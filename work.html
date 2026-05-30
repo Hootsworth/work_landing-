@@ -18,6 +18,127 @@
             --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
+        /* --- DARK MODE VARIABLES --- */
+        [data-theme="dark"] {
+            --bg-color: #111111;
+            --text-color: #faf9f6;
+            --accent-1: #ff6be2; 
+            --accent-2: #ffda33;
+            --accent-3: #5ce1e6;
+            --accent-4: #b5ff5c;
+        }
+
+        /* Smooth transition for theme switching */
+        body, footer, .bento-card, .manifesto-box, .navbar, h1, h2, h3, p {
+            transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease, transform 0.5s var(--spring), box-shadow 0.4s var(--spring);
+        }
+
+        /* Specific Dark Mode Overrides for Depth */
+        [data-theme="dark"] .bento-card {
+            background: #1a1a1a;
+            border-color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        [data-theme="dark"] .card-featured {
+            background: linear-gradient(135deg, #1a1a1a, #111111);
+        }
+        [data-theme="dark"] .card-tag {
+            background: #2b2b2b;
+            border-color: #444;
+            color: #faf9f6;
+        }
+        [data-theme="dark"] .tech-pill {
+            background: #2b2b2b;
+            border-color: #444;
+            color: #faf9f6;
+        }
+        [data-theme="dark"] .navbar {
+            background: rgba(17, 17, 17, 0.8);
+        }
+        [data-theme="dark"] .hero-meta {
+            border-bottom-color: rgba(250, 249, 246, 0.1);
+        }
+        [data-theme="dark"] .manifesto-box {
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+
+        /* --- NEO-BRUTALIST LIGHT SWITCH --- */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 2rem;
+        }
+
+        .neo-switch {
+            position: relative;
+            cursor: none; 
+        }
+
+        .neo-switch input { display: none; }
+
+        .switch-body {
+            width: 86px;
+            height: 44px;
+            background: var(--accent-1);
+            border: 3px solid var(--bg-color); 
+            border-radius: 8px;
+            box-shadow: 5px 5px 0 var(--bg-color);
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
+            position: relative;
+        }
+
+        .neo-switch:active .switch-body {
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0 var(--bg-color);
+        }
+
+        .switch-handle {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 32px;
+            height: 32px;
+            background: var(--bg-color);
+            border: 3px solid var(--bg-color);
+            border-radius: 4px;
+            transition: transform 0.5s var(--spring);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .switch-icon {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-color);
+            transition: transform 0.5s var(--spring), opacity 0.3s;
+        }
+
+        .icon-light { transform: translateY(0); opacity: 1; }
+        .icon-dark { transform: translateY(30px); opacity: 0; }
+
+        input:checked + .switch-body {
+            background: var(--accent-3);
+        }
+
+        input:checked + .switch-body .switch-handle {
+            transform: translateX(42px);
+        }
+
+        input:checked + .switch-body .icon-light {
+            transform: translateY(-30px);
+            opacity: 0;
+        }
+
+        input:checked + .switch-body .icon-dark {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -351,7 +472,7 @@
             align-items: center;
             padding-top: 2rem;
             border-top: 1px solid rgba(250, 249, 246, 0.2);
-            opacity: 0.7;
+            opacity: 0.9;
         }
         .social-links { display: flex; gap: 1.5rem; }
         .social-links a { color: var(--bg-color); text-decoration: none; font-weight: 600; }
@@ -531,6 +652,19 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Singulr Agency. All rights reserved.</p>
+            
+            <div class="theme-switch-wrapper">
+                <label class="neo-switch hover-target" title="Toggle Dark Mode">
+                    <input type="checkbox" id="theme-toggle">
+                    <div class="switch-body">
+                        <div class="switch-handle">
+                            <span class="switch-icon icon-light">☼</span>
+                            <span class="switch-icon icon-dark">☾</span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+            
             <div class="social-links">
                 <a href="#" class="hover-target">Twitter</a>
                 <a href="#" class="hover-target">Dribbble</a>
@@ -542,6 +676,34 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Dark Mode Logic ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                if (themeToggle && currentTheme === 'dark') {
+                    themeToggle.checked = true;
+                }
+            } else {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    if (themeToggle) themeToggle.checked = true;
+                }
+            }
+
+            if (themeToggle) {
+                themeToggle.addEventListener('change', function(e) {
+                    if (e.target.checked) {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                        localStorage.setItem('theme', 'light');
+                    }
+                });
+            }
+
             const cursorDot = document.querySelector('.cursor-dot');
             const cursorOutline = document.querySelector('.cursor-outline');
             const hoverTargets = document.querySelectorAll('.hover-target');

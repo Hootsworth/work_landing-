@@ -18,6 +18,147 @@
             --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
+        /* --- DARK MODE VARIABLES --- */
+        [data-theme="dark"] {
+            --bg-color: #111111;
+            --text-color: #faf9f6;
+            --accent-1: #ff6be2; 
+            --accent-2: #ffda33;
+            --accent-3: #5ce1e6;
+            --accent-4: #b5ff5c;
+        }
+
+        /* Smooth transition for theme switching */
+        body, .navbar, .select-card, .bouncy-pill, .huge-input, h1, h2, h3, p {
+            transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease, transform 0.5s var(--spring), box-shadow 0.4s var(--spring);
+        }
+
+        /* Specific Dark Mode Overrides for Depth */
+        [data-theme="dark"] .navbar {
+            background: rgba(17, 17, 17, 0.8);
+        }
+        [data-theme="dark"] .huge-input {
+            border-bottom-color: rgba(250, 249, 246, 0.15);
+        }
+        [data-theme="dark"] .huge-input::placeholder {
+            color: rgba(250, 249, 246, 0.2);
+        }
+        [data-theme="dark"] .bouncy-pill {
+            border-color: rgba(250, 249, 246, 0.2);
+        }
+        [data-theme="dark"] .bouncy-pill:hover {
+            border-color: var(--text-color);
+        }
+        [data-theme="dark"] .bouncy-pill.active {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-color: var(--text-color);
+        }
+        [data-theme="dark"] .select-card {
+            border-color: rgba(250, 249, 246, 0.15);
+        }
+        [data-theme="dark"] .select-card:hover {
+            border-color: rgba(250, 249, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        [data-theme="dark"] .select-card.active {
+            background: #1a1a1a;
+            border-color: var(--accent-3);
+            box-shadow: 0 20px 40px rgba(92, 225, 230, 0.2);
+        }
+        [data-theme="dark"] .submit-area {
+            border-top-color: rgba(250, 249, 246, 0.15);
+        }
+        [data-theme="dark"] .submit-btn {
+            background: var(--text-color);
+            color: var(--bg-color);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        [data-theme="dark"] .submit-btn:hover {
+            background: var(--accent-4);
+            color: var(--text-color);
+            box-shadow: 0 30px 60px rgba(181, 255, 92, 0.3);
+        }
+        [data-theme="dark"] .hero-meta {
+            border-bottom-color: rgba(250, 249, 246, 0.15);
+        }
+
+        /* --- NEO-BRUTALIST LIGHT SWITCH --- */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 2rem;
+        }
+
+        .neo-switch {
+            position: relative;
+            cursor: none; 
+        }
+
+        .neo-switch input { display: none; }
+
+        .switch-body {
+            width: 86px;
+            height: 44px;
+            background: var(--accent-1);
+            border: 3px solid var(--bg-color); 
+            border-radius: 8px;
+            box-shadow: 5px 5px 0 var(--bg-color);
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
+            position: relative;
+        }
+
+        .neo-switch:active .switch-body {
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0 var(--bg-color);
+        }
+
+        .switch-handle {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 32px;
+            height: 32px;
+            background: var(--bg-color);
+            border: 3px solid var(--bg-color);
+            border-radius: 4px;
+            transition: transform 0.5s var(--spring);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .switch-icon {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-color);
+            transition: transform 0.5s var(--spring), opacity 0.3s;
+        }
+
+        .icon-light { transform: translateY(0); opacity: 1; }
+        .icon-dark { transform: translateY(30px); opacity: 0; }
+
+        input:checked + .switch-body {
+            background: var(--accent-3);
+        }
+
+        input:checked + .switch-body .switch-handle {
+            transform: translateX(42px);
+        }
+
+        input:checked + .switch-body .icon-light {
+            transform: translateY(-30px);
+            opacity: 0;
+        }
+
+        input:checked + .switch-body .icon-dark {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
 
         body {
@@ -246,12 +387,25 @@
                 <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
             </svg>
         </a>
-        <ul class="nav-links">
-            <li><a href="index.html#services" class="hover-target">Services</a></li>
-            <li><a href="work.html" class="hover-target">Work</a></li>
-            <li><a href="about.html" class="hover-target">Agency</a></li>
-            <li><a href="blogs.html" class="hover-target">Blogs</a></li>
-        </ul>
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <ul class="nav-links">
+                <li><a href="index.html#services" class="hover-target">Services</a></li>
+                <li><a href="work.html" class="hover-target">Work</a></li>
+                <li><a href="about.html" class="hover-target">Agency</a></li>
+                <li><a href="blogs.html" class="hover-target">Blogs</a></li>
+            </ul>
+            <div class="theme-switch-wrapper" style="margin: 0;">
+                <label class="neo-switch hover-target" title="Toggle Dark Mode">
+                    <input type="checkbox" id="theme-toggle">
+                    <div class="switch-body">
+                        <div class="switch-handle">
+                            <span class="switch-icon icon-light">☼</span>
+                            <span class="switch-icon icon-dark">☾</span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
     </nav>
 
     <main>
@@ -332,6 +486,34 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Dark Mode Logic ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                if (themeToggle && currentTheme === 'dark') {
+                    themeToggle.checked = true;
+                }
+            } else {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    if (themeToggle) themeToggle.checked = true;
+                }
+            }
+
+            if (themeToggle) {
+                themeToggle.addEventListener('change', function(e) {
+                    if (e.target.checked) {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                        localStorage.setItem('theme', 'light');
+                    }
+                });
+            }
+
             const cursorDot = document.querySelector('.cursor-dot');
             const cursorOutline = document.querySelector('.cursor-outline');
             const hoverTargets = document.querySelectorAll('.hover-target');
@@ -363,7 +545,9 @@
                 target.addEventListener('mouseenter', () => {
                     outlineSize = 75;
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
-                    cursorOutline.style.backgroundColor = 'rgba(26, 26, 26, 0.05)';
+                    
+                    const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+                    cursorOutline.style.backgroundColor = isDarkTheme ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)';
                     cursorOutline.style.borderColor = 'transparent';
                 });
                 target.addEventListener('mouseleave', () => {
