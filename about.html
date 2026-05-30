@@ -51,6 +51,19 @@
             background: rgba(40, 40, 40, 0.5);
             border: 1px solid rgba(250, 249, 246, 0.2);
         }
+        [data-theme="dark"] .manifesto-section {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        [data-theme="dark"] .lore-section {
+            background: #1a1a1a;
+            color: var(--text-color);
+            border: 1px solid #333;
+        }
+        [data-theme="dark"] .hero-meta {
+            border-bottom-color: rgba(250, 249, 246, 0.1);
+        }
 
         * {
             margin: 0;
@@ -896,7 +909,7 @@
             }
             animateCursor();
 
-            // Cursor Hover States
+            // Hover States
             hoverTargets.forEach(target => {
                 target.addEventListener('mouseenter', () => {
                     outlineSize = 75;
@@ -905,7 +918,8 @@
                     
                     const isDarkSection = target.closest('footer') || 
                                           target.classList.contains('marquee-container') ||
-                                          target.closest('.lore-section');
+                                          target.closest('.lore-section') ||
+                                          document.documentElement.getAttribute('data-theme') === 'dark';
                                           
                     if (isDarkSection) {
                         cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.15)';
@@ -924,7 +938,8 @@
                     
                     const isDarkSection = target.closest('footer') || 
                                           target.classList.contains('marquee-container') ||
-                                          target.closest('.lore-section');
+                                          target.closest('.lore-section') ||
+                                          document.documentElement.getAttribute('data-theme') === 'dark';
                                           
                     if (isDarkSection) {
                         cursorOutline.style.borderColor = 'var(--bg-color)';

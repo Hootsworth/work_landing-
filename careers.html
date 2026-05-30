@@ -16,10 +16,6 @@
             
             --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        }
-
         /* --- DARK MODE VARIABLES --- */
         [data-theme="dark"] {
             --bg-color: #111111;
@@ -36,15 +32,34 @@
         }
 
         /* Specific Dark Mode Overrides for Depth */
-        [data-theme="dark"] .perk-card {
-            background: rgba(255,255,255,0.02);
+        [data-theme="dark"] .perks-section {
             border-color: #333;
+        }
+        [data-theme="dark"] .perk-card {
+            background: #1a1a1a;
+            border-color: #333;
+            box-shadow: 12px 12px 0px #000;
+        }
+        [data-theme="dark"] .perk-card:hover {
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .perk-card:hover .perk-number {
+            color: var(--text-color);
         }
         [data-theme="dark"] .role-row {
             border-color: #333;
         }
+        [data-theme="dark"] .role-row:last-child {
+            border-bottom-color: #333;
+        }
+        [data-theme="dark"] .role-arrow {
+            border-color: var(--text-color);
+        }
         [data-theme="dark"] .navbar {
             background: rgba(17, 17, 17, 0.8);
+        }
+        [data-theme="dark"] .hero-meta {
+            border-bottom-color: rgba(250, 249, 246, 0.1);
         }
 
         body {
@@ -600,9 +615,9 @@
                     outlineSize = 75;
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
                     
-                    const isFooter = target.closest('footer');
+                    const isDarkSection = target.closest('footer') || document.documentElement.getAttribute('data-theme') === 'dark';
                     
-                    if (isFooter) {
+                    if (isDarkSection) {
                         cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.15)';
                         cursorOutline.style.borderColor = 'transparent';
                     } else {
@@ -615,8 +630,8 @@
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
                     cursorOutline.style.backgroundColor = 'transparent';
                     
-                    const isFooter = target.closest('footer');
-                    cursorOutline.style.borderColor = isFooter ? 'var(--bg-color)' : 'var(--text-color)';
+                    const isDarkSection = target.closest('footer') || document.documentElement.getAttribute('data-theme') === 'dark';
+                    cursorOutline.style.borderColor = isDarkSection ? 'var(--bg-color)' : 'var(--text-color)';
                 });
             });
 

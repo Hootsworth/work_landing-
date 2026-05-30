@@ -60,6 +60,7 @@
         }
         [data-theme="dark"] .manifesto-box {
             background: #1a1a1a;
+            color: var(--text-color);
             border: 1px solid #333;
         }
 
@@ -738,7 +739,7 @@
                     outlineSize = 75;
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
                     
-                    const isDarkSection = target.closest('footer') || target.closest('.manifesto-box');
+                    const isDarkSection = target.closest('footer') || target.closest('.manifesto-box') || document.documentElement.getAttribute('data-theme') === 'dark';
                     cursorOutline.style.backgroundColor = isDarkSection ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)';
                     cursorOutline.style.borderColor = 'transparent';
                 });
@@ -747,7 +748,7 @@
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
                     cursorOutline.style.backgroundColor = 'transparent';
                     
-                    const isDarkSection = target.closest('footer') || target.closest('.manifesto-box');
+                    const isDarkSection = target.closest('footer') || target.closest('.manifesto-box') || document.documentElement.getAttribute('data-theme') === 'dark';
                     cursorOutline.style.borderColor = isDarkSection ? 'var(--bg-color)' : 'var(--text-color)';
                 });
             });

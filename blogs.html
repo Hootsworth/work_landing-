@@ -18,8 +18,6 @@
             --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
-        }
-
         /* --- DARK MODE VARIABLES --- */
         [data-theme="dark"] {
             --bg-color: #111111;
@@ -46,6 +44,12 @@
         }
         [data-theme="dark"] .navbar {
             background: rgba(17, 17, 17, 0.8);
+        }
+        [data-theme="dark"] .post-tag {
+            background: rgba(250, 249, 246, 0.1);
+        }
+        [data-theme="dark"] .hero-meta {
+            border-bottom-color: rgba(250, 249, 246, 0.1);
         }
 
         body {
@@ -518,7 +522,7 @@
                 target.addEventListener('mouseenter', () => {
                     outlineSize = 75;
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
-                    const isDarkSection = target.closest('footer');
+                    const isDarkSection = target.closest('footer') || document.documentElement.getAttribute('data-theme') === 'dark';
                     cursorOutline.style.backgroundColor = isDarkSection ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)';
                     cursorOutline.style.borderColor = 'transparent';
                 });
@@ -526,7 +530,7 @@
                     outlineSize = 40;
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
                     cursorOutline.style.backgroundColor = 'transparent';
-                    const isDarkSection = target.closest('footer');
+                    const isDarkSection = target.closest('footer') || document.documentElement.getAttribute('data-theme') === 'dark';
                     cursorOutline.style.borderColor = isDarkSection ? 'var(--bg-color)' : 'var(--text-color)';
                 });
             });
