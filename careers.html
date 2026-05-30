@@ -110,8 +110,26 @@
 
         /* Open Roles Interactive List */
         .roles-section { max-width: 1200px; margin: 0 auto; padding: 4rem 5% 8rem; width: 100%; }
-        .roles-header { margin-bottom: 4rem; font-size: clamp(2.5rem, 4vw, 3.5rem); }
         
+        .roles-header-flex {
+            display: flex; justify-content: space-between; align-items: flex-end; 
+            margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem;
+        }
+        .roles-header { font-size: clamp(2.5rem, 4vw, 3.5rem); margin: 0; }
+        
+        /* New Ritual Button */
+        .ritual-btn {
+            font-weight: 800; text-transform: uppercase; text-decoration: none;
+            color: var(--bg-color); background: var(--text-color);
+            padding: 1rem 2rem; border: 3px solid var(--text-color);
+            box-shadow: 6px 6px 0px var(--accent-1);
+            transition: transform 0.2s var(--spring), box-shadow 0.2s var(--spring);
+        }
+        .ritual-btn:hover {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px var(--accent-1);
+        }
+
         .role-list { display: flex; flex-direction: column; }
         .role-row {
             display: flex; justify-content: space-between; align-items: center;
@@ -146,56 +164,108 @@
             transform: rotate(45deg) scale(1.1);
         }
 
-        /* Perks Bento Grid */
-        .perks-section { background: var(--text-color); color: var(--bg-color); border-radius: 60px; padding: 8rem 5%; margin: 0 5%; }
-        .perks-header { text-align: center; margin-bottom: 5rem; }
-        .perks-header h2 { font-size: clamp(2.5rem, 5vw, 4rem); color: var(--bg-color); }
+        /* Fun Wobble Click Animation */
+        @keyframes wobble {
+            0%, 100% { transform: translateX(0); }
+            15% { transform: translateX(-15px) rotate(-1.5deg); }
+            30% { transform: translateX(12px) rotate(1.2deg); }
+            45% { transform: translateX(-8px) rotate(-0.8deg); }
+            60% { transform: translateX(5px) rotate(0.5deg); }
+            75% { transform: translateX(-3px) rotate(-0.3deg); }
+        }
+        .wobble-active {
+            animation: wobble 0.6s var(--spring);
+        }
+
+        /* Neo-Brutalist Perks Section */
+        .perks-section { 
+            background: var(--bg-color); 
+            padding: 8rem 5%; 
+            border-top: 4px solid var(--text-color);
+            border-bottom: 4px solid var(--text-color);
+            margin: 4rem 0;
+        }
+        .perks-header { margin-bottom: 4rem; text-align: center; }
+        .perks-header h2 { font-size: clamp(3rem, 6vw, 5rem); color: var(--text-color); text-transform: uppercase; }
         
         .perks-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem; max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem; max-width: 1400px; margin: 0 auto;
         }
+        
         .perk-card {
-            background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.1); transition: transform 0.4s var(--spring), background 0.4s;
-            transform-style: preserve-3d; perspective: 1000px;
+            background: var(--bg-color);
+            padding: 3rem 2rem;
+            border: 4px solid var(--text-color);
+            box-shadow: 12px 12px 0px var(--text-color);
+            transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
         }
-        .perk-card:hover { background: rgba(255,255,255,0.1); }
         
-        .perk-icon { font-size: 3rem; margin-bottom: 2rem; transform: translateZ(30px); transition: transform 0.3s; }
-        .perk-card h3 { font-size: 1.8rem; margin-bottom: 1rem; color: var(--bg-color); transform: translateZ(20px); transition: transform 0.3s; }
-        .perk-card p { opacity: 0.7; line-height: 1.6; font-size: 1.1rem; transform: translateZ(10px); transition: transform 0.3s; }
+        .perk-card:hover {
+            transform: translate(8px, 8px);
+            box-shadow: 0px 0px 0px var(--text-color);
+        }
         
-        .perk-card:hover .perk-icon { transform: translateZ(50px) scale(1.1); }
-        .perk-card:hover h3 { transform: translateZ(40px); color: var(--accent-4); }
+        /* Alternate accent colors on hover based on nth-child */
+        .perk-card:nth-child(1):hover { background: var(--accent-1); }
+        .perk-card:nth-child(2):hover { background: var(--accent-2); }
+        .perk-card:nth-child(3):hover { background: var(--accent-3); }
+        .perk-card:nth-child(4):hover { background: var(--accent-4); }
+        
+        .perk-number { 
+            font-size: 4rem; 
+            font-weight: 800; 
+            -webkit-text-stroke: 2px var(--text-color); 
+            color: transparent; 
+            margin-bottom: 1rem; 
+            line-height: 1;
+        }
+        
+        .perk-card:hover .perk-number { color: var(--text-color); -webkit-text-stroke: 0; }
+        
+        .perk-card h3 { font-size: 2rem; margin-bottom: 1rem; color: var(--text-color); text-transform: uppercase; letter-spacing: -1px; }
+        .perk-card p { font-size: 1.1rem; color: var(--text-color); font-weight: 500; line-height: 1.5; }
 
         /* Footer */
         footer {
-            padding: 8rem 5% 4rem; text-align: center; background-color: var(--bg-color);
-            color: var(--text-color); margin-top: 4rem;
+            padding: 8rem 5% 4rem; text-align: center; background-color: var(--text-color);
+            color: var(--bg-color); margin-top: 4rem;
         }
-        footer h2 { font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 3rem; }
+        footer h2 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 3rem; color: var(--bg-color); }
         .footer-btn {
-            font-size: 1.5rem; padding: 1.5rem 3.5rem; background: var(--text-color);
-            color: var(--bg-color); text-decoration: none; border-radius: 50px;
-            font-weight: 600; display: inline-block; transition: transform 0.3s var(--spring), background 0.3s;
+            font-size: 2rem;
+            padding: 1.5rem 4rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s;
+            border: 2px solid var(--bg-color);
         }
-        .footer-btn:hover { background: var(--accent-1); color: var(--text-color); transform: scale(1.05); }
+        .footer-btn:hover {
+            background: var(--accent-2);
+            border-color: var(--accent-2);
+            transform: translateY(-5px) scale(1.05);
+        }
         .footer-bottom {
             margin-top: 8rem; display: flex; justify-content: space-between; align-items: center;
-            padding-top: 2rem; border-top: 1px solid rgba(0,0,0, 0.1); opacity: 0.7; font-weight: 300;
+            padding-top: 2rem; border-top: 1px solid rgba(250, 249, 246, 0.2); opacity: 0.7; font-weight: 300;
         }
         .social-links { display: flex; gap: 1.5rem; }
-        .social-links a { color: var(--text-color); text-decoration: none; font-weight: 600; }
+        .social-links a { color: var(--bg-color); text-decoration: none; font-weight: 600; }
 
         @media (max-width: 900px) {
             .nav-links { display: none; }
             .hero-meta { flex-direction: column; gap: 1.5rem; border-bottom: none; margin-bottom: 2rem; padding-bottom: 0; }
             .hero-title .indent-1 { padding-left: 0; }
+            .roles-header-flex { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .role-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; padding: 2rem 1rem; }
             .role-row:hover { padding: 2rem 1rem; }
             .role-meta { width: 100%; justify-content: space-between; }
-            .perks-section { margin: 0; border-radius: 0; padding: 4rem 5%; }
+            .perks-section { border-left: none; border-right: none; }
             .footer-bottom { flex-direction: column; gap: 1rem; }
         }
         @media (hover: none) and (pointer: coarse) {
@@ -212,7 +282,16 @@
     <div class="cursor-outline"></div>
 
     <nav class="navbar">
-        <a href="index.html" class="logo hover-target">Singulr<span>.</span></a>
+        <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
+            <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
+                <!-- Logo Mark -->
+                <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
+                <circle cx="10" cy="27" r="6" fill="#ff2d93" />
+                <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
+                <!-- Text -->
+                <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
+            </svg>
+        </a>
         <ul class="nav-links">
             <li><a href="index.html#services" class="hover-target">Services</a></li>
             <li><a href="work.html" class="hover-target">Work</a></li>
@@ -236,16 +315,19 @@
         </header>
 
         <section class="roles-section">
-            <h2 class="roles-header fade-up">Open Positions</h2>
+            <div class="roles-header-flex">
+                <h2 class="roles-header fade-up">Open Positions</h2>
+                <a href="hiring-process.html" class="ritual-btn fade-up hover-target">View The Hiring Ritual</a>
+            </div>
+            
             <div class="role-list">
-                
                 <a href="#" class="role-row hover-target fade-up">
                     <div class="role-info">
                         <h3>Creative Developer</h3>
                         <p>Focus on WebGL, Three.js, and advanced spring physics.</p>
                     </div>
                     <div class="role-meta">
-                        <span class="role-type">Remote / Global</span>
+                        <span class="role-type" style="transition: color 0.3s ease;">Not Hiring Yet 🍿 (Out of Pixels)</span>
                         <div class="role-arrow">↗</div>
                     </div>
                 </a>
@@ -256,7 +338,7 @@
                         <p>Obsess over micro-interactions and tactile layouts.</p>
                     </div>
                     <div class="role-meta">
-                        <span class="role-type">Remote / Global</span>
+                        <span class="role-type" style="transition: color 0.3s ease;">Not Hiring Yet 🎨 (Canvas Full)</span>
                         <div class="role-arrow">↗</div>
                     </div>
                 </a>
@@ -267,44 +349,41 @@
                         <p>Data-driven scaling for experimental digital products.</p>
                     </div>
                     <div class="role-meta">
-                        <span class="role-type">New York / Hybrid</span>
+                        <span class="role-type" style="transition: color 0.3s ease;">Not Hiring Yet 🔥 (Servers Melting)</span>
                         <div class="role-arrow">↗</div>
                     </div>
                 </a>
-
             </div>
         </section>
 
         <section class="perks-section fade-up">
             <div class="perks-header">
-                <h2>Why work with us?</h2>
+                <h2>The Baseline.</h2>
             </div>
             <div class="perks-grid">
-                
                 <div class="perk-card hover-target">
-                    <div class="perk-icon">🌍</div>
-                    <h3>Work Anywhere</h3>
-                    <p>We are a remote-first team. Work from a cabin in the woods or a cafe in Tokyo. As long as you have Wi-Fi, you're good.</p>
+                    <div class="perk-number">01</div>
+                    <h3>Geography is a Construct</h3>
+                    <p>Remote-first. Work from a cabin, a cafe, or your couch. If your code compiles and your designs snap, your coordinates don't matter.</p>
                 </div>
-
+        
                 <div class="perk-card hover-target">
-                    <div class="perk-icon">💻</div>
-                    <h3>Top Tier Gear</h3>
-                    <p>We provide a $3,000 stipend for your home office setup upon joining, plus a brand new fully-loaded Macbook Pro.</p>
+                    <div class="perk-number">02</div>
+                    <h3>Uncompromised Rigs</h3>
+                    <p>You can't build high-performance physics loops on a potato. $3,000 home-office stipend on day one, plus a fully maxed-out machine.</p>
                 </div>
-
+        
                 <div class="perk-card hover-target">
-                    <div class="perk-icon">🧠</div>
-                    <h3>Continuous Learning</h3>
-                    <p>Unlimited access to courses, books, and a generous budget to attend one global design or dev conference every year.</p>
+                    <div class="perk-number">03</div>
+                    <h3>Anti-Burnout Protocol</h3>
+                    <p>No arbitrary 9-to-5. We operate on deep work and asynchronous trust. We measure the impact of your commits, not your screen time.</p>
                 </div>
-
+        
                 <div class="perk-card hover-target">
-                    <div class="perk-icon">⚖️</div>
-                    <h3>True Flexibility</h3>
-                    <p>No arbitrary 9-to-5 rules. We care about the quality of the work you produce, not the hours you sit in front of a screen.</p>
+                    <div class="perk-number">04</div>
+                    <h3>Creative Capital</h3>
+                    <p>Unlimited access to courses, design systems, and an annual budget to fly out to one global design or dev conference of your choice.</p>
                 </div>
-
             </div>
         </section>
     </main>
@@ -356,9 +435,10 @@
                 target.addEventListener('mouseenter', () => {
                     outlineSize = 75;
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
-                    const isDarkSection = target.closest('.perks-section') || target.closest('.role-row:hover');
                     
-                    if (isDarkSection) {
+                    const isFooter = target.closest('footer');
+                    
+                    if (isFooter) {
                         cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.15)';
                         cursorOutline.style.borderColor = 'transparent';
                     } else {
@@ -370,8 +450,9 @@
                     outlineSize = 40;
                     cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
                     cursorOutline.style.backgroundColor = 'transparent';
-                    const isDarkSection = target.closest('.perks-section');
-                    cursorOutline.style.borderColor = isDarkSection ? 'var(--bg-color)' : 'var(--text-color)';
+                    
+                    const isFooter = target.closest('footer');
+                    cursorOutline.style.borderColor = isFooter ? 'var(--bg-color)' : 'var(--text-color)';
                 });
             });
 
@@ -386,25 +467,6 @@
                 btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px) scale(1)`);
             });
 
-            // 3D Tilt for Perks Cards
-            const cards = document.querySelectorAll('.perk-card');
-            cards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    if (window.innerWidth < 900) return; // Disable on mobile
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;  
-                    const centerX = rect.width / 2; const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -5;
-                    const rotateY = ((x - centerX) / centerX) * 5;
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                    card.style.transition = 'transform 0.5s var(--spring), background 0.4s';
-                });
-                card.addEventListener('mouseenter', () => { card.style.transition = 'background 0.4s'; });
-            });
-
             // Scroll Reveal
             const observer = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
@@ -412,6 +474,57 @@
                 });
             }, { threshold: 0.15 });
             document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+            // --- Bouncy Interactive Click for Roles ---
+            const roleRows = document.querySelectorAll('.role-row');
+            const funMessages = {
+                "Creative Developer": [
+                    "NOT HIRING YET! 🍿 (We're fully pixelated)",
+                    "GRAVITY ERROR! 🚫 (No open seats in orbit)",
+                    "NOT YET! 🧪 (Our physics engine is full)",
+                    "PAUSED! 🕹️ (Out of pixels, check back soon!)"
+                ],
+                "Senior UI/UX Designer": [
+                    "NOT HIRING YET! 🎨 (Our color wheel is full)",
+                    "CANVAS FULL! 🚫 (No blank screens left)",
+                    "NOT YET! 🤫 (We're busy aligning elements)",
+                    "HOLD ON! 📐 (Measuring perfect micro-bounces)"
+                ],
+                "Growth Engineer": [
+                    "NOT HIRING YET! 🚀 (Servers currently melting)",
+                    "PAUSED! 🍿 (VOLATILITY LIMIT REACHED)",
+                    "NOT YET! 🔥 (Managing extreme bouncy-loop chaos)",
+                    "SLOW DOWN! 📈 (Growth metrics too high to count)"
+                ]
+            };
+
+            roleRows.forEach(row => {
+                row.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Add bouncy wobble animation
+                    row.classList.remove('wobble-active');
+                    void row.offsetWidth; // Force reflow to reset CSS transition
+                    row.classList.add('wobble-active');
+                    
+                    const roleTitle = row.querySelector('h3').textContent.trim();
+                    const typeSpan = row.querySelector('.role-type');
+                    const arrowDiv = row.querySelector('.role-arrow');
+                    
+                    // Change status text to a random fun message
+                    const messages = funMessages[roleTitle] || ["Not Hiring Yet! 🍿"];
+                    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+                    
+                    typeSpan.textContent = randomMsg;
+                    typeSpan.style.color = 'var(--accent-1)';
+                    
+                    // Spin arrow in circles
+                    arrowDiv.style.transform = 'rotate(360deg) scale(0.9)';
+                    setTimeout(() => {
+                        arrowDiv.style.transform = '';
+                    }, 400);
+                });
+            });
         });
     </script>
 </body>

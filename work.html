@@ -261,14 +261,68 @@
             font-weight: 300;
         }
 
+        /* General Buttons (Used outside hero) */
+        .btn-group { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: inherit;
+            border-radius: 50px;
+            transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring), background 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            border: 2px solid var(--text-color);
+        }
+        .btn-primary {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+            background-color: var(--accent-1);
+            border-color: var(--accent-1);
+            color: var(--text-color);
+        }
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-color);
+        }
+        .btn-outline:hover {
+            transform: translateY(-5px) scale(1.05);
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
         /* Footer */
         footer {
-            padding: 6rem 5% 4rem; text-align: center; background-color: var(--text-color);
-            color: var(--bg-color); border-top-left-radius: 60px; border-top-right-radius: 60px;
+            padding: 8rem 5% 4rem;
+            text-align: center;
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            border-top-left-radius: 60px;
+            border-top-right-radius: 60px;
+            margin-top: 4rem;
         }
-        footer h2 { font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 2rem; color: var(--bg-color); }
+        footer h2 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            margin-bottom: 3rem;
+            color: var(--bg-color);
+        }
+        .footer-btn {
+            font-size: 2rem;
+            padding: 1.5rem 4rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border-color: var(--bg-color);
+        }
+        .footer-btn:hover {
+            background: var(--accent-2);
+            border-color: var(--accent-2);
+        }
         .footer-bottom {
-            margin-top: 5rem;
+            margin-top: 8rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -278,13 +332,6 @@
         }
         .social-links { display: flex; gap: 1.5rem; }
         .social-links a { color: var(--bg-color); text-decoration: none; font-weight: 600; }
-        .btn-primary {
-            background-color: var(--bg-color); color: var(--text-color);
-            padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px;
-            text-decoration: none; display: inline-block;
-            transition: transform 0.3s var(--spring);
-        }
-        .btn-primary:hover { transform: translateY(-5px) scale(1.05); background-color: var(--accent-4); }
 
         /* Responsive */
         @media (max-width: 900px) {
@@ -307,14 +354,21 @@
     <div class="cursor-outline"></div>
 
     <nav class="navbar">
-        <a href="index.html" class="logo hover-target">Singulr<span>.</span></a>
+        <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
+            <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
+                <!-- Logo Mark -->
+                <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
+                <circle cx="10" cy="27" r="6" fill="#ff2d93" />
+                <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
+                <!-- Text -->
+                <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
+            </svg>
+        </a>
         <ul class="nav-links">
             <li><a href="index.html#services" class="hover-target">Services</a></li>
             <li><a href="work.html" class="hover-target active">Work</a></li>
             <li><a href="about.html" class="hover-target">Agency</a></li>
-            <li><a href="blog.html" class="hover-target">Journal</a></li>
-            <li><a href="careers.html" class="hover-target">Careers</a></li>
-            <li><a href="#contact" class="hover-target">Contact</a></li>
+            <li><a href="blogs.html" class="hover-target">Blogs</a></li>
         </ul>
     </nav>
 
@@ -446,8 +500,8 @@
 
     <footer id="contact">
         <div class="fade-up">
-            <h2 class="hover-target">Let's build something <span class="highlight" style="background: var(--accent-4); -webkit-background-clip: text;">fun.</span></h2>
-            <a href="mailto:hello@singulr.agency" class="btn-primary hover-target magnetic-btn">Say Hello</a>
+            <h2 class="hover-target">Let's build something <span class="highlight">fun.</span></h2>
+            <a href="mailto:hello@singulr.agency" class="btn btn-primary footer-btn hover-target magnetic-btn">Say Hello</a>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Singulr Agency. All rights reserved.</p>

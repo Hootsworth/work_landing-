@@ -257,6 +257,7 @@
             bottom: 2.5rem;
             width: clamp(130px, 13vw, 185px);
             transform: rotate(-6deg);
+            z-index: 10;
         }
         .manifesto-content,
         .physics-playground {
@@ -486,20 +487,20 @@
             margin-top: 4rem;
         }
         footer h2 {
-            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-size: clamp(3rem, 8vw, 6rem);
             margin-bottom: 3rem;
             color: var(--bg-color);
         }
         .footer-btn {
-            font-size: 1.5rem;
-            padding: 1.5rem 3.5rem;
+            font-size: 2rem;
+            padding: 1.5rem 4rem;
             background: var(--bg-color);
             color: var(--text-color);
             border-color: var(--bg-color);
         }
         .footer-btn:hover {
-            background: var(--accent-4);
-            border-color: var(--accent-4);
+            background: var(--accent-2);
+            border-color: var(--accent-2);
         }
         .footer-bottom {
             margin-top: 8rem;
@@ -551,7 +552,16 @@
     <div class="cursor-outline"></div>
 
     <nav class="navbar">
-        <a href="index.html" class="logo hover-target">Singulr<span>.</span></a>
+        <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
+            <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
+                <!-- Logo Mark -->
+                <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
+                <circle cx="10" cy="27" r="6" fill="#ff2d93" />
+                <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
+                <!-- Text -->
+                <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
+            </svg>
+        </a>
         <ul class="nav-links">
             <li><a href="index.html#services" class="hover-target">Services</a></li>
             <li><a href="work.html" class="hover-target">Work</a></li>
@@ -658,7 +668,7 @@
 
     <footer id="contact">
         <div class="fade-up">
-            <h2 class="hover-target">Let's build something <span class="highlight" style="background: var(--accent-4); -webkit-background-clip: text;">fun.</span></h2>
+            <h2 class="hover-target">Let's build something <span class="highlight">fun.</span></h2>
             <a href="mailto:hello@singulr.agency" class="btn btn-primary footer-btn hover-target magnetic-btn">Say Hello</a>
         </div>
         <div class="footer-bottom">

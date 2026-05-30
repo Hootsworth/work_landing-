@@ -171,13 +171,24 @@
             padding: 8rem 5% 4rem; text-align: center; background-color: var(--text-color);
             color: var(--bg-color); border-top-left-radius: 60px; border-top-right-radius: 60px;
         }
-        footer h2 { font-size: clamp(3rem, 7vw, 5.5rem); margin-bottom: 3rem; color: var(--bg-color); }
+        footer h2 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 3rem; color: var(--bg-color); }
         .footer-btn {
-            font-size: 1.5rem; padding: 1.5rem 3.5rem; background: var(--bg-color);
-            color: var(--text-color); text-decoration: none; border-radius: 50px;
-            font-weight: 600; display: inline-block; transition: transform 0.3s var(--spring), background 0.3s;
+            font-size: 2rem;
+            padding: 1.5rem 4rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s;
+            border: 2px solid var(--bg-color);
         }
-        .footer-btn:hover { background: var(--accent-3); transform: scale(1.05); }
+        .footer-btn:hover {
+            background: var(--accent-2);
+            border-color: var(--accent-2);
+            transform: translateY(-5px) scale(1.05);
+        }
         .footer-bottom {
             margin-top: 8rem; display: flex; justify-content: space-between; align-items: center;
             padding-top: 2rem; border-top: 1px solid rgba(250, 249, 246, 0.2); opacity: 0.7; font-weight: 300;
@@ -204,7 +215,16 @@
     <div class="cursor-outline"></div>
 
     <nav class="navbar">
-        <a href="index.html" class="logo hover-target">Singulr<span>.</span></a>
+        <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
+            <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
+                <!-- Logo Mark -->
+                <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
+                <circle cx="10" cy="27" r="6" fill="#ff2d93" />
+                <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
+                <!-- Text -->
+                <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
+            </svg>
+        </a>
         <ul class="nav-links">
             <li><a href="index.html#services" class="hover-target">Services</a></li>
             <li><a href="work.html" class="hover-target">Work</a></li>

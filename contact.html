@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singulr - Start a Project</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --text-color: #1a1a1a;
+            --accent-1: #ff90e8;
+            --accent-2: #ffc900;
+            --accent-3: #90e8ff;
+            --accent-4: #c9ff90;
+            
+            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0; border-radius: 50%;
+            z-index: 9999; pointer-events: none; opacity: 0;
+            will-change: transform, width, height;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: var(--text-color); transition: border-radius 0.2s, height 0.2s, width 0.2s; }
+        .cursor-outline {
+            width: 40px; height: 40px; border: 2px solid var(--text-color);
+            transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease, border-radius 0.3s;
+        }
+
+        /* I-Beam Cursor for Inputs */
+        body.text-hover .cursor-dot { height: 24px; width: 2px; border-radius: 0; background-color: var(--accent-1); }
+        body.text-hover .cursor-outline { opacity: 0 !important; }
+
+        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
+        .highlight {
+            background: linear-gradient(120deg, var(--accent-4), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block; padding: 0 0.2rem;
+        }
+
+        .fade-up {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.8s var(--smooth), transform 0.8s var(--smooth);
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* Navigation */
+        .navbar {
+            display: flex; justify-content: space-between; padding: 2rem 5%;
+            align-items: center; position: fixed; top: 0; width: 100%;
+            background: rgba(250, 249, 246, 0.8); backdrop-filter: blur(10px); z-index: 1000;
+        }
+        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: var(--text-color); }
+        .logo span { color: var(--accent-1); }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-color); font-weight: 600;
+            position: relative; padding: 0.5rem 0; display: inline-block;
+            transition: transform 0.3s var(--spring), color 0.3s ease;
+        }
+        .nav-links a:hover { transform: translateY(-3px); color: var(--accent-1); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0px; left: 0;
+            width: 0%; height: 3px; background-color: var(--accent-1);
+            transition: width 0.3s var(--spring); border-radius: 2px;
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        /* Editorial Hero */
+        .hero { padding: 10rem 5% 2rem; display: flex; align-items: center; }
+        .hero-grid { width: 100%; position: relative; max-width: 1200px; margin: 0 auto; }
+        .hero-meta {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            border-bottom: 2px solid rgba(26, 26, 26, 0.1); padding-bottom: 2rem; margin-bottom: 4rem;
+        }
+        .hero-tag { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 1rem; color: var(--text-color); }
+        .hero-title {
+            font-size: clamp(3.5rem, 8vw, 9rem); line-height: 0.85;
+            letter-spacing: -3px; text-transform: uppercase; position: relative; z-index: 2;
+            margin-bottom: 2rem;
+        }
+        .hero-italic {
+            font-family: Georgia, serif; font-style: italic; text-transform: lowercase;
+            color: var(--accent-1); font-weight: 400; padding: 0 0.5rem;
+            display: inline-block; transition: color 0.3s ease, transform 0.4s var(--spring);
+        }
+        .hero-italic:hover { color: var(--text-color); transform: scale(1.05) rotate(-2deg); }
+
+        /* Tactile Form Section */
+        .form-section {
+            max-width: 1000px; margin: 0 auto; padding: 2rem 5% 8rem; width: 100%;
+        }
+        
+        .form-block {
+            margin-bottom: 5rem;
+            position: relative;
+        }
+        
+        .form-label {
+            font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; display: block;
+            opacity: 0.9;
+        }
+        .form-label span { color: var(--accent-1); }
+
+        /* Big Inputs */
+        .huge-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid rgba(0,0,0,0.1);
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 600;
+            color: var(--text-color);
+            padding: 1rem 0;
+            outline: none;
+            transition: border-color 0.4s var(--spring);
+        }
+        .huge-input::placeholder { color: rgba(0,0,0,0.15); }
+        .huge-input:focus { border-color: var(--accent-1); }
+
+        /* Bouncy Pills (Checkboxes) */
+        .pill-grid {
+            display: flex; flex-wrap: wrap; gap: 1rem;
+        }
+        .bouncy-pill {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border: 2px solid rgba(0,0,0,0.1);
+            font-size: 1.2rem; font-weight: 600;
+            background: transparent; color: var(--text-color);
+            transition: transform 0.4s var(--spring), background 0.3s, border-color 0.3s, color 0.3s;
+            user-select: none;
+        }
+        .bouncy-pill:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: var(--text-color);
+        }
+        .bouncy-pill.active {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-color: var(--text-color);
+            transform: scale(1.05);
+        }
+        
+        /* Selectable Cards (Radio) */
+        .card-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;
+        }
+        .select-card {
+            padding: 2.5rem 2rem;
+            border-radius: 30px;
+            border: 2px solid rgba(0,0,0,0.1);
+            background: transparent;
+            text-align: center;
+            transition: transform 0.5s var(--spring), background 0.3s, border-color 0.3s, box-shadow 0.4s var(--spring);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;
+        }
+        .select-card h3 { font-size: 1.5rem; }
+        .select-card p { opacity: 0.6; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+        
+        .select-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+        .select-card.active {
+            background: var(--bg-color);
+            border-color: var(--accent-3);
+            box-shadow: 0 20px 40px rgba(144, 232, 255, 0.3);
+            transform: translateY(-10px) scale(1.02);
+        }
+        .select-card.active h3 { color: var(--accent-3); }
+
+        /* Textarea */
+        textarea.huge-input {
+            font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+            min-height: 150px;
+            resize: none;
+            line-height: 1.4;
+        }
+
+        /* Submit Area */
+        .submit-area {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 4rem; padding-top: 4rem; border-top: 2px solid rgba(0,0,0,0.1);
+        }
+        .submit-text { max-width: 400px; font-size: 1.2rem; opacity: 0.7; line-height: 1.6; }
+        
+        .submit-btn {
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            background: var(--text-color); color: var(--bg-color);
+            border: none; font-size: 1.5rem; font-weight: 800; font-family: inherit;
+            display: flex; justify-content: center; align-items: center;
+            transition: transform 0.4s var(--spring), background 0.3s, box-shadow 0.4s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .submit-btn:hover {
+            background: var(--accent-4); color: var(--text-color);
+            transform: scale(1.1);
+            box-shadow: 0 30px 60px rgba(201, 255, 144, 0.4);
+        }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .hero-meta { border-bottom: none; margin-bottom: 2rem; padding-bottom: 0; }
+            .submit-area { flex-direction: column; gap: 3rem; text-align: center; align-items: center; }
+            .bouncy-pill { font-size: 1rem; padding: 0.8rem 1.5rem; }
+            .select-card { padding: 2rem 1.5rem; }
+        }
+        @media (hover: none) and (pointer: coarse) {
+            * { cursor: auto !important; }
+            .cursor-dot, .cursor-outline { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo hover-target">Singulr<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html#services" class="hover-target">Services</a></li>
+            <li><a href="work.html" class="hover-target">Work</a></li>
+            <li><a href="about.html" class="hover-target">Agency</a></li>
+            <li><a href="open-source.html" class="hover-target">Open Source</a></li>
+            <li><a href="careers.html" class="hover-target">Careers</a></li>
+            <li><a href="contact.html" class="hover-target active">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <div class="hero-grid">
+                <div class="hero-meta fade-up">
+                    <span class="hero-tag hover-target">007 // Onboarding</span>
+                </div>
+                <h1 class="hero-title fade-up" style="transition-delay: 0.1s;">
+                    Let's Build <br><span class="hero-italic hover-target">Something.</span>
+                </h1>
+            </div>
+        </header>
+
+        <section class="form-section">
+            <form id="projectForm" onsubmit="event.preventDefault();">
+                
+                <!-- Block 1: Details -->
+                <div class="form-block fade-up" style="transition-delay: 0.2s;">
+                    <label class="form-label"><span>01.</span> What's your name?</label>
+                    <input type="text" class="huge-input text-input" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-block fade-up">
+                    <label class="form-label"><span>02.</span> Where can we reach you?</label>
+                    <input type="email" class="huge-input text-input" placeholder="john@company.com" required>
+                </div>
+
+                <!-- Block 2: Project Type (Multi-select) -->
+                <div class="form-block fade-up">
+                    <label class="form-label"><span>03.</span> What do you need help with?</label>
+                    <div class="pill-grid">
+                        <div class="bouncy-pill hover-target" onclick="this.classList.toggle('active')">Brand Identity</div>
+                        <div class="bouncy-pill hover-target" onclick="this.classList.toggle('active')">UI/UX Design</div>
+                        <div class="bouncy-pill hover-target" onclick="this.classList.toggle('active')">Web Development</div>
+                        <div class="bouncy-pill hover-target" onclick="this.classList.toggle('active')">Mobile App</div>
+                        <div class="bouncy-pill hover-target" onclick="this.classList.toggle('active')">Web3 / Crypto</div>
+                        <div class="bouncy-pill hover-target" onclick="this.classList.toggle('active')">AI / Agents</div>
+                        <div class="bouncy-pill hover-target" onclick="this.classList.toggle('active')">Other</div>
+                    </div>
+                </div>
+
+                <!-- Block 3: Budget (Single Select) -->
+                <div class="form-block fade-up">
+                    <label class="form-label"><span>04.</span> What's the budget scope?</label>
+                    <div class="card-grid" id="budgetGrid">
+                        <div class="select-card hover-target budget-option">
+                            <h3>$10k - $25k</h3>
+                            <p>Seed</p>
+                        </div>
+                        <div class="select-card hover-target budget-option">
+                            <h3>$25k - $50k</h3>
+                            <p>Startup</p>
+                        </div>
+                        <div class="select-card hover-target budget-option">
+                            <h3>$50k - $100k+</h3>
+                            <p>Enterprise</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Block 4: Message -->
+                <div class="form-block fade-up">
+                    <label class="form-label"><span>05.</span> Tell us about the vision.</label>
+                    <textarea class="huge-input text-input" placeholder="We are building the next generation of..."></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="submit-area fade-up">
+                    <p class="submit-text">By submitting this form, you're taking the first step towards a digital experience that actually feels alive. We usually respond within 24 hours.</p>
+                    <button type="submit" class="submit-btn hover-target magnetic-btn">Send It ↗</button>
+                </div>
+
+            </form>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+            const hoverTargets = document.querySelectorAll('.hover-target');
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            const textInputs = document.querySelectorAll('.text-input');
+            const budgetOptions = document.querySelectorAll('.budget-option');
+            
+            // --- Cursor Logic ---
+            let mouseX = window.innerWidth / 2; let mouseY = window.innerHeight / 2;
+            let outlineX = mouseX; let outlineY = mouseY;
+            let outlineSize = 40; let hasMoved = false;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX; mouseY = e.clientY;
+                if (!hasMoved) { cursorDot.style.opacity = 1; cursorOutline.style.opacity = 1; outlineX = mouseX; outlineY = mouseY; hasMoved = true; }
+                cursorDot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+            });
+
+            function animateCursor() {
+                const easing = 0.15;
+                outlineX += (mouseX - outlineX) * easing; outlineY += (mouseY - outlineY) * easing;
+                cursorOutline.style.transform = `translate(${outlineX - (outlineSize / 2)}px, ${outlineY - (outlineSize / 2)}px)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Hover States
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => {
+                    outlineSize = 75;
+                    cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
+                    cursorOutline.style.backgroundColor = 'rgba(26, 26, 26, 0.05)';
+                    cursorOutline.style.borderColor = 'transparent';
+                });
+                target.addEventListener('mouseleave', () => {
+                    outlineSize = 40;
+                    cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
+                    cursorOutline.style.backgroundColor = 'transparent';
+                    cursorOutline.style.borderColor = 'var(--text-color)';
+                });
+            });
+
+            // Text Input Hover (I-Beam Effect)
+            textInputs.forEach(input => {
+                input.addEventListener('mouseenter', () => document.body.classList.add('text-hover'));
+                input.addEventListener('mouseleave', () => document.body.classList.remove('text-hover'));
+            });
+
+            // Budget Radio Logic
+            budgetOptions.forEach(card => {
+                card.addEventListener('click', () => {
+                    budgetOptions.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    
+                    // Fun bouncy pop
+                    card.style.transform = 'translateY(-15px) scale(1.05)';
+                    setTimeout(() => {
+                        if(card.classList.contains('active')) {
+                            card.style.transform = 'translateY(-10px) scale(1.02)';
+                        }
+                    }, 200);
+                });
+            });
+
+            // Magnetic Buttons
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const position = btn.getBoundingClientRect();
+                    const x = e.clientX - position.left - position.width / 2;
+                    const y = e.clientY - position.top - position.height / 2;
+                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.1)`;
+                });
+                btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px) scale(1)`);
+            });
+
+            // Form Submit Animation
+            const form = document.getElementById('projectForm');
+            const submitBtn = document.querySelector('.submit-btn');
+            
+            form.addEventListener('submit', (e) => {
+                submitBtn.innerHTML = "Sent! ✓";
+                submitBtn.style.background = "var(--accent-4)";
+                submitBtn.style.color = "var(--text-color)";
+                submitBtn.style.transform = "scale(1)";
+            });
+
+            // Scroll Reveal
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
