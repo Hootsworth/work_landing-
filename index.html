@@ -19,39 +19,6 @@
             --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
-        /* --- DARK MODE VARIABLES --- */
-        [data-theme="dark"] {
-            --bg-color: #111111;
-            --text-color: #faf9f6;
-            --accent-1: #ff6be2; 
-            --accent-2: #ffda33;
-            --accent-3: #5ce1e6;
-            --accent-4: #b5ff5c;
-        }
-
-        /* Smooth transition for theme switching */
-        body, footer, .card, .process-section, .navbar, .marquee-container, h1, h2, h3, p {
-            transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease, transform 0.5s var(--spring), box-shadow 0.4s var(--spring);
-        }
-
-        /* Specific Dark Mode Overrides for Depth */
-        [data-theme="dark"] .card {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        [data-theme="dark"] .process-section {
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-        }
-        [data-theme="dark"] .navbar {
-            background: rgba(17, 17, 17, 0.8);
-        }
-        [data-theme="dark"] .hero-badge {
-            background: rgba(40, 40, 40, 0.5);
-            border: 1px solid rgba(250, 249, 246, 0.2);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -375,7 +342,7 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 144, 232, 0); }
         }
 
-        /* General Buttons */
+        /* General Buttons (Used outside hero) */
         .btn-group { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
         .btn {
             padding: 1rem 2.5rem;
@@ -421,6 +388,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: relative;
             z-index: 10;
+            transition: transform 0.5s var(--spring), background-color 0.5s ease;
         }
         .marquee-container:hover {
             transform: rotate(0deg) scale(1.05) skewX(-5deg);
@@ -472,6 +440,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: box-shadow 0.4s var(--spring), transform 0.5s var(--spring);
             display: flex;
             flex-direction: column;
             gap: 1rem;
@@ -618,86 +587,10 @@
             align-items: center;
             padding-top: 2rem;
             border-top: 1px solid rgba(250, 249, 246, 0.2);
-            opacity: 0.9; /* slightly increased for better visibility with the switch */
+            opacity: 0.7;
         }
         .social-links { display: flex; gap: 1.5rem; }
         .social-links a { color: var(--bg-color); text-decoration: none; }
-
-        /* --- NEO-BRUTALIST LIGHT SWITCH --- */
-        .theme-switch-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 2rem;
-        }
-
-        .neo-switch {
-            position: relative;
-            cursor: none; 
-        }
-
-        .neo-switch input { display: none; }
-
-        .switch-body {
-            width: 86px;
-            height: 44px;
-            background: var(--accent-1);
-            border: 3px solid var(--bg-color); 
-            border-radius: 8px;
-            box-shadow: 5px 5px 0 var(--bg-color);
-            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
-            position: relative;
-        }
-
-        .neo-switch:active .switch-body {
-            transform: translate(5px, 5px);
-            box-shadow: 0px 0px 0 var(--bg-color);
-        }
-
-        .switch-handle {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 32px;
-            height: 32px;
-            background: var(--bg-color);
-            border: 3px solid var(--bg-color);
-            border-radius: 4px;
-            transition: transform 0.5s var(--spring);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .switch-icon {
-            position: absolute;
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--text-color);
-            transition: transform 0.5s var(--spring), opacity 0.3s;
-        }
-
-        .icon-light { transform: translateY(0); opacity: 1; }
-        .icon-dark { transform: translateY(30px); opacity: 0; }
-
-        input:checked + .switch-body {
-            background: var(--accent-3);
-        }
-
-        input:checked + .switch-body .switch-handle {
-            transform: translateX(42px);
-        }
-
-        input:checked + .switch-body .icon-light {
-            transform: translateY(-30px);
-            opacity: 0;
-        }
-
-        input:checked + .switch-body .icon-dark {
-            transform: translateY(0);
-            opacity: 1;
-        }
 
         /* Responsive */
         @media (max-width: 1024px) {
@@ -723,14 +616,14 @@
         
         @media (max-width: 900px) {
             .process-section { grid-template-columns: 1fr; text-align: center; }
-            .nav-links { display: none; }
+            .nav-links { display: none; /* Simplified for mobile demo */ }
             section { padding: 5rem 5%; }
             .process-section .sticker {
                 position: static;
                 margin: 0 auto 1.5rem;
                 opacity: 1;
             }
-            .footer-bottom { flex-direction: column; gap: 2rem; }
+            .footer-bottom { flex-direction: column; gap: 1rem; }
         }
 
         @media (max-width: 600px) {
@@ -746,6 +639,7 @@
             .inline-blob { height: 45px; top: -2px; }
         }
 
+        /* Disable custom cursor on touch devices */
         @media (hover: none) and (pointer: coarse) {
             * { cursor: auto !important; }
             .cursor-dot, .cursor-outline { display: none !important; }
@@ -755,15 +649,18 @@
     </style>
 </head>
 <body>
+    <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
     <nav class="navbar">
         <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
             <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
+                <!-- Logo Mark -->
                 <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
                 <circle cx="10" cy="27" r="6" fill="#ff2d93" />
                 <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
+                <!-- Text -->
                 <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
             </svg>
         </a>
@@ -776,8 +673,11 @@
     </nav>
 
     <main>
+        <!-- REVAMPED HERO SECTION -->
         <header class="hero">
             <div class="hero-layout">
+                
+                <!-- Left/Top Grid Area -->
                 <div class="hero-main fade-up">
                     <div class="hero-badge hover-target">
                         <span class="dot"></span> Digital Studio
@@ -788,6 +688,7 @@
                     </h1>
                 </div>
 
+                <!-- Right/Bottom Grid Area -->
                 <div class="hero-sidebar fade-up" style="transition-delay: 0.2s;">
                     <p>We build digital spaces that feel alive. Discarding rigid templates for bouncy, tactile, and human-centric design.</p>
                     
@@ -803,8 +704,10 @@
                         </a>
                     </div>
                 </div>
+
             </div>
 
+            <!-- Background Abstract Elements -->
             <div class="hero-deco deco-1" aria-hidden="true"></div>
             <div class="hero-deco deco-2" aria-hidden="true"></div>
         </header>
@@ -816,6 +719,7 @@
                 <span>Human-Centric</span><span class="star">✦</span>
                 <span>Minimalist</span><span class="star">✦</span>
                 <span>Singular</span><span class="star">✦</span>
+                <!-- Duplicate for seamless loop -->
                 <span>Innovative</span><span class="star">✦</span>
                 <span>Playful</span><span class="star">✦</span>
                 <span>Human-Centric</span><span class="star">✦</span>
@@ -853,6 +757,7 @@
         </section>
 
         <section class="process-section fade-up">
+            <!-- Sticking with image structure from original, but you can remove if sticker img is absent -->
             <img src="assets/stickers/terminal-manifesto.png" alt="" class="sticker" aria-hidden="true" onerror="this.style.display='none'">
             <div class="process-content">
                 <h2>Design that reacts to you.</h2>
@@ -877,19 +782,6 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Singulr Agency. All rights reserved.</p>
-            
-            <div class="theme-switch-wrapper">
-                <label class="neo-switch hover-target" title="Toggle Dark Mode">
-                    <input type="checkbox" id="theme-toggle">
-                    <div class="switch-body">
-                        <div class="switch-handle">
-                            <span class="switch-icon icon-light">☼</span>
-                            <span class="switch-icon icon-dark">☾</span>
-                        </div>
-                    </div>
-                </label>
-            </div>
-
             <div class="social-links">
                 <a href="#" class="hover-target">Twitter</a>
                 <a href="#" class="hover-target">Dribbble</a>
@@ -901,38 +793,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Dark Mode Logic ---
-            const themeToggle = document.getElementById('theme-toggle');
-            const currentTheme = localStorage.getItem('theme');
-
-            if (currentTheme) {
-                document.documentElement.setAttribute('data-theme', currentTheme);
-                if (currentTheme === 'dark') {
-                    themeToggle.checked = true;
-                }
-            } else {
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    themeToggle.checked = true;
-                }
-            }
-
-            themeToggle.addEventListener('change', function(e) {
-                if (e.target.checked) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    localStorage.setItem('theme', 'light');
-                }
-            });
-
-            // --- 1. Cursor Logic ---
             const cursorDot = document.querySelector('.cursor-dot');
             const cursorOutline = document.querySelector('.cursor-outline');
             const hoverTargets = document.querySelectorAll('.hover-target');
             const magneticBtns = document.querySelectorAll('.magnetic-btn');
             
+            // --- 1. Cursor Logic ---
             let mouseX = window.innerWidth / 2;
             let mouseY = window.innerHeight / 2;
             let outlineX = mouseX;
@@ -972,6 +838,7 @@
                 const y = (e.clientY / window.innerHeight - 0.5) * 60;
                 
                 if (deco1 && deco2) {
+                    // Slight opposing movements for depth
                     deco1.style.transform = `translate(${x}px, ${y}px)`;
                     deco2.style.transform = `translate(${-x}px, ${-y}px)`;
                 }
@@ -984,6 +851,7 @@
                     cursorOutline.style.width = `${outlineSize}px`;
                     cursorOutline.style.height = `${outlineSize}px`;
                     
+                    // Specific logic if hovering over the dark footer or marquee
                     const isDarkSection = target.closest('footer') || target.classList.contains('marquee-container');
                     
                     if (isDarkSection) {
@@ -1016,10 +884,12 @@
                     const position = btn.getBoundingClientRect();
                     const x = e.clientX - position.left - position.width / 2;
                     const y = e.clientY - position.top - position.height / 2;
+                    // Moves the button slightly towards the mouse
                     btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
                 });
 
                 btn.addEventListener('mouseleave', () => {
+                    // Resets position smoothly due to CSS transition
                     btn.style.transform = `translate(0px, 0px) scale(1)`;
                 });
             });
@@ -1029,12 +899,13 @@
             cards.forEach(card => {
                 card.addEventListener('mousemove', (e) => {
                     const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left; 
-                    const y = e.clientY - rect.top;  
+                    const x = e.clientX - rect.left; // x position within the card
+                    const y = e.clientY - rect.top;  // y position within the card
                     
                     const centerX = rect.width / 2;
                     const centerY = rect.height / 2;
                     
+                    // Calculate rotation depending on mouse position (max 10 degrees)
                     const rotateX = ((y - centerY) / centerY) * -10;
                     const rotateY = ((x - centerX) / centerX) * 10;
                     
@@ -1047,6 +918,7 @@
                 });
                 
                 card.addEventListener('mouseenter', () => {
+                    // Remove transition while actively moving so it tracks the mouse instantly
                     card.style.transition = 'box-shadow 0.4s var(--spring)';
                 });
             });
@@ -1055,14 +927,14 @@
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.15 
+                threshold: 0.15 // Trigger when 15% of element is visible
             };
 
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
+                        observer.unobserve(entry.target); // Only animate once
                     }
                 });
             }, observerOptions);
@@ -1074,3 +946,4 @@
     </script>
 </body>
 </html>
+index.html
