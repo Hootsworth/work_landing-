@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Singulr - Digital Experiences</title>
+    <title>About Singulr - Digital Agency</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,7 +23,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none; /* Hiding default cursor for our custom one */
+            cursor: none; 
         }
 
         body {
@@ -36,7 +36,6 @@
             flex-direction: column;
         }
 
-        /* Custom Cursor */
         .cursor-dot, .cursor-outline {
             position: fixed;
             top: 0; left: 0;
@@ -58,10 +57,9 @@
             transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease;
         }
 
-        /* Typography & Utilities */
         h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
         .highlight {
-            background: linear-gradient(120deg, var(--accent-1), var(--accent-2));
+            background: linear-gradient(120deg, var(--accent-3), var(--accent-1));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
@@ -69,7 +67,6 @@
         }
         section { padding: 8rem 5%; }
         
-        /* Scroll Animations */
         .fade-up {
             opacity: 0;
             transform: translateY(40px);
@@ -80,7 +77,6 @@
             transform: translateY(0);
         }
 
-        /* Navigation */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -119,7 +115,6 @@
         }
         .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 
-        /* Hero Section */
         .hero {
             text-align: center;
             padding: 12rem 5% 6rem;
@@ -129,10 +124,20 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 90vh;
+        }
+        .hero-tag {
+            font-weight: 800;
+            color: var(--accent-3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            background: rgba(144, 232, 255, 0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
         }
         .hero h1 {
-            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-size: clamp(3rem, 7vw, 6rem);
             line-height: 1.05;
             margin-bottom: 1.5rem;
             letter-spacing: -3px;
@@ -140,13 +145,11 @@
         .hero p {
             font-size: clamp(1.2rem, 2vw, 1.5rem);
             opacity: 0.7;
-            margin-bottom: 3rem;
-            max-width: 600px;
+            max-width: 700px;
             font-weight: 300;
+            line-height: 1.6;
         }
 
-        /* Buttons */
-        .btn-group { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
         .btn {
             padding: 1rem 2.5rem;
             font-size: 1.1rem;
@@ -165,141 +168,148 @@
         .btn-primary:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 15px 25px rgba(0,0,0,0.15);
-            background-color: var(--accent-1);
-            border-color: var(--accent-1);
+            background-color: var(--accent-3);
+            border-color: var(--accent-3);
             color: var(--text-color);
-        }
-        .btn-outline {
-            background-color: transparent;
-            color: var(--text-color);
-        }
-        .btn-outline:hover {
-            transform: translateY(-5px) scale(1.05);
-            background-color: var(--text-color);
-            color: var(--bg-color);
         }
 
-        /* Infinite Marquee */
-        .marquee-container {
-            width: 100%;
+        .manifesto-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+            background: #fff;
+            border-radius: 40px;
+            margin: 0 5%;
+            padding: 6rem 5%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+        }
+        .manifesto-content h2 {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            margin-bottom: 2rem;
+            line-height: 1.1;
+        }
+        .manifesto-content p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .physics-playground {
+            position: relative;
+            height: 450px;
+            background: var(--bg-color);
+            border-radius: 30px;
             overflow: hidden;
-            background: var(--text-color);
-            color: var(--bg-color);
-            padding: 2rem 0;
-            transform: rotate(-2deg) scale(1.05);
-            margin: 4rem 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .marquee-content {
             display: flex;
-            white-space: nowrap;
-            animation: marquee 20s linear infinite;
-            font-size: 2rem;
-            font-weight: 800;
-            text-transform: uppercase;
+            justify-content: center;
+            align-items: center;
         }
-        .marquee-content span { margin: 0 2vw; }
-        .marquee-content span.star { color: var(--accent-2); }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .toy {
+            position: absolute;
+            transition: transform 0.8s var(--spring), border-radius 0.4s ease;
+            mix-blend-mode: multiply;
         }
-
-        /* Services Section */
-        .services-header { text-align: center; margin-bottom: 4rem; }
-        .services-header h2 { font-size: clamp(2.5rem, 5vw, 4rem); }
+        .toy-1 { width: 180px; height: 180px; background: var(--accent-1); border-radius: 40px; transform: translate(-40px, -20px) rotate(-15deg); }
+        .toy-2 { width: 140px; height: 140px; background: var(--accent-2); border-radius: 50%; transform: translate(50px, 40px); }
+        .toy-3 { width: 120px; height: 120px; background: var(--accent-3); border-radius: 20px; transform: translate(-10px, -80px) rotate(25deg); }
         
+        .physics-playground:hover .toy-1 { transform: translate(-80px, -60px) rotate(-45deg) scale(1.1); border-radius: 50%; }
+        .physics-playground:hover .toy-2 { transform: translate(90px, 80px) scale(1.2); border-radius: 20px; }
+        .physics-playground:hover .toy-3 { transform: translate(20px, -120px) rotate(90deg); border-radius: 50%; }
+
+        .values-header { text-align: center; margin-bottom: 4rem; }
+        .values-header h2 { font-size: clamp(2.5rem, 5vw, 4rem); }
+
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2.5rem;
             max-width: 1200px;
             margin: 0 auto;
         }
         .card {
             background: #fff;
-            padding: 3rem 2rem;
-            border-radius: 30px;
+            padding: 4rem 2.5rem;
+            border-radius: 40px;
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.03);
             transition: transform 0.4s var(--spring), box-shadow 0.4s var(--spring);
+            text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            align-items: center;
         }
         .card:hover {
             transform: translateY(-15px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.08);
         }
-        /* Alternate hover rotations for playfulness */
-        .card:nth-child(odd):hover { transform: translateY(-15px) rotate(2deg); }
-        .card:nth-child(even):hover { transform: translateY(-15px) rotate(-2deg); }
-        
-        .card h3 { position: relative; z-index: 2; font-size: 1.8rem; }
-        .card p { position: relative; z-index: 2; opacity: 0.7; line-height: 1.6; }
+        .card:nth-child(1):hover { transform: translateY(-15px) rotate(2deg); }
+        .card:nth-child(2):hover { transform: translateY(-15px) rotate(-2deg); }
+        .card:nth-child(3):hover { transform: translateY(-15px) rotate(1deg); }
 
-        /* Background Blobs for Cards */
-        .blob {
-            position: absolute;
-            width: 150px;
-            height: 150px;
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-color);
             border-radius: 50%;
-            top: -40px;
-            right: -40px;
-            opacity: 0.3;
-            transition: transform 0.6s var(--spring), opacity 0.3s;
-            filter: blur(20px);
-        }
-        .card:hover .blob {
-            transform: scale(2.5) translate(-10px, 10px);
-            opacity: 0.8;
-            filter: blur(30px);
-        }
-        .blob-1 { background-color: var(--accent-1); }
-        .blob-2 { background-color: var(--accent-2); }
-        .blob-3 { background-color: var(--accent-3); }
-        .blob-4 { background-color: var(--accent-4); }
-
-        /* Interactive Process Section */
-        .process-section {
-            background-color: #fff;
-            border-radius: 40px;
-            margin: 2rem 5%;
-            padding: 6rem 5%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-        .process-content h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1.5rem; }
-        .process-content p { font-size: 1.2rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.8; }
-        
-        /* Interactive Abstract Art */
-        .art-container {
-            position: relative;
-            height: 400px;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
         }
-        .shape {
+        .card h3 { position: relative; z-index: 2; font-size: 2rem; margin-bottom: 1rem; }
+        .card p { position: relative; z-index: 2; opacity: 0.7; line-height: 1.6; }
+
+        .blob {
             position: absolute;
             width: 200px;
             height: 200px;
-            border-radius: 40px;
-            mix-blend-mode: multiply;
-            transition: transform 0.6s var(--spring), border-radius 0.4s ease;
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+            opacity: 0.2;
+            transition: transform 0.6s var(--spring), opacity 0.3s;
+            filter: blur(25px);
         }
-        .shape-1 { background: var(--accent-1); transform: translate(-20px, -20px) rotate(-10deg); }
-        .shape-2 { background: var(--accent-2); transform: translate(20px, 20px) rotate(15deg); }
-        .shape-3 { background: var(--accent-3); transform: translate(0, 0) rotate(45deg); border-radius: 50%; width: 150px; height: 150px; }
-        
-        .art-container:hover .shape-1 { transform: translate(-60px, -60px) rotate(-25deg); border-radius: 20px; }
-        .art-container:hover .shape-2 { transform: translate(60px, 60px) rotate(30deg); border-radius: 50%; }
-        .art-container:hover .shape-3 { transform: translate(0, -80px) scale(1.2); border-radius: 20px; }
+        .card:hover .blob {
+            transform: scale(2) translate(-10px, 10px);
+            opacity: 0.6;
+        }
+        .blob-1 { background-color: var(--accent-1); }
+        .blob-2 { background-color: var(--accent-4); }
+        .blob-3 { background-color: var(--accent-2); }
 
-        /* Footer / Big CTA */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background: var(--text-color);
+            color: var(--bg-color);
+            padding: 3rem 0;
+            transform: rotate(2deg) scale(1.05);
+            margin: 6rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: marquee 25s linear infinite;
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .marquee-content span { margin: 0 2vw; }
+        .marquee-content span.star { color: var(--accent-1); }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         footer {
             padding: 8rem 5% 4rem;
             text-align: center;
@@ -310,20 +320,20 @@
             margin-top: 4rem;
         }
         footer h2 {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(3rem, 7vw, 5.5rem);
             margin-bottom: 3rem;
             color: var(--bg-color);
         }
         .footer-btn {
-            font-size: 2rem;
-            padding: 1.5rem 4rem;
+            font-size: 1.5rem;
+            padding: 1.5rem 3.5rem;
             background: var(--bg-color);
             color: var(--text-color);
             border-color: var(--bg-color);
         }
         .footer-btn:hover {
-            background: var(--accent-2);
-            border-color: var(--accent-2);
+            background: var(--accent-4);
+            border-color: var(--accent-4);
         }
         .footer-bottom {
             margin-top: 8rem;
@@ -333,108 +343,110 @@
             padding-top: 2rem;
             border-top: 1px solid rgba(250, 249, 246, 0.2);
             opacity: 0.7;
+            font-weight: 300;
         }
         .social-links { display: flex; gap: 1.5rem; }
-        .social-links a { color: var(--bg-color); text-decoration: none; }
+        .social-links a { color: var(--bg-color); text-decoration: none; font-weight: 600; }
 
-        /* Responsive */
         @media (max-width: 900px) {
-            .process-section { grid-template-columns: 1fr; text-align: center; }
-            .nav-links { display: none; /* Simplified for mobile demo */ }
+            .nav-links { display: none; }
             section { padding: 5rem 5%; }
+            .manifesto-section { grid-template-columns: 1fr; margin: 0; border-radius: 0; padding: 4rem 5%; }
+            .physics-playground { height: 300px; }
             .footer-bottom { flex-direction: column; gap: 1rem; }
         }
 
-        /* Disable custom cursor on touch devices */
         @media (hover: none) and (pointer: coarse) {
             * { cursor: auto !important; }
             .cursor-dot, .cursor-outline { display: none !important; }
             .card:hover { transform: translateY(-5px); }
-            .shape { mix-blend-mode: normal; opacity: 0.8; }
+            .toy { mix-blend-mode: normal; }
         }
     </style>
 </head>
 <body>
-    <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
     <nav class="navbar">
         <a href="index.html" class="logo hover-target">Singulr<span>.</span></a>
         <ul class="nav-links">
-            <li><a href="#services" class="hover-target">Services</a></li>
+            <li><a href="index.html#services" class="hover-target">Services</a></li>
             <li><a href="work.html" class="hover-target">Work</a></li>
-            <li><a href="about.html" class="hover-target">Agency</a></li>
+            <li><a href="about.html" class="hover-target active">Agency</a></li>
             <li><a href="#contact" class="hover-target">Contact</a></li>
         </ul>
     </nav>
 
     <main>
         <header class="hero fade-up">
-            <h1>The singular solution for <span class="highlight hover-target">digital play.</span></h1>
-            <p>We are a digital product agency that builds brands, websites, and apps with an obsessive focus on tactile, human-centric design.</p>
-            <div class="btn-group">
-                <a href="#contact" class="btn btn-primary hover-target magnetic-btn">Start a Project</a>
-                <a href="work.html" class="btn btn-outline hover-target magnetic-btn">View Our Work</a>
-            </div>
+            <div class="hero-tag hover-target">Who we are</div>
+            <h1>Rebelling against the <br><span class="highlight hover-target">boring web.</span></h1>
+            <p>We are a tight-knit team of designers, engineers, and motion obsessives. We believe that interacting with a screen should feel just as satisfying as popping bubble wrap.</p>
         </header>
+
+        <section style="padding-top: 0;">
+            <div class="manifesto-section fade-up">
+                <div class="manifesto-content">
+                    <h2>The internet got too stiff.</h2>
+                    <p>Somewhere along the line, web design became an exercise in filling rigid boxes with perfectly aligned text. Everything became a template. Everything stopped reacting to the user.</p>
+                    <p><strong>Singulr was founded to bring physics back to the screen.</strong></p>
+                    <p>We build digital experiences that stretch, bounce, and follow you around. We engineer interactions that make your users smile, because memorable brands aren't built on grids—they're built on feeling.</p>
+                </div>
+                <div class="physics-playground hover-target">
+                    <div class="toy toy-1"></div>
+                    <div class="toy toy-2"></div>
+                    <div class="toy toy-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="values">
+            <div class="values-header fade-up">
+                <h2>Our DNA.</h2>
+            </div>
+            <div class="card-grid">
+                
+                <div class="card hover-target fade-up">
+                    <div class="blob blob-1"></div>
+                    <div class="card-icon">👆</div>
+                    <h3>Tactile</h3>
+                    <p>Buttons should feel magnetic. Menus should snap. We design interfaces that give the user immediate, satisfying feedback with every click and hover.</p>
+                </div>
+
+                <div class="card hover-target fade-up" style="transition-delay: 0.1s;">
+                    <div class="blob blob-2"></div>
+                    <div class="card-icon">🎾</div>
+                    <h3>Bouncy</h3>
+                    <p>We reject linear animations. Using advanced cubic-bezier curves and spring physics, we ensure that our digital products feel organically alive.</p>
+                </div>
+
+                <div class="card hover-target fade-up" style="transition-delay: 0.2s;">
+                    <div class="blob blob-3"></div>
+                    <div class="card-icon">🧠</div>
+                    <h3>Human</h3>
+                    <p>Technology should adapt to people, not the other way around. We build intuitive flows that require zero cognitive load to navigate.</p>
+                </div>
+
+            </div>
+        </section>
 
         <div class="marquee-container hover-target">
             <div class="marquee-content">
-                <span>Innovative</span><span class="star">✦</span>
-                <span>Playful</span><span class="star">✦</span>
-                <span>Human-Centric</span><span class="star">✦</span>
-                <span>Minimalist</span><span class="star">✦</span>
-                <span>Singular</span><span class="star">✦</span>
-                <!-- Duplicate for seamless loop -->
-                <span>Innovative</span><span class="star">✦</span>
-                <span>Playful</span><span class="star">✦</span>
-                <span>Human-Centric</span><span class="star">✦</span>
-                <span>Minimalist</span><span class="star">✦</span>
-                <span>Singular</span><span class="star">✦</span>
+                <span>No Templates</span><span class="star">✦</span>
+                <span>Custom Code</span><span class="star">✦</span>
+                <span>Physics First</span><span class="star">✦</span>
+                <span>Make It Pop</span><span class="star">✦</span>
+                <span>Stay Playful</span><span class="star">✦</span>
+                <!-- Duplicate for loop -->
+                <span>No Templates</span><span class="star">✦</span>
+                <span>Custom Code</span><span class="star">✦</span>
+                <span>Physics First</span><span class="star">✦</span>
+                <span>Make It Pop</span><span class="star">✦</span>
+                <span>Stay Playful</span><span class="star">✦</span>
             </div>
         </div>
 
-        <section class="services" id="services">
-            <div class="services-header fade-up">
-                <h2>What we do.</h2>
-            </div>
-            <div class="card-grid">
-                <div class="card hover-target fade-up">
-                    <div class="blob blob-1"></div>
-                    <h3>Strategy</h3>
-                    <p>We lay the foundation. Deep research and product positioning that ensures your brand stands out in a crowded market.</p>
-                </div>
-                <div class="card hover-target fade-up" style="transition-delay: 0.1s;">
-                    <div class="blob blob-2"></div>
-                    <h3>Design</h3>
-                    <p>Interfaces that feel alive. We craft visual languages that are not only beautiful but incredibly satisfying to interact with.</p>
-                </div>
-                <div class="card hover-target fade-up" style="transition-delay: 0.2s;">
-                    <div class="blob blob-3"></div>
-                    <h3>Development</h3>
-                    <p>Pixel-perfect execution. Our code is clean, performant, and brings our bouncy, tactile designs to reality on any device.</p>
-                </div>
-                <div class="card hover-target fade-up" style="transition-delay: 0.3s;">
-                    <div class="blob blob-4"></div>
-                    <h3>Growth</h3>
-                    <p>Continuous evolution. We iterate based on data and user feedback to scale your product sustainably and rapidly.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="process-section fade-up">
-            <div class="process-content">
-                <h2>Design that reacts to you.</h2>
-                <p>We believe the web has become too stiff. Everything is a rigid box. At Singulr, we use physics-based animations, organic shapes, and unexpected micro-interactions to make digital spaces feel like physical playgrounds.</p>
-                <a href="about.html" class="btn btn-outline hover-target magnetic-btn">Learn our process</a>
-            </div>
-            <div class="art-container hover-target">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
-            </div>
-        </section>
     </main>
 
     <footer id="contact">
@@ -459,7 +471,7 @@
             const hoverTargets = document.querySelectorAll('.hover-target');
             const magneticBtns = document.querySelectorAll('.magnetic-btn');
             
-            // --- 1. Cursor Logic ---
+            // Cursor Logic
             let mouseX = window.innerWidth / 2;
             let mouseY = window.innerHeight / 2;
             let outlineX = mouseX;
@@ -493,18 +505,16 @@
             // Cursor Hover States
             hoverTargets.forEach(target => {
                 target.addEventListener('mouseenter', () => {
-                    outlineSize = 70;
+                    outlineSize = 75;
                     cursorOutline.style.width = `${outlineSize}px`;
                     cursorOutline.style.height = `${outlineSize}px`;
                     
-                    // Specific logic if hovering over the dark footer or marquee
                     const isDarkSection = target.closest('footer') || target.classList.contains('marquee-container');
-                    
                     if (isDarkSection) {
-                        cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.2)';
+                        cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.15)';
                         cursorOutline.style.borderColor = 'transparent';
                     } else {
-                        cursorOutline.style.backgroundColor = 'rgba(26, 26, 26, 0.06)';
+                        cursorOutline.style.backgroundColor = 'rgba(26, 26, 26, 0.05)';
                         cursorOutline.style.borderColor = 'transparent';
                     }
                 });
@@ -524,41 +534,32 @@
                 });
             });
 
-            // --- 2. Magnetic Buttons ---
+            // Magnetic Buttons
             magneticBtns.forEach(btn => {
                 btn.addEventListener('mousemove', (e) => {
                     const position = btn.getBoundingClientRect();
                     const x = e.clientX - position.left - position.width / 2;
                     const y = e.clientY - position.top - position.height / 2;
-                    // Moves the button slightly towards the mouse
                     btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
                 });
 
                 btn.addEventListener('mouseleave', () => {
-                    // Resets position smoothly due to CSS transition
                     btn.style.transform = `translate(0px, 0px) scale(1)`;
                 });
             });
 
-            // --- 3. Scroll Reveal Animations ---
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.15 // Trigger when 15% of element is visible
-            };
-
+            // Scroll Reveal
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        observer.unobserve(entry.target); // Only animate once
+                        observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
 
-            document.querySelectorAll('.fade-up').forEach(el => {
-                observer.observe(el);
-            });
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
         });
     </script>
 </body>
