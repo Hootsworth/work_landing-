@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aditya - Work Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --text-color: #1a1a1a;
+            --accent-1: #ff90e8;
+            --accent-2: #ffc900;
+            --accent-3: #90e8ff;
+            --accent-4: #c9ff90;
+
+            /* Bouncy animation curve */
+            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Custom cursor */
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            will-change: transform, width, height;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-color);
+        }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--text-color);
+            transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease;
+        }
+
+        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
+        .highlight {
+            background: linear-gradient(120deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            padding: 0 0.2rem;
+        }
+        section { padding: 8rem 5%; }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s var(--smooth), transform 0.8s var(--smooth);
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 2rem 5%;
+            align-items: center;
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(250, 249, 246, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            user-select: none;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+        .logo span { color: var(--accent-1); }
+
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute;
+            bottom: 0px; left: 0;
+            width: 0%; height: 3px;
+            background-color: var(--accent-1);
+            transition: width 0.3s var(--spring);
+            border-radius: 2px;
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        .hero {
+            text-align: center;
+            padding: 12rem 5% 6rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        .hero-tag {
+            font-weight: 800;
+            color: var(--accent-1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -3px;
+        }
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            opacity: 0.7;
+            margin-bottom: 3rem;
+            max-width: 650px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: inherit;
+            border-radius: 50px;
+            transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring), background 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            border: 2px solid var(--text-color);
+        }
+        .btn-primary {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+            background-color: var(--accent-1);
+            border-color: var(--accent-1);
+            color: var(--text-color);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #fff;
+            padding: 3.5rem 2.5rem;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: transform 0.4s var(--spring), box-shadow 0.4s var(--spring);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+        .card:nth-child(odd):hover { transform: translateY(-15px) rotate(1.5deg); }
+        .card:nth-child(even):hover { transform: translateY(-15px) rotate(-1.5deg); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-tag {
+            background: rgba(0,0,0,0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-arrow {
+            font-size: 1.5rem;
+            font-weight: 800;
+            transition: transform 0.3s var(--spring);
+        }
+        .card:hover .card-arrow { transform: translate(5px, -5px) scale(1.2); }
+
+        .card h3 { position: relative; z-index: 2; font-size: 2.2rem; }
+        .card p { position: relative; z-index: 2; opacity: 0.7; line-height: 1.6; font-size: 1.05rem; }
+
+        .card-metrics {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+            border-left: 3px solid rgba(0,0,0,0.1);
+            padding-left: 1rem;
+        }
+        .metric-val { font-weight: 800; font-size: 1.2rem; }
+        .metric-label { font-size: 0.8rem; opacity: 0.6; font-weight: 600; text-transform: uppercase; }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 2;
+            margin-top: auto;
+        }
+        .tech-tag {
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--bg-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .blob {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+            opacity: 0.15;
+            transition: transform 0.6s var(--spring), opacity 0.3s;
+            filter: blur(30px);
+            pointer-events: none;
+        }
+        .card:hover .blob {
+            transform: scale(1.8) translate(-10px, 10px);
+            opacity: 0.4;
+        }
+        .blob-1 { background-color: var(--accent-1); }
+        .blob-2 { background-color: var(--accent-3); }
+        .blob-3 { background-color: var(--accent-2); }
+        .blob-4 { background-color: var(--accent-4); }
+
+        footer {
+            padding: 8rem 5% 4rem;
+            text-align: center;
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            border-top-left-radius: 60px;
+            border-top-right-radius: 60px;
+            margin-top: 4rem;
+        }
+        footer h2 {
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            margin-bottom: 3rem;
+            color: var(--bg-color);
+        }
+        .footer-btn {
+            font-size: 1.5rem;
+            padding: 1.5rem 3.5rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border-color: var(--bg-color);
+        }
+        .footer-btn:hover {
+            background: var(--accent-4);
+            border-color: var(--accent-4);
+        }
+        .footer-bottom {
+            margin-top: 8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(250, 249, 246, 0.2);
+            opacity: 0.7;
+            font-weight: 300;
+        }
+        .social-links { display: flex; gap: 1.5rem; }
+        .social-links a { color: var(--bg-color); text-decoration: none; font-weight: 600; }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            section { padding: 5rem 5%; }
+            .card-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 1rem; }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            * { cursor: auto !important; }
+            .cursor-dot, .cursor-outline { display: none !important; }
+            .card:hover { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo hover-target">Aditya<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="work.html" class="hover-target active">Work</a></li>
+            <li><a href="#" class="hover-target">About</a></li>
+            <li><a href="#" class="hover-target">Experience</a></li>
+            <li><a href="#" class="hover-target">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <header class="hero fade-up">
+            <div class="hero-tag hover-target">Archive &amp; Case Studies</div>
+            <h1>Selected <span class="highlight hover-target">Work.</span></h1>
+            <p>A deep dive into systems, autonomous agents, and AI safety infrastructure. Built for reliability, engineered for the real world-now with a bouncy, satisfying interface.</p>
+        </header>
+
+        <section class="projects">
+            <div class="card-grid">
+                <a href="https://github.com/Hootsworth/wiggle" target="_blank" rel="noopener noreferrer" class="card hover-target fade-up">
+                    <div class="blob blob-1"></div>
+                    <div class="card-header">
+                        <span class="card-tag" style="color: var(--accent-1); background: rgba(255, 144, 232, 0.15);">★ Flagship</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                    <h3>Wiggle AI</h3>
+                    <div class="card-metrics">
+                        <div>
+                            <div class="metric-val">Multi-modal</div>
+                            <div class="metric-label">Architecture</div>
+                        </div>
+                        <div>
+                            <div class="metric-val">Local + Cloud</div>
+                            <div class="metric-label">Compute</div>
+                        </div>
+                    </div>
+                    <p>A powerful browser extension that upgrades your standard cursor into a multi-modal AI agent. Features live DOM rewriting, ghost autofill, swarm web research, and a Set-of-Mark vision agent.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Browser Extension</span>
+                        <span class="tech-tag">Gemini API</span>
+                        <span class="tech-tag">DOM Manipulation</span>
+                    </div>
+                </a>
+
+                <a href="https://github.com/Hootsworth/cortexKit" target="_blank" rel="noopener noreferrer" class="card hover-target fade-up" style="transition-delay: 0.1s;">
+                    <div class="blob blob-2"></div>
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #00b4d8; background: rgba(144, 232, 255, 0.2);">Agent Infra</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                    <h3>Cortex Kit</h3>
+                    <div class="card-metrics">
+                        <div>
+                            <div class="metric-val">0</div>
+                            <div class="metric-label">Test Failures</div>
+                        </div>
+                        <div>
+                            <div class="metric-val">SHA-256</div>
+                            <div class="metric-label">Plan Hashing</div>
+                        </div>
+                    </div>
+                    <p>An 8-package modular toolkit for agent memory, planning, and execution. Implements 'Phantom Run' for reproducible multi-step execution using secure cryptographic hashing.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Cognitive Infra</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Open Source</span>
+                    </div>
+                </a>
+
+                <a href="https://github.com/Hootsworth/XRisk" target="_blank" rel="noopener noreferrer" class="card hover-target fade-up">
+                    <div class="blob blob-3"></div>
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #d4a700; background: rgba(255, 201, 0, 0.15);">AI Safety</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                    <h3>XRisk Engine</h3>
+                    <div class="card-metrics">
+                        <div>
+                            <div class="metric-val">100%</div>
+                            <div class="metric-label">Pass Rate</div>
+                        </div>
+                        <div>
+                            <div class="metric-val">6-Signal</div>
+                            <div class="metric-label">Risk Model</div>
+                        </div>
+                    </div>
+                    <p>An open-source policy enforcement layer for LLM agents. Features 3 decision states and a comprehensive weighted risk model. Defends against prompt injections and jailbreaks.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">LLM Safety</span>
+                        <span class="tech-tag">Risk Scoring</span>
+                        <span class="tech-tag">Security</span>
+                    </div>
+                </a>
+
+                <a href="https://github.com/Hootsworth/Firefly" target="_blank" rel="noopener noreferrer" class="card hover-target fade-up" style="transition-delay: 0.1s;">
+                    <div class="blob blob-4"></div>
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #7ab300; background: rgba(201, 255, 144, 0.3);">Systems</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                    <h3>Firefly</h3>
+                    <div class="card-metrics">
+                        <div>
+                            <div class="metric-val">Desktop</div>
+                            <div class="metric-label">Environment</div>
+                        </div>
+                        <div>
+                            <div class="metric-val">Delta</div>
+                            <div class="metric-label">Analysis</div>
+                        </div>
+                    </div>
+                    <p>Deterministic performance diagnostics tool utilizing expected-time modeling versus observed behavior. Provides plain-language diagnosis cards and visual system design.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Rust</span>
+                        <span class="tech-tag">Tauri</span>
+                        <span class="tech-tag">Diagnostics</span>
+                    </div>
+                </a>
+
+                <a href="https://github.com/Hootsworth/DQL_Game" target="_blank" rel="noopener noreferrer" class="card hover-target fade-up" style="grid-column: 1 / -1;">
+                    <div class="blob blob-1" style="width: 400px; height: 400px; top: -100px; right: -50px; background-color: var(--accent-1);"></div>
+                    <div class="blob blob-2" style="width: 300px; height: 300px; bottom: -50px; left: -50px; top: auto; right: auto; background-color: var(--accent-3);"></div>
+                    <div class="card-header">
+                        <span class="card-tag" style="color: var(--text-color); background: rgba(0,0,0,0.08);">Machine Learning</span>
+                        <span class="card-arrow">↗</span>
+                    </div>
+                    <h3>DQL Agents</h3>
+                    <div class="card-metrics">
+                        <div>
+                            <div class="metric-val">100%</div>
+                            <div class="metric-label">Eval Success</div>
+                        </div>
+                        <div>
+                            <div class="metric-val">+5.95</div>
+                            <div class="metric-label">Reward Delta</div>
+                        </div>
+                    </div>
+                    <p style="max-width: 800px;">Custom Deep Q-learning agents built entirely from scratch to conquer classic grid-based games like Pac-Man, Minesweeper, and Snake. The Pac-Man agent achieved a flawless success rate during formal evaluation, utilizing sophisticated experience replay mechanics.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">PyTorch</span>
+                        <span class="tech-tag">Deep RL</span>
+                        <span class="tech-tag">Experience Replay</span>
+                        <span class="tech-tag">Python</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="fade-up">
+            <h2 class="hover-target">Let's build <br><span class="highlight">something real.</span></h2>
+            <a href="mailto:adityapdixit6626@gmail.com" class="btn btn-primary footer-btn hover-target magnetic-btn">Say Hello</a>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Aditya P Dixit. Bengaluru, India.</p>
+            <div class="social-links">
+                <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer" class="hover-target">GitHub</a>
+                <a href="https://linkedin.com/in/aditya-p-dixit" target="_blank" rel="noopener noreferrer" class="hover-target">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+            const hoverTargets = document.querySelectorAll('.hover-target');
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+
+            // Cursor Logic
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let outlineX = mouseX;
+            let outlineY = mouseY;
+            let outlineSize = 40;
+            let hasMoved = false;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                if (!hasMoved) {
+                    cursorDot.style.opacity = 1;
+                    cursorOutline.style.opacity = 1;
+                    outlineX = mouseX;
+                    outlineY = mouseY;
+                    hasMoved = true;
+                }
+                cursorDot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+            });
+
+            function animateCursor() {
+                const easing = 0.15;
+                outlineX += (mouseX - outlineX) * easing;
+                outlineY += (mouseY - outlineY) * easing;
+                cursorOutline.style.transform = `translate(${outlineX - (outlineSize / 2)}px, ${outlineY - (outlineSize / 2)}px)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Cursor Hover States
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => {
+                    outlineSize = 75;
+                    cursorOutline.style.width = `${outlineSize}px`;
+                    cursorOutline.style.height = `${outlineSize}px`;
+
+                    const isDarkSection = target.closest('footer');
+                    if (isDarkSection) {
+                        cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.15)';
+                        cursorOutline.style.borderColor = 'transparent';
+                    } else {
+                        cursorOutline.style.backgroundColor = 'rgba(26, 26, 26, 0.05)';
+                        cursorOutline.style.borderColor = 'transparent';
+                    }
+                });
+
+                target.addEventListener('mouseleave', () => {
+                    outlineSize = 40;
+                    cursorOutline.style.width = `${outlineSize}px`;
+                    cursorOutline.style.height = `${outlineSize}px`;
+                    cursorOutline.style.backgroundColor = 'transparent';
+
+                    const isDarkSection = target.closest('footer');
+                    if (isDarkSection) {
+                        cursorOutline.style.borderColor = 'var(--bg-color)';
+                    } else {
+                        cursorOutline.style.borderColor = 'var(--text-color)';
+                    }
+                });
+            });
+
+            // Magnetic Buttons
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const position = btn.getBoundingClientRect();
+                    const x = e.clientX - position.left - position.width / 2;
+                    const y = e.clientY - position.top - position.height / 2;
+                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = `translate(0px, 0px) scale(1)`;
+                });
+            });
+
+            // Scroll Reveal
+            const observerOptions = {
+                root: null, rootMargin: '0px', threshold: 0.15
+            };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

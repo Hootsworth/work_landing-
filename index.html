@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singulr - Digital Experiences</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #faf9f6;
+            --text-color: #1a1a1a;
+            --accent-1: #ff90e8;
+            --accent-2: #ffc900;
+            --accent-3: #90e8ff;
+            --accent-4: #c9ff90;
+            
+            /* Bouncy animation curve */
+            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Hiding default cursor for our custom one */
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            will-change: transform, width, height;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-color);
+        }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--text-color);
+            transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease;
+        }
+
+        /* Typography & Utilities */
+        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
+        .highlight {
+            background: linear-gradient(120deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            padding: 0 0.2rem;
+        }
+        section { padding: 8rem 5%; }
+        
+        /* Scroll Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s var(--smooth), transform 0.8s var(--smooth);
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 2rem 5%;
+            align-items: center;
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(250, 249, 246, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            user-select: none;
+        }
+        .logo span { color: var(--accent-1); }
+        
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute;
+            bottom: 0px; left: 0;
+            width: 0%; height: 3px;
+            background-color: var(--accent-1);
+            transition: width 0.3s var(--spring);
+            border-radius: 2px;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 12rem 5% 6rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+        }
+        .hero h1 {
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -3px;
+        }
+        .hero p {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            opacity: 0.7;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            font-weight: 300;
+        }
+
+        /* Buttons */
+        .btn-group { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: inherit;
+            border-radius: 50px;
+            transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring), background 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            border: 2px solid var(--text-color);
+        }
+        .btn-primary {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+            background-color: var(--accent-1);
+            border-color: var(--accent-1);
+            color: var(--text-color);
+        }
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-color);
+        }
+        .btn-outline:hover {
+            transform: translateY(-5px) scale(1.05);
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* Infinite Marquee */
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background: var(--text-color);
+            color: var(--bg-color);
+            padding: 2rem 0;
+            transform: rotate(-2deg) scale(1.05);
+            margin: 4rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: marquee 20s linear infinite;
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .marquee-content span { margin: 0 2vw; }
+        .marquee-content span.star { color: var(--accent-2); }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Services Section */
+        .services-header { text-align: center; margin-bottom: 4rem; }
+        .services-header h2 { font-size: clamp(2.5rem, 5vw, 4rem); }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #fff;
+            padding: 3rem 2rem;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: transform 0.4s var(--spring), box-shadow 0.4s var(--spring);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+        /* Alternate hover rotations for playfulness */
+        .card:nth-child(odd):hover { transform: translateY(-15px) rotate(2deg); }
+        .card:nth-child(even):hover { transform: translateY(-15px) rotate(-2deg); }
+        
+        .card h3 { position: relative; z-index: 2; font-size: 1.8rem; }
+        .card p { position: relative; z-index: 2; opacity: 0.7; line-height: 1.6; }
+
+        /* Background Blobs for Cards */
+        .blob {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            top: -40px;
+            right: -40px;
+            opacity: 0.3;
+            transition: transform 0.6s var(--spring), opacity 0.3s;
+            filter: blur(20px);
+        }
+        .card:hover .blob {
+            transform: scale(2.5) translate(-10px, 10px);
+            opacity: 0.8;
+            filter: blur(30px);
+        }
+        .blob-1 { background-color: var(--accent-1); }
+        .blob-2 { background-color: var(--accent-2); }
+        .blob-3 { background-color: var(--accent-3); }
+        .blob-4 { background-color: var(--accent-4); }
+
+        /* Interactive Process Section */
+        .process-section {
+            background-color: #fff;
+            border-radius: 40px;
+            margin: 2rem 5%;
+            padding: 6rem 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        .process-content h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1.5rem; }
+        .process-content p { font-size: 1.2rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.8; }
+        
+        /* Interactive Abstract Art */
+        .art-container {
+            position: relative;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .shape {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 40px;
+            mix-blend-mode: multiply;
+            transition: transform 0.6s var(--spring), border-radius 0.4s ease;
+        }
+        .shape-1 { background: var(--accent-1); transform: translate(-20px, -20px) rotate(-10deg); }
+        .shape-2 { background: var(--accent-2); transform: translate(20px, 20px) rotate(15deg); }
+        .shape-3 { background: var(--accent-3); transform: translate(0, 0) rotate(45deg); border-radius: 50%; width: 150px; height: 150px; }
+        
+        .art-container:hover .shape-1 { transform: translate(-60px, -60px) rotate(-25deg); border-radius: 20px; }
+        .art-container:hover .shape-2 { transform: translate(60px, 60px) rotate(30deg); border-radius: 50%; }
+        .art-container:hover .shape-3 { transform: translate(0, -80px) scale(1.2); border-radius: 20px; }
+
+        /* Footer / Big CTA */
+        footer {
+            padding: 8rem 5% 4rem;
+            text-align: center;
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            border-top-left-radius: 60px;
+            border-top-right-radius: 60px;
+            margin-top: 4rem;
+        }
+        footer h2 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            margin-bottom: 3rem;
+            color: var(--bg-color);
+        }
+        .footer-btn {
+            font-size: 2rem;
+            padding: 1.5rem 4rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border-color: var(--bg-color);
+        }
+        .footer-btn:hover {
+            background: var(--accent-2);
+            border-color: var(--accent-2);
+        }
+        .footer-bottom {
+            margin-top: 8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(250, 249, 246, 0.2);
+            opacity: 0.7;
+        }
+        .social-links { display: flex; gap: 1.5rem; }
+        .social-links a { color: var(--bg-color); text-decoration: none; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .process-section { grid-template-columns: 1fr; text-align: center; }
+            .nav-links { display: none; /* Simplified for mobile demo */ }
+            section { padding: 5rem 5%; }
+            .footer-bottom { flex-direction: column; gap: 1rem; }
+        }
+
+        /* Disable custom cursor on touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            * { cursor: auto !important; }
+            .cursor-dot, .cursor-outline { display: none !important; }
+            .card:hover { transform: translateY(-5px); }
+            .shape { mix-blend-mode: normal; opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav class="navbar">
+        <div class="logo hover-target">Singulr<span>.</span></div>
+        <ul class="nav-links">
+            <li><a href="#" class="hover-target">Services</a></li>
+            <li><a href="work.html" class="hover-target">Work</a></li>
+            <li><a href="#" class="hover-target">Agency</a></li>
+            <li><a href="#" class="hover-target">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <header class="hero fade-up">
+            <h1>The singular solution for <span class="highlight hover-target">digital play.</span></h1>
+            <p>We are a digital product agency that builds brands, websites, and apps with an obsessive focus on tactile, human-centric design.</p>
+            <div class="btn-group">
+                <a href="#" class="btn btn-primary hover-target magnetic-btn">Start a Project</a>
+                <a href="work.html" class="btn btn-outline hover-target magnetic-btn">View Our Work</a>
+            </div>
+        </header>
+
+        <div class="marquee-container hover-target">
+            <div class="marquee-content">
+                <span>Innovative</span><span class="star">✦</span>
+                <span>Playful</span><span class="star">✦</span>
+                <span>Human-Centric</span><span class="star">✦</span>
+                <span>Minimalist</span><span class="star">✦</span>
+                <span>Singular</span><span class="star">✦</span>
+                <!-- Duplicate for seamless loop -->
+                <span>Innovative</span><span class="star">✦</span>
+                <span>Playful</span><span class="star">✦</span>
+                <span>Human-Centric</span><span class="star">✦</span>
+                <span>Minimalist</span><span class="star">✦</span>
+                <span>Singular</span><span class="star">✦</span>
+            </div>
+        </div>
+
+        <section class="services">
+            <div class="services-header fade-up">
+                <h2>What we do.</h2>
+            </div>
+            <div class="card-grid">
+                <div class="card hover-target fade-up">
+                    <div class="blob blob-1"></div>
+                    <h3>Strategy</h3>
+                    <p>We lay the foundation. Deep research and product positioning that ensures your brand stands out in a crowded market.</p>
+                </div>
+                <div class="card hover-target fade-up" style="transition-delay: 0.1s;">
+                    <div class="blob blob-2"></div>
+                    <h3>Design</h3>
+                    <p>Interfaces that feel alive. We craft visual languages that are not only beautiful but incredibly satisfying to interact with.</p>
+                </div>
+                <div class="card hover-target fade-up" style="transition-delay: 0.2s;">
+                    <div class="blob blob-3"></div>
+                    <h3>Development</h3>
+                    <p>Pixel-perfect execution. Our code is clean, performant, and brings our bouncy, tactile designs to reality on any device.</p>
+                </div>
+                <div class="card hover-target fade-up" style="transition-delay: 0.3s;">
+                    <div class="blob blob-4"></div>
+                    <h3>Growth</h3>
+                    <p>Continuous evolution. We iterate based on data and user feedback to scale your product sustainably and rapidly.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="process-section fade-up">
+            <div class="process-content">
+                <h2>Design that reacts to you.</h2>
+                <p>We believe the web has become too stiff. Everything is a rigid box. At Singulr, we use physics-based animations, organic shapes, and unexpected micro-interactions to make digital spaces feel like physical playgrounds.</p>
+                <a href="#" class="btn btn-outline hover-target magnetic-btn">Learn our process</a>
+            </div>
+            <div class="art-container hover-target">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="fade-up">
+            <h2 class="hover-target">Let's build something <span class="highlight">fun.</span></h2>
+            <a href="#" class="btn btn-primary footer-btn hover-target magnetic-btn">Say Hello</a>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Singulr Agency. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" class="hover-target">Twitter</a>
+                <a href="#" class="hover-target">Dribbble</a>
+                <a href="#" class="hover-target">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+            const hoverTargets = document.querySelectorAll('.hover-target');
+            const magneticBtns = document.querySelectorAll('.magnetic-btn');
+            
+            // --- 1. Cursor Logic ---
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let outlineX = mouseX;
+            let outlineY = mouseY;
+            let outlineSize = 40;
+            let hasMoved = false;
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                if (!hasMoved) {
+                    cursorDot.style.opacity = 1;
+                    cursorOutline.style.opacity = 1;
+                    outlineX = mouseX;
+                    outlineY = mouseY;
+                    hasMoved = true;
+                }
+                cursorDot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+            });
+
+            function animateCursor() {
+                const easing = 0.15;
+                outlineX += (mouseX - outlineX) * easing;
+                outlineY += (mouseY - outlineY) * easing;
+                cursorOutline.style.transform = `translate(${outlineX - (outlineSize / 2)}px, ${outlineY - (outlineSize / 2)}px)`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            // Cursor Hover States
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => {
+                    outlineSize = 70;
+                    cursorOutline.style.width = `${outlineSize}px`;
+                    cursorOutline.style.height = `${outlineSize}px`;
+                    
+                    // Specific logic if hovering over the dark footer or marquee
+                    const isDarkSection = target.closest('footer') || target.classList.contains('marquee-container');
+                    
+                    if (isDarkSection) {
+                        cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.2)';
+                        cursorOutline.style.borderColor = 'transparent';
+                    } else {
+                        cursorOutline.style.backgroundColor = 'rgba(26, 26, 26, 0.06)';
+                        cursorOutline.style.borderColor = 'transparent';
+                    }
+                });
+
+                target.addEventListener('mouseleave', () => {
+                    outlineSize = 40;
+                    cursorOutline.style.width = `${outlineSize}px`;
+                    cursorOutline.style.height = `${outlineSize}px`;
+                    cursorOutline.style.backgroundColor = 'transparent';
+                    
+                    const isDarkSection = target.closest('footer') || target.classList.contains('marquee-container');
+                    if (isDarkSection) {
+                        cursorOutline.style.borderColor = 'var(--bg-color)';
+                    } else {
+                        cursorOutline.style.borderColor = 'var(--text-color)';
+                    }
+                });
+            });
+
+            // --- 2. Magnetic Buttons ---
+            magneticBtns.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const position = btn.getBoundingClientRect();
+                    const x = e.clientX - position.left - position.width / 2;
+                    const y = e.clientY - position.top - position.height / 2;
+                    // Moves the button slightly towards the mouse
+                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    // Resets position smoothly due to CSS transition
+                    btn.style.transform = `translate(0px, 0px) scale(1)`;
+                });
+            });
+
+            // --- 3. Scroll Reveal Animations ---
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 // Trigger when 15% of element is visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-up').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
