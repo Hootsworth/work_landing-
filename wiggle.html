@@ -389,6 +389,23 @@
             border-color: var(--accent-2);
             transform: translateY(-5px) scale(1.05);
         }
+        .footer-btn-outline {
+            font-size: 2rem;
+            padding: 1.5rem 4rem;
+            background: transparent;
+            color: var(--bg-color);
+            border: 2px solid var(--bg-color);
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .footer-btn-outline:hover {
+            background: rgba(250, 249, 246, 0.1);
+            border-color: var(--accent-2);
+            color: var(--accent-2);
+            transform: translateY(-5px) scale(1.05);
+        }
         .footer-bottom {
             margin-top: 8rem; display: flex; justify-content: space-between; align-items: center;
             padding-top: 2rem; border-top: 1px solid rgba(250, 249, 246, 0.2); opacity: 0.7;
@@ -620,7 +637,10 @@
     <footer>
         <div class="fade-up">
             <h2 class="hover-target">Ready to <span class="highlight">Wiggle?</span></h2>
-            <a href="https://github.com/Hootsworth/wiggle" target="_blank" class="footer-btn hover-target magnetic-btn">Clone Repository</a>
+            <div class="btn-group" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem;">
+                <a href="https://github.com/Hootsworth/wiggle" target="_blank" class="footer-btn-outline hover-target magnetic-btn">Clone Repository</a>
+                <a href="contact.html" class="footer-btn hover-target magnetic-btn">Start a Project</a>
+            </div>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Singulr Agency. Wiggle AI is Open Source.</p>

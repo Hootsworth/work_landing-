@@ -497,10 +497,33 @@
             background: var(--bg-color);
             color: var(--text-color);
             border-color: var(--bg-color);
+            border: 2px solid var(--bg-color);
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s;
         }
         .footer-btn:hover {
             background: var(--accent-2);
             border-color: var(--accent-2);
+            transform: translateY(-5px) scale(1.05);
+        }
+        .footer-btn-outline {
+            font-size: 2rem;
+            padding: 1.5rem 4rem;
+            background: transparent;
+            color: var(--bg-color);
+            border: 2px solid var(--bg-color);
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .footer-btn-outline:hover {
+            background: rgba(250, 249, 246, 0.1);
+            border-color: var(--accent-2);
+            color: var(--accent-2);
+            transform: translateY(-5px) scale(1.05);
         }
         .footer-bottom {
             margin-top: 8rem;
@@ -669,7 +692,10 @@
     <footer id="contact">
         <div class="fade-up">
             <h2 class="hover-target">Let's build something <span class="highlight">fun.</span></h2>
-            <a href="mailto:hello@singulr.agency" class="btn btn-primary footer-btn hover-target magnetic-btn">Say Hello</a>
+            <div class="btn-group" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem;">
+                <a href="mailto:hello@singulr.agency" class="footer-btn-outline hover-target magnetic-btn">Say Hello</a>
+                <a href="contact.html" class="footer-btn hover-target magnetic-btn">Start a Project</a>
+            </div>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Singulr Agency. All rights reserved.</p>
