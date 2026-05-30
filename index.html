@@ -71,7 +71,6 @@
         section { padding: 8rem 5%; }
 
         .sticker {
-            position: absolute;
             width: clamp(120px, 15vw, 220px);
             height: auto;
             z-index: 1;
@@ -144,9 +143,10 @@
             overflow: hidden;
         }
         .hero .sticker {
-            right: max(-3rem, -7vw);
-            top: 22%;
-            transform: rotate(7deg);
+            position: static;
+            width: clamp(150px, 22vw, 260px);
+            margin: 0 0 1.4rem;
+            transform: rotate(-2deg);
         }
         .hero h1 {
             font-size: clamp(3.5rem, 8vw, 7rem);
@@ -292,10 +292,16 @@
             overflow: hidden;
         }
         .process-section .sticker {
-            left: 2rem;
-            bottom: 2rem;
-            width: clamp(120px, 14vw, 190px);
-            transform: rotate(-8deg);
+            position: absolute;
+            right: 2rem;
+            top: 2rem;
+            width: clamp(130px, 13vw, 185px);
+            transform: rotate(6deg);
+        }
+        .process-content,
+        .art-container {
+            position: relative;
+            z-index: 2;
         }
         .process-content h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1.5rem; }
         .process-content p { font-size: 1.2rem; opacity: 0.7; margin-bottom: 2rem; line-height: 1.8; }
@@ -368,13 +374,12 @@
             .nav-links { display: none; /* Simplified for mobile demo */ }
             section { padding: 5rem 5%; }
             .hero .sticker {
-                position: relative;
-                right: auto;
-                top: auto;
-                margin: 1rem 0;
+                width: min(220px, 80vw);
             }
             .process-section .sticker {
-                opacity: 0.25;
+                position: static;
+                margin: 0 auto 1.5rem;
+                opacity: 1;
             }
             .footer-bottom { flex-direction: column; gap: 1rem; }
         }
