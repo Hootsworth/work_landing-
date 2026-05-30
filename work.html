@@ -67,6 +67,20 @@
         }
         section { padding: 8rem 5%; }
 
+        .sticker {
+            position: absolute;
+            width: clamp(120px, 16vw, 220px);
+            height: auto;
+            z-index: 1;
+            pointer-events: none;
+            filter: drop-shadow(0 18px 24px rgba(0,0,0,0.12));
+            transition: transform 0.4s var(--spring);
+        }
+        .hover-target:hover .sticker,
+        .sticker:hover {
+            transform: rotate(0deg) scale(1.04);
+        }
+
         .fade-up {
             opacity: 0;
             transform: translateY(40px);
@@ -125,6 +139,17 @@
             justify-content: center;
             align-items: center;
             min-height: 80vh;
+            position: relative;
+        }
+        .hero .sticker-left {
+            left: max(-4rem, -8vw);
+            top: 28%;
+            transform: rotate(-9deg);
+        }
+        .hero .sticker-right {
+            right: max(-4rem, -8vw);
+            bottom: 14%;
+            transform: rotate(8deg);
         }
         .hero-tag {
             font-weight: 800;
@@ -174,10 +199,125 @@
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
             gap: 2.5rem;
             max-width: 1200px;
             margin: 0 auto;
+        }
+        .work-strip {
+            padding: 0 5% 4rem;
+        }
+        .strip-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 2.5rem;
+            align-items: stretch;
+        }
+        .signal-board,
+        .tool-stack {
+            position: relative;
+            background: #fff;
+            border-radius: 40px;
+            padding: 3rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
+        .signal-board h2,
+        .tool-stack h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        .signal-board p,
+        .tool-stack p {
+            position: relative;
+            z-index: 2;
+            opacity: 0.72;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            max-width: 680px;
+        }
+        .mini-metrics {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .mini-metric {
+            border: 2px solid rgba(0,0,0,0.08);
+            border-radius: 22px;
+            padding: 1.25rem;
+            background: var(--bg-color);
+        }
+        .mini-metric strong {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 0.35rem;
+        }
+        .mini-metric span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0.65;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .tool-list {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            gap: 0.9rem;
+            margin-top: 1.6rem;
+        }
+        .tool-pill {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 1.1rem;
+            border-radius: 18px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            font-weight: 700;
+        }
+        .tool-pill span:last-child {
+            color: var(--accent-4);
+            white-space: nowrap;
+        }
+        .signal-board .sticker {
+            right: 1rem;
+            top: 1.2rem;
+            width: clamp(120px, 18vw, 240px);
+            transform: rotate(5deg);
+        }
+        .tool-stack .sticker {
+            right: -0.5rem;
+            bottom: 0.5rem;
+            width: clamp(120px, 16vw, 210px);
+            transform: rotate(-7deg);
+        }
+        .projects {
+            padding-top: 3rem;
+            position: relative;
+        }
+        .projects-heading {
+            max-width: 1200px;
+            margin: 0 auto 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 2rem;
+        }
+        .projects-heading h2 {
+            font-size: clamp(2.4rem, 5vw, 4rem);
+        }
+        .projects-heading p {
+            max-width: 420px;
+            opacity: 0.7;
+            line-height: 1.7;
         }
         .card {
             background: #fff;
@@ -277,6 +417,63 @@
         .blob-3 { background-color: var(--accent-2); }
         .blob-4 { background-color: var(--accent-4); }
 
+        .playbook-section {
+            padding-top: 2rem;
+        }
+        .playbook {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-radius: 48px;
+            padding: 4rem;
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .playbook h2 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            color: var(--bg-color);
+        }
+        .playbook p {
+            opacity: 0.78;
+            line-height: 1.7;
+            margin-top: 1rem;
+            font-size: 1.08rem;
+        }
+        .playbook > div {
+            position: relative;
+            z-index: 2;
+        }
+        .playbook-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+        .playbook-step {
+            background: rgba(250,249,246,0.08);
+            border: 1px solid rgba(250,249,246,0.15);
+            border-radius: 24px;
+            padding: 1.5rem;
+        }
+        .playbook-step strong {
+            color: var(--accent-2);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        .playbook .sticker {
+            left: 2rem;
+            bottom: 1.8rem;
+            width: clamp(140px, 18vw, 260px);
+            transform: rotate(-6deg);
+        }
+
         footer {
             padding: 8rem 5% 4rem;
             text-align: center;
@@ -319,6 +516,26 @@
             .nav-links { display: none; }
             section { padding: 5rem 5%; }
             .card-grid { grid-template-columns: 1fr; }
+            .hero .sticker {
+                position: relative;
+                left: auto;
+                right: auto;
+                top: auto;
+                bottom: auto;
+                margin: 1rem 0;
+            }
+            .strip-inner,
+            .playbook {
+                grid-template-columns: 1fr;
+            }
+            .mini-metrics,
+            .playbook-grid {
+                grid-template-columns: 1fr;
+            }
+            .projects-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
             .footer-bottom { flex-direction: column; gap: 1rem; }
         }
 
@@ -345,12 +562,53 @@
 
     <main>
         <header class="hero fade-up">
+            <img src="assets/stickers/singulr-gradient.png" alt="" class="sticker sticker-left" aria-hidden="true">
+            <img src="assets/stickers/think-different.png" alt="" class="sticker sticker-right" aria-hidden="true">
             <div class="hero-tag hover-target">Archive &amp; Case Studies</div>
             <h1>Selected <span class="highlight hover-target">Work.</span></h1>
-            <p>A deep dive into product systems, autonomous agents, and AI safety infrastructure. Built for reliability, engineered for the real world-now with a bouncy, satisfying interface.</p>
+            <p>A deep dive into product systems, autonomous agents, and AI safety infrastructure. Built for reliability, engineered for the real world, now with a bouncy, satisfying interface.</p>
         </header>
 
+        <section class="work-strip">
+            <div class="strip-inner">
+                <div class="signal-board hover-target fade-up">
+                    <img src="assets/stickers/terminal-manifesto.png" alt="" class="sticker" aria-hidden="true">
+                    <h2>Built like systems. Felt like toys.</h2>
+                    <p>Every Singulr project starts as a messy problem map and leaves as a tactile product surface: sharp logic underneath, soft motion on top, and enough personality to make people remember it.</p>
+                    <div class="mini-metrics">
+                        <div class="mini-metric">
+                            <strong>05</strong>
+                            <span>Featured builds</span>
+                        </div>
+                        <div class="mini-metric">
+                            <strong>03</strong>
+                            <span>Agent systems</span>
+                        </div>
+                        <div class="mini-metric">
+                            <strong>100%</strong>
+                            <span>Playful bias</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tool-stack hover-target fade-up" style="transition-delay: 0.1s;">
+                    <img src="assets/stickers/singulr-confetti.png" alt="" class="sticker" aria-hidden="true">
+                    <h2>What shows up.</h2>
+                    <p>A compact mix of interaction design, infra thinking, AI workflows, and motion polish.</p>
+                    <div class="tool-list">
+                        <div class="tool-pill"><span>Brand systems</span><span>visual</span></div>
+                        <div class="tool-pill"><span>Agent products</span><span>logic</span></div>
+                        <div class="tool-pill"><span>Motion UI</span><span>feel</span></div>
+                        <div class="tool-pill"><span>Safety layers</span><span>trust</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="projects">
+            <div class="projects-heading fade-up">
+                <h2>Case study shelf.</h2>
+                <p>A little denser, a little louder, and still built for quick scanning.</p>
+            </div>
             <div class="card-grid">
                 <a href="https://github.com/Hootsworth/wiggle" target="_blank" rel="noopener noreferrer" class="card hover-target fade-up">
                     <div class="blob blob-1"></div>
@@ -478,6 +736,22 @@
                         <span class="tech-tag">Python</span>
                     </div>
                 </a>
+            </div>
+        </section>
+
+        <section class="playbook-section">
+            <div class="playbook hover-target fade-up">
+                <img src="assets/stickers/think-different.png" alt="" class="sticker" aria-hidden="true">
+                <div>
+                    <h2>How the work moves.</h2>
+                    <p>Singulr keeps the process small enough to stay fast and structured enough to avoid chaos. The goal is always the same: make the hard thing feel obvious.</p>
+                </div>
+                <div class="playbook-grid">
+                    <div class="playbook-step"><strong>01</strong>Find the sharp product promise.</div>
+                    <div class="playbook-step"><strong>02</strong>Sketch the motion and interaction language.</div>
+                    <div class="playbook-step"><strong>03</strong>Prototype the riskiest system behavior.</div>
+                    <div class="playbook-step"><strong>04</strong>Polish until it feels inevitable.</div>
+                </div>
             </div>
         </section>
     </main>
