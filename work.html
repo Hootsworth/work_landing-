@@ -94,38 +94,34 @@
         }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-        /* Hero */
-        .hero {
-            text-align: center; padding: 12rem 5% 4rem;
-            max-width: 900px; margin: 0 auto;
-            position: relative;
+        /* Editorial Hero */
+        .hero { padding: 12rem 5% 4rem; min-height: 70vh; display: flex; align-items: center; }
+        .hero-grid { width: 100%; position: relative; max-width: 1400px; margin: 0 auto; }
+        .hero-meta {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            border-bottom: 2px solid rgba(26, 26, 26, 0.1); padding-bottom: 2rem; margin-bottom: 4rem;
         }
-        .hero-tag {
-            font-weight: 800; color: var(--accent-1); text-transform: uppercase;
-            letter-spacing: 2px; margin-bottom: 1rem; font-size: 0.9rem;
-            display: inline-block;
+        .hero-tag { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 1rem; color: var(--text-color); }
+        .hero-sub { max-width: 450px; font-size: 1.25rem; line-height: 1.6; opacity: 0.8; font-weight: 400; }
+        .hero-title {
+            font-size: clamp(3.5rem, 9vw, 11rem); line-height: 0.85;
+            letter-spacing: -3px; text-transform: uppercase; position: relative; z-index: 2;
         }
-        .hero h1 { 
-            font-size: clamp(3.5rem, 7vw, 6.5rem); 
-            line-height: 1; 
-            margin-bottom: 1.5rem; 
+        .hero-title .line {
+            display: block; opacity: 0; transform: translateY(50px) rotate(3deg);
+            transform-origin: left; animation: heroReveal 0.8s var(--spring) forwards;
         }
+        .hero-title .indent-1 { padding-left: 10vw; animation-delay: 0.1s; }
+        .hero-title .indent-2 { padding-left: 20vw; animation-delay: 0.2s; }
         
-        .hero h1 .line {
-            display: block;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: heroReveal 0.8s var(--smooth) forwards;
+        .hero-italic {
+            font-family: Georgia, serif; font-style: italic; text-transform: lowercase;
+            color: var(--accent-1); font-weight: 400; padding: 0 0.5rem;
+            display: inline-block; transition: color 0.3s ease, transform 0.4s var(--spring);
         }
-        
-        .hero h1 .line:nth-child(1) { animation-delay: 0.1s; }
-        .hero h1 .line:nth-child(2) { animation-delay: 0.3s; }
+        .hero-italic:hover { color: var(--text-color); transform: scale(1.05) rotate(-2deg); }
 
-        @keyframes heroReveal {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hero p { font-size: 1.2rem; opacity: 0.7; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        @keyframes heroReveal { to { opacity: 1; transform: translateY(0) rotate(0deg); } }
 
         /* New Bento Grid System */
         .bento-section { padding: 4rem 5% 8rem; max-width: 1300px; margin: 0 auto; width: 100%; }
@@ -182,20 +178,6 @@
             align-items: center;
             background: linear-gradient(135deg, #fff, var(--bg-color));
         }
-
-        /* Pinned Stickers */
-        .sticker-pinned {
-            position: absolute;
-            width: clamp(80px, 10vw, 130px);
-            z-index: 10;
-            pointer-events: none;
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
-            transition: transform 0.4s var(--spring);
-            transform: translateZ(80px); /* 3D float */
-        }
-        .bento-card:hover .sticker-pinned { transform: translateZ(90px) scale(1.1) rotate(5deg); }
-        .pin-top-right { top: -20px; right: -20px; transform: translateZ(80px) rotate(12deg); }
-        .pin-bottom-right { bottom: -10px; right: -20px; transform: translateZ(80px) rotate(-15deg); width: 160px; }
 
         /* Card Content */
         .card-header { display: flex; justify-content: space-between; align-items: center; }
@@ -307,9 +289,11 @@
         /* Responsive */
         @media (max-width: 900px) {
             .nav-links { display: none; }
+            .hero-meta { flex-direction: column; gap: 1.5rem; border-bottom: none; margin-bottom: 2rem; padding-bottom: 0; }
+            .hero-title .indent-1 { padding-left: 0; }
+            .hero-title .indent-2 { padding-left: 5vw; }
             .bento-grid { grid-template-columns: 1fr; }
             .card-featured { grid-template-columns: 1fr; gap: 2rem; }
-            .sticker-pinned { display: none; }
             .manifesto-box { padding: 4rem 2rem; }
         }
         @media (hover: none) and (pointer: coarse) {
@@ -328,25 +312,31 @@
             <li><a href="index.html#services" class="hover-target">Services</a></li>
             <li><a href="work.html" class="hover-target active">Work</a></li>
             <li><a href="about.html" class="hover-target">Agency</a></li>
-            <li><a href="blogs.html" class="hover-target">Blogs</a></li>
+            <li><a href="blog.html" class="hover-target">Journal</a></li>
+            <li><a href="careers.html" class="hover-target">Careers</a></li>
+            <li><a href="#contact" class="hover-target">Contact</a></li>
         </ul>
     </nav>
 
     <main>
         <header class="hero">
-            <div class="hero-tag hover-target fade-up">Case Studies</div>
-            <h1>
-                <span class="line">Selected</span>
-                <span class="line"><span class="highlight hover-target">Work.</span></span>
-            </h1>
-            <p class="fade-up" style="transition-delay: 0.2s;">Engineered for the real world, built for reliability, and wrapped in a bouncy, satisfying interface.</p>
+            <div class="hero-grid">
+                <div class="hero-meta fade-up">
+                    <span class="hero-tag hover-target">002 // Case Studies</span>
+                    <p class="hero-sub fade-up" style="transition-delay: 0.1s;">Engineered for the real world, built for reliability, and wrapped in a bouncy, satisfying interface.</p>
+                </div>
+                <h1 class="hero-title">
+                    <span class="line">Selected</span>
+                    <span class="line indent-1"><span class="hero-italic hover-target">Digital</span></span>
+                    <span class="line indent-2">Work.</span>
+                </h1>
+            </div>
         </header>
 
         <section class="bento-section">
             <div class="bento-grid">
                 
-                <a href="https://github.com/Hootsworth/wiggle" target="_blank" class="bento-card card-featured hover-target fade-up">
-                    <img src="assets/stickers/think-different.png" alt="" class="sticker-pinned pin-top-right" onerror="this.style.display='none'">
+                <a href="wiggle.html" class="bento-card card-featured hover-target fade-up">
                     <div class="card-bg-graphic bg-1"></div>
                     
                     <div class="card-content-left">
@@ -395,7 +385,6 @@
                 </a>
 
                 <a href="https://github.com/Hootsworth/XRisk" target="_blank" class="bento-card hover-target fade-up" style="transition-delay: 0.1s;">
-                    <img src="assets/stickers/terminal-manifesto.png" alt="" class="sticker-pinned pin-bottom-right" onerror="this.style.display='none'">
                     <div class="card-bg-graphic bg-3"></div>
                     <div class="card-header">
                         <span class="card-tag">AI Safety</span>
