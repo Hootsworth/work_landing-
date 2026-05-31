@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Singulr - Employee Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -15,6 +14,9 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         body { font-family: 'Outfit', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; min-height: 100vh; }
+
+        /* Cinematic Film Grain */
+        .film-grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9998; opacity: 0.05; background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'); }
 
         /* Cursor */
         .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none; opacity: 0; will-change: transform, width, height; }
@@ -26,79 +28,129 @@
         h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
 
         /* Utilities */
-        .btn { padding: 1rem 2rem; font-size: 1.1rem; font-weight: 800; font-family: inherit; border-radius: 50px; transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring); border: 2px solid var(--text-color); background: var(--text-color); color: var(--bg-color); display: inline-flex; align-items: center; justify-content: center; text-transform: uppercase; }
-        .btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15); background: var(--accent-4); color: var(--text-color); }
+        .btn { padding: 1rem 2rem; font-size: 1.1rem; font-weight: 800; font-family: inherit; border-radius: 50px; transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring), background 0.3s; border: 3px solid var(--text-color); background: var(--text-color); color: var(--bg-color); display: inline-flex; align-items: center; justify-content: center; text-transform: uppercase; box-shadow: 6px 6px 0px rgba(0,0,0,0.1); }
+        .btn:hover { transform: translate(-4px, -4px); box-shadow: 10px 10px 0px var(--accent-1); background: var(--text-color); color: var(--bg-color); }
+        .btn-outline { background: transparent; color: var(--text-color); }
+        .btn-outline:hover { background: var(--text-color); color: var(--bg-color); box-shadow: 10px 10px 0px var(--accent-3); }
+        
         .huge-input { width: 100%; background: transparent; border: none; border-bottom: 3px solid rgba(0,0,0,0.1); font-family: 'Outfit', sans-serif; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 600; color: var(--text-color); padding: 1rem 0; outline: none; transition: border-color 0.4s var(--spring); }
         .huge-input:focus { border-color: var(--accent-1); }
-        .bento-card { background: #fff; border-radius: 30px; padding: 2.5rem; border: 2px solid rgba(0,0,0,0.04); box-shadow: 0 10px 30px rgba(0,0,0,0.02); transition: box-shadow 0.4s var(--spring), transform 0.5s var(--spring); position: relative; overflow: hidden; transform-style: preserve-3d; perspective: 1000px; }
-        .bento-card:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.08); transform: translateY(-5px); }
+        
+        /* Brutalist Bento Card */
+        .bento-card { background: #fff; border-radius: 30px; padding: 2.5rem; border: 3px solid var(--text-color); box-shadow: 8px 8px 0px var(--text-color); transition: box-shadow 0.4s var(--spring), transform 0.5s var(--spring); position: relative; overflow: hidden; transform-style: preserve-3d; perspective: 1000px; }
+        .bento-card:hover { box-shadow: 14px 14px 0px var(--text-color); transform: translate(-4px, -4px); }
 
-        /* Views */
+        /* Views Controller */
         .app-view { display: none; opacity: 0; transition: opacity 0.4s var(--smooth); }
         .app-view.active { display: flex; opacity: 1; }
-        #login-view { min-height: 100vh; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 50%, var(--bg-color) 0%, #e8e6e1 100%); }
-        .login-box { max-width: 500px; width: 90%; background: #fff; padding: 4rem; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
-        .login-box h1 { font-size: 3rem; margin-bottom: 1rem; }
+
+        /* --- NEO-BRUTALIST LOGIN VIEW --- */
+        #login-view { min-height: 100vh; align-items: center; justify-content: center; position: relative; overflow: hidden; background: var(--text-color); color: var(--bg-color); }
         
+        /* Giant Background Typography */
+        .bg-typography { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 25vw; font-weight: 800; color: rgba(255,255,255,0.03); white-space: nowrap; user-select: none; pointer-events: none; line-height: 0.8; text-align: center; }
+        .bg-typography span { display: block; animation: floatText 20s linear infinite alternate; }
+        @keyframes floatText { 0% { transform: translateX(-5%); } 100% { transform: translateX(5%); } }
+
+        .login-box { width: 100%; max-width: 480px; background: var(--bg-color); color: var(--text-color); padding: 4rem 3rem; border-radius: 40px; border: 4px solid var(--text-color); box-shadow: 20px 20px 0px var(--accent-3); position: relative; z-index: 2; transition: transform 0.4s var(--spring), box-shadow 0.4s var(--spring); }
+        .login-box:hover { transform: translate(-5px, -5px); box-shadow: 25px 25px 0px var(--accent-1); }
+        .login-box h1 { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 0.5rem; line-height: 1; letter-spacing: -2px; }
+        .login-box p { opacity: 0.7; font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 3rem; }
+        
+        .neo-input-group { margin-bottom: 2rem; position: relative; }
+        .neo-input { width: 100%; background: #fff; border: 3px solid var(--text-color); padding: 1.2rem 1.5rem; font-size: 1.2rem; font-family: 'Outfit', sans-serif; font-weight: 600; border-radius: 15px; outline: none; transition: box-shadow 0.3s var(--spring), transform 0.3s var(--spring); }
+        .neo-input:focus { box-shadow: 6px 6px 0px var(--accent-2); transform: translate(-3px, -3px); }
+        
+        /* --- PORTAL SHELL (Unchanged mechanics, updated borders) --- */
         #portal-shell { min-height: 100vh; flex-direction: row; }
-        .sidebar { width: 280px; background: var(--text-color); color: var(--bg-color); padding: 3rem 2rem; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+        .sidebar { width: 280px; background: var(--text-color); color: var(--bg-color); padding: 3rem 2rem; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; border-right: 2px solid rgba(255,255,255,0.1); }
         .sidebar .logo { font-size: 2rem; color: var(--bg-color); margin-bottom: 4rem; display: block; }
         .nav-menu { display: flex; flex-direction: column; gap: 1rem; flex-grow: 1; }
-        .nav-item { padding: 1rem 1.5rem; border-radius: 20px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s var(--spring); opacity: 0.6; }
+        .nav-item { padding: 1rem 1.5rem; border-radius: 20px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s var(--spring); opacity: 0.6; display: flex; align-items: center; gap: 1rem; }
         .nav-item:hover { opacity: 1; background: rgba(255,255,255,0.1); transform: translateX(5px); }
-        .nav-item.active { opacity: 1; background: var(--accent-1); color: var(--text-color); }
-        .main-content { margin-left: 280px; width: calc(100% - 280px); padding: 4rem 5%; }
+        .nav-item.active { opacity: 1; background: var(--accent-1); color: var(--text-color); box-shadow: 4px 4px 0px var(--accent-2); }
+        .main-content { margin-left: 280px; width: calc(100% - 280px); padding: 4rem 5%; position: relative; z-index: 2; }
         
-        /* Dashboard Layouts */
         .section-header { margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
-        .section-header h2 { font-size: 3.5rem; line-height: 0.9; }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
-        .metric-card h3 { font-size: 1.2rem; opacity: 0.7; margin-bottom: 1rem; }
-        .metric-card .value { font-size: 4rem; font-weight: 800; color: var(--accent-1); line-height: 1; }
+        .section-header h2 { font-size: clamp(3rem, 5vw, 4.5rem); line-height: 0.9; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; margin-bottom: 4rem; }
+        .metric-card { border: 3px solid var(--text-color); box-shadow: 8px 8px 0px var(--text-color); }
+        .metric-card h3 { font-size: 1.2rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem; }
+        .metric-card .value { font-size: 5rem; font-weight: 800; color: var(--text-color); line-height: 1; text-shadow: 3px 3px 0px var(--accent-1); }
 
         /* Tasks & Chat */
-        .task-list { display: flex; flex-direction: column; gap: 1rem; }
-        .task-row { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 1.5rem 2rem; border-radius: 20px; border: 2px solid transparent; transition: all 0.3s var(--spring); }
-        .task-row:hover { border-color: rgba(0,0,0,0.1); transform: translateX(10px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .status-pill { padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+        .task-list { display: flex; flex-direction: column; gap: 1.5rem; }
+        .task-row { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 2rem; border-radius: 20px; border: 3px solid var(--text-color); transition: all 0.3s var(--spring); box-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
+        .task-row:hover { transform: translate(-5px, -5px); box-shadow: 8px 8px 0px var(--accent-3); }
+        .status-pill { padding: 0.5rem 1.5rem; border-radius: 50px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; border: 2px solid var(--text-color); }
         .status-progress { background: var(--accent-2); }
         .status-review { background: var(--accent-3); }
         .status-done { background: var(--accent-4); }
 
-        .chat-container { background: #fff; border-radius: 30px; height: 600px; display: flex; flex-direction: column; overflow: hidden; border: 2px solid rgba(0,0,0,0.05); }
-        .chat-history { flex-grow: 1; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; }
-        .msg { max-width: 70%; padding: 1rem 1.5rem; border-radius: 20px; font-weight: 500; }
-        .msg.received { background: var(--bg-color); align-self: flex-start; border-bottom-left-radius: 5px; }
-        .msg.sent { background: var(--text-color); color: var(--bg-color); align-self: flex-end; border-bottom-right-radius: 5px; }
-        .chat-input-area { padding: 1.5rem; border-top: 2px solid rgba(0,0,0,0.05); display: flex; gap: 1rem; }
-        .chat-input { flex-grow: 1; border: none; background: var(--bg-color); padding: 1rem 1.5rem; border-radius: 50px; font-family: inherit; font-size: 1rem; outline: none; }
+        .chat-container { background: #fff; border-radius: 30px; height: 600px; display: flex; flex-direction: column; overflow: hidden; border: 3px solid var(--text-color); box-shadow: 8px 8px 0px var(--text-color); }
+        .chat-history { flex-grow: 1; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; background: var(--bg-color); }
+        .msg { max-width: 70%; padding: 1.2rem 1.5rem; border-radius: 20px; font-weight: 600; font-size: 1.1rem; border: 2px solid var(--text-color); }
+        .msg.received { background: #fff; align-self: flex-start; border-bottom-left-radius: 5px; box-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
+        .msg.sent { background: var(--accent-1); align-self: flex-end; border-bottom-right-radius: 5px; box-shadow: -4px 4px 0px rgba(0,0,0,0.1); }
+        .chat-input-area { padding: 1.5rem; border-top: 3px solid var(--text-color); display: flex; gap: 1rem; background: #fff; }
+        .chat-input { flex-grow: 1; border: 3px solid var(--text-color); background: var(--bg-color); padding: 1rem 1.5rem; border-radius: 50px; font-family: inherit; font-size: 1.1rem; outline: none; transition: box-shadow 0.3s; }
+        .chat-input:focus { box-shadow: inset 4px 4px 0px rgba(0,0,0,0.05); }
 
-        .editor-container { max-width: 900px; }
-        .editor-textarea { min-height: 400px; resize: none; font-size: 1.2rem; line-height: 1.8; margin-top: 2rem; }
+        /* Blog Editor */
+        .editor-workspace { max-width: 1000px; background: #fff; border: 3px solid var(--text-color); border-radius: 30px; padding: 3rem; box-shadow: 12px 12px 0px var(--text-color); position: relative; }
+        .editor-toolbar { position: sticky; top: 2rem; background: rgba(250, 249, 246, 0.8); backdrop-filter: blur(10px); border: 2px solid var(--text-color); padding: 1rem; border-radius: 20px; display: flex; gap: 1rem; align-items: center; margin-bottom: 2rem; z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .format-btn { width: 40px; height: 40px; border-radius: 10px; border: 2px solid transparent; background: transparent; font-weight: 800; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; transition: all 0.2s var(--spring); font-family: inherit; }
+        .format-btn:hover { border-color: var(--text-color); background: var(--accent-2); transform: scale(1.1); }
+        .word-counter { margin-left: auto; font-weight: 800; opacity: 0.5; font-size: 0.9rem; text-transform: uppercase; }
+        .editor-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        .meta-field { display: flex; flex-direction: column; gap: 0.5rem; }
+        .meta-label { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; opacity: 0.7; }
+        .meta-input { background: var(--bg-color); border: 2px solid rgba(0,0,0,0.1); padding: 1rem; border-radius: 15px; font-family: inherit; font-size: 1rem; outline: none; transition: border-color 0.3s; }
+        .meta-input:focus { border-color: var(--accent-1); }
+        .tag-pill-container { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .tag-select-pill { padding: 0.5rem 1rem; border-radius: 50px; border: 2px solid rgba(0,0,0,0.1); font-weight: 600; font-size: 0.9rem; transition: all 0.2s var(--spring); user-select: none; }
+        .tag-select-pill:hover { border-color: var(--text-color); transform: translateY(-2px); }
+        .tag-select-pill.active { background: var(--text-color); color: var(--bg-color); border-color: var(--text-color); }
+        .title-input { font-size: clamp(2rem, 4vw, 3.5rem); border-bottom-width: 4px; margin-bottom: 1rem; }
+        .editor-textarea { min-height: 400px; resize: none; font-size: 1.25rem; line-height: 1.8; border: none; padding: 1rem 0; font-weight: 400; }
+        .editor-status { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 0.9rem; opacity: 0.6; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-4); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(201, 255, 144, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(201, 255, 144, 0); } 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); } }
 
         @media (max-width: 900px) {
             #portal-shell { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; position: relative; padding: 1.5rem; flex-direction: row; align-items: center; justify-content: space-between; }
+            .sidebar { width: 100%; height: auto; position: relative; padding: 1.5rem; flex-direction: row; align-items: center; justify-content: space-between; z-index: 10; border-right: none; border-bottom: 2px solid rgba(255,255,255,0.1); }
             .sidebar .logo { margin-bottom: 0; font-size: 1.5rem; }
             .nav-menu { display: none; }
             .main-content { margin-left: 0; width: 100%; padding: 2rem 5%; }
+            .editor-meta-grid { grid-template-columns: 1fr; }
         }
         @media (hover: none) and (pointer: coarse) { * { cursor: auto !important; } .cursor-dot, .cursor-outline { display: none !important; } }
     </style>
 </head>
 <body>
+    <div class="film-grain"></div>
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <!-- LOGIN -->
+    <!-- NEO-BRUTALIST LOGIN -->
     <div id="login-view" class="app-view active">
+        <div class="bg-typography">
+            <span>RESTRICTED</span>
+            <span>MAINFRAME</span>
+        </div>
+        
         <div class="login-box hover-target">
-            <h1>Singulr<span style="color: var(--accent-1);">.</span> Hub</h1>
-            <p>Authorized personnel only.</p>
+            <h1>Singulr<span style="color: var(--accent-1);">.</span></h1>
+            <p>Node Authorization Required</p>
             <form onsubmit="app.login(event)">
-                <input id="emailInput" type="email" class="huge-input text-input" placeholder="agent@singulr.agency" style="margin-bottom: 2rem;" required>
-                <input id="passwordInput" type="password" class="huge-input text-input" placeholder="Passcode" style="margin-bottom: 3rem;" required>
-                <button type="submit" class="btn magnetic-btn" style="width: 100%;">Initialize ↗</button>
+                <div class="neo-input-group">
+                    <input id="emailInput" type="email" class="neo-input text-input" placeholder="agent@singulr.agency" required>
+                </div>
+                <div class="neo-input-group">
+                    <input id="passwordInput" type="password" class="neo-input text-input" placeholder="Passcode" required>
+                </div>
+                <button type="submit" class="btn magnetic-btn" style="width: 100%; font-size: 1.2rem; padding: 1.2rem;">Initialize Session ↗</button>
             </form>
         </div>
     </div>
@@ -108,10 +160,10 @@
         <nav class="sidebar">
             <div class="logo">Singulr<span style="color: var(--accent-1);">.</span></div>
             <div class="nav-menu">
-                <div class="nav-item hover-target active" onclick="app.navigate('dashboard', this)">Dashboard</div>
-                <div class="nav-item hover-target" onclick="app.navigate('tasks', this)">Work Tracker</div>
-                <div class="nav-item hover-target" onclick="app.navigate('messages', this)">Comm-Link</div>
-                <div class="nav-item hover-target" onclick="app.navigate('blog', this)">Journal CMS</div>
+                <div class="nav-item hover-target active" onclick="app.navigate('dashboard', this)"><span>✦</span> Dashboard</div>
+                <div class="nav-item hover-target" onclick="app.navigate('tasks', this)"><span>⚡</span> Work Tracker</div>
+                <div class="nav-item hover-target" onclick="app.navigate('messages', this)"><span>💬</span> Comm-Link</div>
+                <div class="nav-item hover-target" onclick="app.navigate('blog', this)"><span>📝</span> Journal CMS</div>
             </div>
             <div class="nav-item hover-target" style="margin-top: auto; opacity: 0.5;" onclick="app.logout()">Log Out</div>
         </nav>
@@ -141,10 +193,10 @@
             <div id="tasks" class="content-section" style="display: none;">
                 <div class="section-header">
                     <h2>Active <br>Sprints.</h2>
-                    <button class="btn hover-target magnetic-btn" style="background: transparent; color: var(--text-color);" onclick="app.createDummyTask()">+ Add Task (Demo)</button>
+                    <button class="btn btn-outline hover-target magnetic-btn" onclick="app.createDummyTask()">+ Add Demo Task</button>
                 </div>
                 <div class="task-list" id="task-container">
-                    <p style="opacity:0.5;">Loading tasks...</p>
+                    <p style="opacity:0.5; font-size: 1.2rem;">Loading tasks...</p>
                 </div>
             </div>
 
@@ -153,25 +205,50 @@
                 <div class="section-header"><h2>Agency <br>Comm-Link.</h2></div>
                 <div class="chat-container">
                     <div class="chat-history" id="chat-history">
-                        <p style="opacity:0.5; text-align:center;">Loading messages...</p>
+                        <p style="opacity:0.5; text-align:center; margin-top:2rem;">Loading messages...</p>
                     </div>
                     <form class="chat-input-area" onsubmit="app.sendMessage(event)">
                         <input id="chatInput" type="text" class="chat-input text-input" placeholder="Type a message..." required>
-                        <button type="submit" class="btn magnetic-btn hover-target" style="padding: 1rem 1.5rem;">Send</button>
+                        <button type="submit" class="btn magnetic-btn hover-target" style="padding: 1rem 1.5rem; border-radius: 50px;">Send</button>
                     </form>
                 </div>
             </div>
 
             <!-- Blog Editor -->
             <div id="blog" class="content-section" style="display: none;">
-                <div class="section-header">
+                <div class="section-header" style="align-items: center;">
                     <h2>Draft <br>Journal.</h2>
-                    <button class="btn hover-target magnetic-btn" onclick="app.publishBlog()">Publish to Live ↗</button>
+                    <div style="display: flex; gap: 1.5rem; align-items: center;">
+                        <div class="editor-status"><span class="status-dot"></span> Auto-Saving</div>
+                        <button class="btn hover-target magnetic-btn" onclick="app.publishBlog()">Publish Live ↗</button>
+                    </div>
                 </div>
-                <div class="editor-container">
-                    <input id="blogTitle" type="text" class="huge-input text-input" placeholder="Article Title (Make it punchy)">
-                    <input id="blogTags" type="text" class="huge-input text-input" placeholder="Tags (e.g. Engineering, Culture)" style="font-size: 1.5rem; border-color: transparent; opacity: 0.7;">
-                    <textarea id="blogContent" class="huge-input text-input editor-textarea" placeholder="Start writing..."></textarea>
+
+                <div class="editor-workspace hover-target">
+                    <div class="editor-toolbar">
+                        <button class="format-btn hover-target">B</button>
+                        <button class="format-btn hover-target">I</button>
+                        <div style="width: 2px; height: 20px; background: rgba(0,0,0,0.1); margin: 0 0.5rem;"></div>
+                        <button class="format-btn hover-target">H2</button>
+                        <button class="format-btn hover-target">🔗</button>
+                        <div class="word-counter" id="wordCount">0 Words</div>
+                    </div>
+
+                    <input id="blogTitle" type="text" class="huge-input title-input text-input" placeholder="Title (Make it punchy)">
+                    
+                    <div class="editor-meta-grid">
+                        <div class="meta-field">
+                            <span class="meta-label">Category</span>
+                            <div class="tag-pill-container" id="categorySelector">
+                                <div class="tag-select-pill active hover-target" onclick="app.selectTag(this)">Engineering</div>
+                                <div class="tag-select-pill hover-target" onclick="app.selectTag(this)">Design</div>
+                                <div class="tag-select-pill hover-target" onclick="app.selectTag(this)">Culture</div>
+                            </div>
+                            <input type="hidden" id="blogTags" value="Engineering"> 
+                        </div>
+                    </div>
+
+                    <textarea id="blogContent" class="huge-input text-input editor-textarea" placeholder="Start typing the revolution..."></textarea>
                 </div>
             </div>
 
@@ -179,20 +256,16 @@
     </div>
 
     <script>
-        // ==========================================
-        // INSERT YOUR SUPABASE CREDENTIALS HERE
-        // ==========================================
+        // SUPABASE INIT
         const SUPABASE_URL = 'https://hrmcefpiysptevmqsuaw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhybWNlZnBpeXNwdGV2bXFzdWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTc0ODAsImV4cCI6MjA5NTc5MzQ4MH0.4FOVriV8XW0X8y1kYtF5jpzg_Kugw276GDVOIi32X4o';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // --- Core App Logic ---
         const app = {
             currentUserEmail: null,
-
             init: async () => {
                 initCursor();
-                
+                setupEditorWordCount();
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (session) {
                     app.currentUserEmail = session.user.email;
@@ -201,141 +274,96 @@
                     app.loadDashboardData();
                 }
             },
-
             login: async (e) => {
                 e.preventDefault();
                 const email = document.getElementById('emailInput').value;
                 const password = document.getElementById('passwordInput').value;
-                
                 const btn = e.target.querySelector('button');
-                btn.innerText = "Authenticating...";
-
+                const ogText = btn.innerText;
+                btn.innerText = "Authorizing...";
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-                if (error) {
-                    alert(error.message);
-                    btn.innerText = "Initialize ↗";
-                    return;
-                }
-
+                if (error) { alert(error.message); btn.innerText = ogText; return; }
                 app.currentUserEmail = data.user.email;
                 document.getElementById('login-view').classList.remove('active');
-                setTimeout(() => {
-                    document.getElementById('portal-shell').classList.add('active');
-                    app.loadDashboardData();
-                    rebindCursor();
-                }, 400);
+                setTimeout(() => { document.getElementById('portal-shell').classList.add('active'); app.loadDashboardData(); rebindCursor(); }, 400);
             },
-
             logout: async () => {
                 await supabaseClient.auth.signOut();
                 app.currentUserEmail = null;
                 document.getElementById('portal-shell').classList.remove('active');
-                setTimeout(() => {
-                    document.getElementById('login-view').classList.add('active');
-                }, 400);
+                setTimeout(() => { document.getElementById('login-view').classList.add('active'); }, 400);
             },
-
             navigate: (sectionId, navElement) => {
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 navElement.classList.add('active');
-                
                 document.querySelectorAll('.content-section').forEach(el => { el.style.display = 'none'; el.style.opacity = 0; });
                 const target = document.getElementById(sectionId);
                 target.style.display = 'block';
                 setTimeout(() => target.style.opacity = 1, 50);
-
                 if (sectionId === 'tasks') app.loadTasks();
                 if (sectionId === 'messages') app.loadMessages();
                 if (sectionId === 'dashboard') app.loadDashboardData();
             },
-
-            // --- Database Functions ---
-            
+            selectTag: (element) => {
+                document.querySelectorAll('.tag-select-pill').forEach(pill => pill.classList.remove('active'));
+                element.classList.add('active');
+                document.getElementById('blogTags').value = element.innerText;
+            },
             publishBlog: async () => {
                 const title = document.getElementById('blogTitle').value;
                 const tags = document.getElementById('blogTags').value;
                 const content = document.getElementById('blogContent').value;
-
-                if (!title || !content) return alert("Title and Content are required.");
-
+                if (!title || !content) return alert("Title and Content required.");
                 const { error } = await supabaseClient.from('blogs').insert([{ title, tags, content }]);
-
-                if (error) {
-                    alert(`Error: ${error.message}`);
-                } else {
-                    alert("Published! Check the live blogs page.");
-                    document.getElementById('blogTitle').value = '';
-                    document.getElementById('blogTags').value = '';
-                    document.getElementById('blogContent').value = '';
-                }
+                if (error) alert(`Error: ${error.message}`);
+                else { alert("Published Live! 🚀"); document.getElementById('blogTitle').value = ''; document.getElementById('blogContent').value = ''; }
             },
-
             loadTasks: async () => {
                 const { data: tasks, error } = await supabaseClient.from('tasks').select('*').order('created_at', { ascending: false });
                 const container = document.getElementById('task-container');
-                
-                if (error || !tasks.length) {
-                    container.innerHTML = `<p style="opacity:0.5;">No active tasks found.</p>`;
-                    return;
-                }
-
+                if (error || !tasks.length) return container.innerHTML = `<p style="opacity:0.5; font-size: 1.2rem;">No active tasks found.</p>`;
                 container.innerHTML = tasks.map(task => `
                     <div class="task-row hover-target">
                         <div>
                             <h3 style="font-size: 1.5rem; margin-bottom: 0.2rem;">${task.title}</h3>
-                            <p style="opacity: 0.6; font-size: 0.9rem;">${task.project}</p>
+                            <p style="opacity: 0.6; font-size: 0.95rem; font-weight: 600;">${task.project}</p>
                         </div>
                         <span class="status-pill ${task.status === 'Merged' ? 'status-done' : task.status === 'In Review' ? 'status-review' : 'status-progress'}">${task.status}</span>
                     </div>
-                `).join('');
-                rebindCursor();
+                `).join(''); rebindCursor();
             },
-
             createDummyTask: async () => {
-                await supabaseClient.from('tasks').insert([{ title: "New Feature Spec", project: "Client Build", status: "In Progress" }]);
+                const projs = ["Landing Page", "Wiggle AI", "Cortex Kit", "Client Build"];
+                await supabaseClient.from('tasks').insert([{ title: "New Feature Spec", project: projs[Math.floor(Math.random() * projs.length)], status: "In Progress" }]);
                 app.loadTasks();
             },
-
             loadMessages: async () => {
-                const { data: messages, error } = await supabaseClient.from('messages').select('*').order('created_at', { ascending: true });
+                const { data: msgs, error } = await supabaseClient.from('messages').select('*').order('created_at', { ascending: true });
                 const container = document.getElementById('chat-history');
-                
-                if (error || !messages.length) {
-                    container.innerHTML = `<p style="opacity:0.5; text-align:center;">Comm-Link is quiet.</p>`;
-                    return;
-                }
-
-                container.innerHTML = messages.map(msg => {
-                    const isMine = msg.sender_email === app.currentUserEmail;
-                    return `<div class="msg ${isMine ? 'sent' : 'received'}" title="${msg.sender_email}">${msg.message}</div>`;
-                }).join('');
+                if (error || !msgs.length) return container.innerHTML = `<p style="opacity:0.5; text-align:center; margin-top:2rem;">Comm-Link is quiet.</p>`;
+                container.innerHTML = msgs.map(msg => `<div class="msg ${msg.sender_email === app.currentUserEmail ? 'sent' : 'received'}" title="${msg.sender_email}">${msg.message}</div>`).join('');
                 container.scrollTop = container.scrollHeight;
             },
-
             sendMessage: async (e) => {
                 e.preventDefault();
                 const input = document.getElementById('chatInput');
-                const message = input.value;
-                if (!message) return;
-
-                const { error } = await supabaseClient.from('messages').insert([{ sender_email: app.currentUserEmail, message }]);
-                if (!error) {
-                    input.value = '';
-                    app.loadMessages();
-                }
+                if (!input.value) return;
+                const { error } = await supabaseClient.from('messages').insert([{ sender_email: app.currentUserEmail, message: input.value }]);
+                if (!error) { input.value = ''; app.loadMessages(); }
             },
-
             loadDashboardData: async () => {
                 const { count: blogCount } = await supabaseClient.from('blogs').select('*', { count: 'exact', head: true });
                 const { count: taskCount } = await supabaseClient.from('tasks').select('*', { count: 'exact', head: true });
-                
                 document.getElementById('dash-blog-count').innerText = (blogCount || 0).toString().padStart(2, '0');
                 document.getElementById('dash-task-count').innerText = (taskCount || 0).toString().padStart(2, '0');
             }
         };
 
-        // --- Interaction Engine ---
+        function setupEditorWordCount() {
+            const ta = document.getElementById('blogContent'), wd = document.getElementById('wordCount');
+            ta.addEventListener('input', () => { const text = ta.value.trim(); const words = text ? text.split(/\s+/).length : 0; wd.innerText = `${words} Word${words !== 1 ? 's' : ''}`; });
+        }
+
         let cursorDot, cursorOutline, mouseX, mouseY, outlineX, outlineY;
         function initCursor() {
             cursorDot = document.querySelector('.cursor-dot'); cursorOutline = document.querySelector('.cursor-outline');
@@ -359,15 +387,14 @@
                 btn.addEventListener('mousemove', (e) => { const r = btn.getBoundingClientRect(); btn.style.transform = `translate(${(e.clientX - r.left - r.width/2) * 0.3}px, ${(e.clientY - r.top - r.height/2) * 0.4}px) scale(1.05)`; });
                 btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px) scale(1)`);
             });
-            document.querySelectorAll('.bento-card').forEach(card => {
-                card.addEventListener('mousemove', (e) => { const r = card.getBoundingClientRect(); card.style.transform = `perspective(1000px) rotateX(${((e.clientY - r.top - r.height/2) / (r.height/2)) * -5}deg) rotateY(${((e.clientX - r.left - r.width/2) / (r.width/2)) * 5}deg) scale3d(1.02, 1.02, 1.02)`; });
+            document.querySelectorAll('.bento-card, .editor-workspace').forEach(card => {
+                card.addEventListener('mousemove', (e) => { const r = card.getBoundingClientRect(); card.style.transform = `perspective(1000px) rotateX(${((e.clientY - r.top - r.height/2) / (r.height/2)) * -2}deg) rotateY(${((e.clientX - r.left - r.width/2) / (r.width/2)) * 2}deg) scale3d(1.01, 1.01, 1.01)`; });
                 card.addEventListener('mouseleave', () => card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`);
             });
         }
         function handleMouseEnter(e) { cursorOutline.style.width = '70px'; cursorOutline.style.height = '70px'; cursorOutline.style.backgroundColor = e.target.closest('.sidebar') ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)'; cursorOutline.style.borderColor = 'transparent'; }
         function handleMouseLeave(e) { cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px'; cursorOutline.style.backgroundColor = 'transparent'; cursorOutline.style.borderColor = e.target.closest('.sidebar') ? 'var(--bg-color)' : 'var(--text-color)'; }
 
-        // Start App
         document.addEventListener('DOMContentLoaded', app.init);
     </script>
 </body>

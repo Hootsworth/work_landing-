@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Singulr - Journal & Thoughts</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -17,6 +16,9 @@
         body { font-family: 'Outfit', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
         html { overflow-x: hidden; scroll-behavior: smooth; }
 
+        /* Film Grain */
+        .film-grain { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9998; opacity: 0.04; background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'); }
+
         /* Cursor */
         .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none; opacity: 0; will-change: transform, width, height; }
         .cursor-dot { width: 8px; height: 8px; background-color: var(--text-color); }
@@ -24,7 +26,6 @@
 
         h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
         .highlight { background: linear-gradient(120deg, var(--accent-3), var(--accent-1)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; padding: 0 0.2rem; }
-        section { padding: 8rem 5%; }
         .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--smooth), transform 0.8s var(--smooth); }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
 
@@ -39,7 +40,7 @@
         .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 
         /* Hero */
-        .hero { padding: 12rem 5% 4rem; min-height: 80vh; display: flex; align-items: center; }
+        .hero { padding: 12rem 5% 4rem; display: flex; align-items: center; }
         .hero-grid { width: 100%; position: relative; max-width: 1400px; margin: 0 auto; }
         .hero-meta { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid rgba(26, 26, 26, 0.1); padding-bottom: 2rem; margin-bottom: 4rem; }
         .hero-tag { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 1rem; color: var(--text-color); }
@@ -52,17 +53,15 @@
         .hero-italic:hover { color: var(--text-color); transform: scale(1.05) rotate(2deg); }
         @keyframes heroReveal { to { opacity: 1; transform: translateY(0) rotate(0deg); } }
 
-        /* Blog Layout */
+        /* Blog Layout Grid (View 1) */
+        #view-grid { display: block; opacity: 1; transition: opacity 0.5s var(--smooth); }
         .blog-container { max-width: 1300px; margin: 0 auto; padding: 0 5% 8rem; }
-        
-        .featured-post { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; background: #fff; border-radius: 40px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 4rem; text-decoration: none; color: var(--text-color); border: 2px solid transparent; transition: transform 0.4s var(--spring), box-shadow 0.4s ease, border-color 0.4s; }
-        .featured-post:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.05); }
+        .featured-post { display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; background: #fff; border-radius: 40px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 4rem; text-decoration: none; color: var(--text-color); border: 3px solid var(--text-color); transition: transform 0.4s var(--spring), box-shadow 0.4s ease; }
+        .featured-post:hover { transform: translate(-5px, -5px); box-shadow: 12px 12px 0px var(--text-color); }
         .featured-img { width: 100%; height: 400px; border-radius: 20px; background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); position: relative; overflow: hidden; }
-        
         .post-meta { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; }
         .post-tag { padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; background: rgba(26, 26, 26, 0.05); }
         .post-date { font-size: 0.9rem; opacity: 0.6; font-weight: 600; }
-        
         .featured-post h2 { font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 1.5rem; line-height: 1.1; }
         .featured-post p { font-size: 1.2rem; line-height: 1.6; opacity: 0.7; margin-bottom: 2rem; }
         .read-more { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 0.5rem; }
@@ -71,28 +70,40 @@
 
         .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 3rem; }
         .post-card { text-decoration: none; color: var(--text-color); display: flex; flex-direction: column; gap: 1.5rem; transform-style: preserve-3d; perspective: 1000px; }
-        .post-card-img { width: 100%; height: 250px; border-radius: 20px; overflow: hidden; position: relative; transform: translateZ(30px); transition: transform 0.4s var(--spring), box-shadow 0.4s ease; background: linear-gradient(45deg, #e0e0e0, #fff); border: 2px solid rgba(0,0,0,0.05); }
-        .post-card:hover .post-card-img { transform: translateZ(50px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .post-card-img { width: 100%; height: 250px; border-radius: 20px; overflow: hidden; position: relative; transform: translateZ(30px); transition: transform 0.4s var(--spring), box-shadow 0.4s ease; background: linear-gradient(45deg, #e0e0e0, #fff); border: 3px solid var(--text-color); }
+        .post-card:hover .post-card-img { transform: translateZ(50px) scale(1.02); box-shadow: 8px 8px 0px var(--text-color); }
         .post-card h3 { font-size: 1.8rem; line-height: 1.2; transform: translateZ(20px); transition: transform 0.3s; }
         .post-card:hover h3 { transform: translateZ(30px); color: var(--accent-1); }
         .post-card p { opacity: 0.7; line-height: 1.6; }
 
+        /* Full Article Layout (View 2) */
+        #view-article { display: none; opacity: 0; transition: opacity 0.5s var(--smooth); padding: 0 5% 8rem; }
+        .article-container { max-width: 900px; margin: 0 auto; background: #fff; padding: 4rem; border-radius: 40px; border: 3px solid var(--text-color); box-shadow: 12px 12px 0px var(--text-color); }
+        .back-btn { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; color: var(--text-color); margin-bottom: 3rem; transition: transform 0.3s var(--spring), color 0.3s; }
+        .back-btn:hover { transform: translateX(-5px); color: var(--accent-1); }
+        
+        .article-header { border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 2rem; margin-bottom: 3rem; }
+        .article-header h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; margin: 1.5rem 0; letter-spacing: -2px; }
+        .article-content { font-size: 1.25rem; line-height: 1.9; font-weight: 400; color: #222; }
+        .article-content p { margin-bottom: 2rem; }
+
         /* Footer */
         footer { padding: 8rem 5% 4rem; text-align: center; background-color: var(--text-color); color: var(--bg-color); border-top-left-radius: 60px; border-top-right-radius: 60px; }
         footer h2 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 3rem; color: var(--bg-color); }
-        .footer-btn { font-size: 2rem; padding: 1.5rem 4rem; background: var(--bg-color); color: var(--text-color); text-decoration: none; border-radius: 50px; font-weight: 600; display: inline-block; transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s; border: 2px solid var(--bg-color); }
+        .footer-btn { font-size: 2rem; padding: 1.5rem 4rem; background: var(--bg-color); color: var(--text-color); text-decoration: none; border-radius: 50px; font-weight: 600; display: inline-block; transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s; border: 3px solid var(--bg-color); }
         .footer-btn:hover { background: var(--accent-2); border-color: var(--accent-2); transform: translateY(-5px) scale(1.05); }
-        .footer-btn-outline { font-size: 2rem; padding: 1.5rem 4rem; background: transparent; color: var(--bg-color); border: 2px solid var(--bg-color); border-radius: 50px; text-decoration: none; display: inline-block; transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s, color 0.3s; }
+        .footer-btn-outline { font-size: 2rem; padding: 1.5rem 4rem; background: transparent; color: var(--bg-color); border: 3px solid var(--bg-color); border-radius: 50px; text-decoration: none; display: inline-block; transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s, color 0.3s; }
         .footer-btn-outline:hover { background: rgba(250, 249, 246, 0.1); border-color: var(--accent-2); color: var(--accent-2); transform: translateY(-5px) scale(1.05); }
         .footer-bottom { margin-top: 8rem; display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid rgba(250, 249, 246, 0.2); opacity: 0.7; font-weight: 300; }
         .social-links { display: flex; gap: 1.5rem; }
         .social-links a { color: var(--bg-color); text-decoration: none; font-weight: 600; }
 
-        @media (max-width: 900px) { .nav-links { display: none; } .hero-meta { flex-direction: column; gap: 1.5rem; border-bottom: none; margin-bottom: 2rem; padding-bottom: 0; } .featured-post { grid-template-columns: 1fr; padding: 2rem; } }
+        @media (max-width: 900px) { .nav-links { display: none; } .hero-meta { flex-direction: column; gap: 1.5rem; border-bottom: none; margin-bottom: 2rem; padding-bottom: 0; } .featured-post { grid-template-columns: 1fr; padding: 2rem; } .article-container { padding: 2rem; } }
         @media (hover: none) and (pointer: coarse) { * { cursor: auto !important; } .cursor-dot, .cursor-outline { display: none !important; } }
     </style>
 </head>
 <body>
+    <div class="film-grain"></div>
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
@@ -114,6 +125,7 @@
     </nav>
 
     <main>
+        <!-- The Master Hero (Visible on both views) -->
         <header class="hero">
             <div class="hero-grid">
                 <div class="hero-meta fade-up">
@@ -128,9 +140,26 @@
             </div>
         </header>
 
-        <section class="blog-container" id="blog-injection-zone" style="padding-top: 0;">
-            <p style="text-align: center; opacity: 0.5; font-size: 1.2rem;">Loading journal entries...</p>
-        </section>
+        <!-- VIEW 1: Grid List -->
+        <div id="view-grid">
+            <section class="blog-container" id="blog-injection-zone" style="padding-top: 0;">
+                <p style="text-align: center; opacity: 0.5; font-size: 1.2rem;">Loading journal entries...</p>
+            </section>
+        </div>
+
+        <!-- VIEW 2: Single Article -->
+        <div id="view-article">
+            <div class="article-container hover-target">
+                <a href="#" class="back-btn hover-target" onclick="blogSPA.showGrid(event)">← Back to Journal</a>
+                
+                <div class="article-header" id="article-header">
+                    <!-- Injected via JS -->
+                </div>
+                <div class="article-content" id="article-content">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer id="contact">
@@ -151,74 +180,136 @@
     </footer>
 
     <script>
-        // ==========================================
-        // INSERT YOUR SUPABASE CREDENTIALS HERE
-        // ==========================================
+        // SUPABASE INIT
         const SUPABASE_URL = 'https://hrmcefpiysptevmqsuaw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhybWNlZnBpeXNwdGV2bXFzdWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTc0ODAsImV4cCI6MjA5NTc5MzQ4MH0.4FOVriV8XW0X8y1kYtF5jpzg_Kugw276GDVOIi32X4o';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        async function fetchAndRenderBlogs() {
-            const container = document.getElementById('blog-injection-zone');
-            
-            const { data: blogs, error } = await supabaseClient
-                .from('blogs')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error || !blogs || blogs.length === 0) {
-                container.innerHTML = `<p style="text-align: center; opacity: 0.5; font-size: 1.2rem;">No journal entries published yet.</p>`;
-                return;
-            }
-
-            // Render First item as Featured
-            let htmlString = `
-                <a href="#" class="featured-post hover-target fade-up visible">
-                    <div class="featured-img"></div>
-                    <div>
-                        <div class="post-meta">
-                            <span class="post-tag">${blogs[0].tags || 'General'}</span>
-                            <span class="post-date">${new Date(blogs[0].created_at).toLocaleDateString()}</span>
-                        </div>
-                        <h2>${blogs[0].title}</h2>
-                        <p>${blogs[0].content.substring(0, 180)}...</p>
-                        <div class="read-more">Read Article <span>→</span></div>
-                    </div>
-                </a>
-            `;
-
-            // Render the rest in the Grid
-            if (blogs.length > 1) {
-                htmlString += `<div class="post-grid">`;
+        // --- SPA Router for Blogs ---
+        const blogSPA = {
+            init: () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const postId = urlParams.get('id');
                 
-                const gridColors = ['var(--accent-4)', '#e0e0e0', 'var(--text-color)']; // Rotating colors
-                
-                for (let i = 1; i < blogs.length; i++) {
-                    const post = blogs[i];
-                    const color = gridColors[(i-1) % gridColors.length];
-                    
-                    htmlString += `
-                        <a href="#" class="post-card hover-target fade-up visible">
-                            <div class="post-card-img" style="background: linear-gradient(45deg, ${color}, #fff);"></div>
-                            <div>
-                                <div class="post-meta">
-                                    <span class="post-tag">${post.tags || 'General'}</span>
-                                    <span class="post-date">${new Date(post.created_at).toLocaleDateString()}</span>
-                                </div>
-                                <h3>${post.title}</h3>
-                                <p>${post.content.substring(0, 100)}...</p>
-                            </div>
-                        </a>
-                    `;
+                if (postId) {
+                    blogSPA.fetchAndRenderSingle(postId);
+                } else {
+                    blogSPA.fetchAndRenderGrid();
                 }
-                htmlString += `</div>`;
+            },
+
+            showGrid: (e) => {
+                if (e) e.preventDefault();
+                // Update URL without reloading page
+                window.history.pushState({}, '', 'blogs.html');
+                
+                document.getElementById('view-article').style.opacity = 0;
+                setTimeout(() => {
+                    document.getElementById('view-article').style.display = 'none';
+                    document.getElementById('view-grid').style.display = 'block';
+                    setTimeout(() => document.getElementById('view-grid').style.opacity = 1, 50);
+                    blogSPA.fetchAndRenderGrid(); // Refresh grid data
+                }, 400);
+            },
+
+            readArticle: (e, id) => {
+                e.preventDefault();
+                window.history.pushState({}, '', `?id=${id}`);
+                blogSPA.fetchAndRenderSingle(id);
+            },
+
+            fetchAndRenderGrid: async () => {
+                const container = document.getElementById('blog-injection-zone');
+                const { data: blogs, error } = await supabaseClient.from('blogs').select('*').order('created_at', { ascending: false });
+
+                if (error || !blogs || blogs.length === 0) {
+                    container.innerHTML = `<p style="text-align: center; opacity: 0.5; font-size: 1.2rem;">No journal entries published yet.</p>`;
+                    return;
+                }
+
+                let htmlString = `
+                    <a href="?id=${blogs[0].id}" onclick="blogSPA.readArticle(event, '${blogs[0].id}')" class="featured-post hover-target fade-up visible">
+                        <div class="featured-img"></div>
+                        <div>
+                            <div class="post-meta">
+                                <span class="post-tag">${blogs[0].tags || 'General'}</span>
+                                <span class="post-date">${new Date(blogs[0].created_at).toLocaleDateString()}</span>
+                            </div>
+                            <h2>${blogs[0].title}</h2>
+                            <p>${blogs[0].content.substring(0, 180)}...</p>
+                            <div class="read-more">Read Article <span>→</span></div>
+                        </div>
+                    </a>
+                `;
+
+                if (blogs.length > 1) {
+                    htmlString += `<div class="post-grid">`;
+                    const gridColors = ['var(--accent-4)', '#e0e0e0', 'var(--text-color)'];
+                    for (let i = 1; i < blogs.length; i++) {
+                        const post = blogs[i];
+                        const color = gridColors[(i-1) % gridColors.length];
+                        htmlString += `
+                            <a href="?id=${post.id}" onclick="blogSPA.readArticle(event, '${post.id}')" class="post-card hover-target fade-up visible">
+                                <div class="post-card-img" style="background: linear-gradient(45deg, ${color}, #fff);"></div>
+                                <div>
+                                    <div class="post-meta">
+                                        <span class="post-tag">${post.tags || 'General'}</span>
+                                        <span class="post-date">${new Date(post.created_at).toLocaleDateString()}</span>
+                                    </div>
+                                    <h3>${post.title}</h3>
+                                    <p>${post.content.substring(0, 100)}...</p>
+                                </div>
+                            </a>
+                        `;
+                    }
+                    htmlString += `</div>`;
+                }
+
+                container.innerHTML = htmlString;
+                rebindInteractions();
+            },
+
+            fetchAndRenderSingle: async (id) => {
+                const header = document.getElementById('article-header');
+                const contentArea = document.getElementById('article-content');
+                
+                header.innerHTML = `<p style="opacity:0.5;">Loading databank...</p>`;
+                contentArea.innerHTML = '';
+
+                // Fade out Grid, Fade in Article
+                document.getElementById('view-grid').style.opacity = 0;
+                setTimeout(() => {
+                    document.getElementById('view-grid').style.display = 'none';
+                    document.getElementById('view-article').style.display = 'block';
+                    setTimeout(() => document.getElementById('view-article').style.opacity = 1, 50);
+                    
+                    // Scroll to top of article container securely
+                    window.scrollTo({ top: document.getElementById('view-article').offsetTop - 150, behavior: 'smooth' });
+                }, 400);
+
+                const { data: post, error } = await supabaseClient.from('blogs').select('*').eq('id', id).single();
+
+                if (error || !post) {
+                    header.innerHTML = `<h1>Entry Not Found.</h1>`;
+                    return;
+                }
+
+                header.innerHTML = `
+                    <div class="post-meta">
+                        <span class="post-tag">${post.tags || 'General'}</span>
+                        <span class="post-date">${new Date(post.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <h1>${post.title}</h1>
+                `;
+                
+                // Splitting paragraphs naturally
+                const formattedContent = post.content.split('\n').filter(p => p.trim() !== '').map(p => `<p>${p}</p>`).join('');
+                contentArea.innerHTML = formattedContent;
+                rebindInteractions();
             }
+        };
 
-            container.innerHTML = htmlString;
-            rebindInteractions(); // Crucial: Rebind the physics/cursor to the newly injected HTML
-        }
-
-        // --- Interaction Logic ---
+        // --- Interaction Engine ---
         let cursorOutline;
         document.addEventListener('DOMContentLoaded', () => {
             const cursorDot = document.querySelector('.cursor-dot');
@@ -238,27 +329,21 @@
                 requestAnimationFrame(animateCursor);
             }
             animateCursor();
-
-            fetchAndRenderBlogs();
+            blogSPA.init();
         });
 
-        // Called after DOM generation to attach event listeners to dynamic elements
-        function rebindInteractions() {
-            // Rebind Cursor Hover Rules
-            document.querySelectorAll('.hover-target').forEach(target => {
-                target.addEventListener('mouseenter', () => {
-                    cursorOutline.style.width = '75px'; cursorOutline.style.height = '75px';
-                    cursorOutline.style.backgroundColor = target.closest('footer') ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)';
-                    cursorOutline.style.borderColor = 'transparent';
-                });
-                target.addEventListener('mouseleave', () => {
-                    cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px';
-                    cursorOutline.style.backgroundColor = 'transparent';
-                    cursorOutline.style.borderColor = target.closest('footer') ? 'var(--bg-color)' : 'var(--text-color)';
-                });
-            });
+        // Handle browser back/forward buttons natively
+        window.addEventListener('popstate', () => {
+            blogSPA.init();
+        });
 
-            // Rebind Magnetic Footer Buttons
+        function rebindInteractions() {
+            document.querySelectorAll('.hover-target').forEach(target => {
+                target.removeEventListener('mouseenter', handleMouseEnter);
+                target.removeEventListener('mouseleave', handleMouseLeave);
+                target.addEventListener('mouseenter', handleMouseEnter);
+                target.addEventListener('mouseleave', handleMouseLeave);
+            });
             document.querySelectorAll('.magnetic-btn').forEach(btn => {
                 btn.addEventListener('mousemove', (e) => {
                     const p = btn.getBoundingClientRect();
@@ -266,8 +351,6 @@
                 });
                 btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px) scale(1)`);
             });
-
-            // Rebind 3D Tilt for newly injected dynamic Post Cards
             document.querySelectorAll('.post-card, .featured-post').forEach(card => {
                 card.addEventListener('mousemove', (e) => {
                     if (window.innerWidth < 900) return; 
@@ -276,10 +359,19 @@
                 });
                 card.addEventListener('mouseleave', () => {
                     card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                    card.style.transition = 'transform 0.5s var(--spring), box-shadow 0.4s ease';
                 });
-                card.addEventListener('mouseenter', () => card.style.transition = 'box-shadow 0.4s ease');
             });
+        }
+
+        function handleMouseEnter(e) {
+            cursorOutline.style.width = '75px'; cursorOutline.style.height = '75px';
+            cursorOutline.style.backgroundColor = e.target.closest('footer') || e.target.closest('.article-container') ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)';
+            cursorOutline.style.borderColor = 'transparent';
+        }
+        function handleMouseLeave(e) {
+            cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px';
+            cursorOutline.style.backgroundColor = 'transparent';
+            cursorOutline.style.borderColor = e.target.closest('footer') || e.target.closest('.article-container') ? 'var(--bg-color)' : 'var(--text-color)';
         }
     </script>
 </body>
