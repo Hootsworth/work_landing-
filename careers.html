@@ -109,7 +109,7 @@
         @keyframes heroReveal { to { opacity: 1; transform: translateY(0) rotate(0deg); } }
 
         /* Open Roles Interactive List */
-        .roles-section { max-width: 1200px; margin: 0 auto; padding: 4rem 5% 8rem; width: 100%; }
+        .roles-section { max-width: 1200px; margin: 0 auto; padding: 4rem 5% 4rem; width: 100%; }
         
         .roles-header-flex {
             display: flex; justify-content: space-between; align-items: flex-end; 
@@ -128,6 +128,13 @@
         .ritual-btn:hover {
             transform: translate(4px, 4px);
             box-shadow: 2px 2px 0px var(--accent-1);
+        }
+        
+        .intern-badge {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--text-color);
+            box-shadow: 4px 4px 0px var(--accent-4);
         }
 
         .role-list { display: flex; flex-direction: column; }
@@ -207,7 +214,6 @@
             box-shadow: 0px 0px 0px var(--text-color);
         }
         
-        /* Alternate accent colors on hover based on nth-child */
         .perk-card:nth-child(1):hover { background: var(--accent-1); }
         .perk-card:nth-child(2):hover { background: var(--accent-2); }
         .perk-card:nth-child(3):hover { background: var(--accent-3); }
@@ -301,11 +307,9 @@
     <nav class="navbar">
         <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
             <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
-                <!-- Logo Mark -->
                 <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
                 <circle cx="10" cy="27" r="6" fill="#ff2d93" />
                 <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
-                <!-- Text -->
                 <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
             </svg>
         </a>
@@ -373,6 +377,50 @@
             </div>
         </section>
 
+        <!-- NEW INTERNSHIP SECTION -->
+        <section class="roles-section" style="padding-top: 0;">
+            <div class="roles-header-flex">
+                <h2 class="roles-header fade-up">The Apprentice Protocol</h2>
+                <div class="ritual-btn intern-badge fade-up">2 to 6 Months / Unpaid</div>
+            </div>
+            <p class="fade-up" style="max-width: 700px; margin-bottom: 3rem; font-size: 1.1rem; line-height: 1.6; opacity: 0.8;">Why work for free? Because you'll leave with a portfolio of shipped production products, hands-on experience building complex logic, and the kind of high-velocity learning you won't get sitting in a lecture hall.</p>
+            
+            <div class="role-list">
+                <a href="#" class="role-row hover-target fade-up">
+                    <div class="role-info">
+                        <h3>AI Agent Engineer (Intern)</h3>
+                        <p>Dive into LLM orchestration, build security layers, and prototype agentic workflows.</p>
+                    </div>
+                    <div class="role-meta">
+                        <span class="role-type" style="transition: color 0.3s ease;">Apply Now 🤖</span>
+                        <div class="role-arrow">↗</div>
+                    </div>
+                </a>
+
+                <a href="#" class="role-row hover-target fade-up">
+                    <div class="role-info">
+                        <h3>UI/UX Design Intern</h3>
+                        <p>Craft expressive layouts exploring Neo-Brutalism, glassmorphism, and Material 3 mechanics.</p>
+                    </div>
+                    <div class="role-meta">
+                        <span class="role-type" style="transition: color 0.3s ease;">Apply Now 👁️</span>
+                        <div class="role-arrow">↗</div>
+                    </div>
+                </a>
+
+                <a href="#" class="role-row hover-target fade-up">
+                    <div class="role-info">
+                        <h3>Mobile Dev Intern</h3>
+                        <p>Architect robust, privacy-first mobile apps focusing on mental wellbeing and daily utility.</p>
+                    </div>
+                    <div class="role-meta">
+                        <span class="role-type" style="transition: color 0.3s ease;">Apply Now 📱</span>
+                        <div class="role-arrow">↗</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
         <section class="perks-section fade-up">
             <div class="perks-header">
                 <h2>The Baseline.</h2>
@@ -380,26 +428,26 @@
             <div class="perks-grid">
                 <div class="perk-card hover-target">
                     <div class="perk-number">01</div>
-                    <h3>Geography is a Construct</h3>
-                    <p>Remote-first. Work from a cabin, a cafe, or your couch. If your code compiles and your designs snap, your coordinates don't matter.</p>
+                    <h3>Radical Ownership</h3>
+                    <p>No corporate bureaucracy or endless permission chains. You build it, you own it. Your code and designs hit production fast.</p>
                 </div>
         
                 <div class="perk-card hover-target">
                     <div class="perk-number">02</div>
-                    <h3>Uncompromised Rigs</h3>
-                    <p>You can't build high-performance physics loops on a potato. $3,000 home-office stipend on day one, plus a fully maxed-out machine.</p>
+                    <h3>Asynchronous & Flexible</h3>
+                    <p>We care about your output, not your hours. We measure the impact of your commits, not when you log into a Slack channel.</p>
                 </div>
         
                 <div class="perk-card hover-target">
                     <div class="perk-number">03</div>
-                    <h3>Anti-Burnout Protocol</h3>
-                    <p>No arbitrary 9-to-5. We operate on deep work and asynchronous trust. We measure the impact of your commits, not your screen time.</p>
+                    <h3>Direct Mentorship</h3>
+                    <p>Learn directly from founders who are in the trenches building and scaling products. Expect blunt feedback and accelerated growth.</p>
                 </div>
         
                 <div class="perk-card hover-target">
                     <div class="perk-number">04</div>
-                    <h3>Creative Capital</h3>
-                    <p>Unlimited access to courses, design systems, and an annual budget to fly out to one global design or dev conference of your choice.</p>
+                    <h3>Creative Autonomy</h3>
+                    <p>Want to experiment with a bleeding-edge framework or an unconventional visual style? We actively encourage breaking the mold.</p>
                 </div>
             </div>
         </section>
@@ -501,20 +549,29 @@
                 "Creative Developer": [
                     "NOT HIRING YET! 🍿 (We're fully pixelated)",
                     "GRAVITY ERROR! 🚫 (No open seats in orbit)",
-                    "NOT YET! 🧪 (Our physics engine is full)",
-                    "PAUSED! 🕹️ (Out of pixels, check back soon!)"
+                    "NOT YET! 🧪 (Our physics engine is full)"
                 ],
                 "Senior UI/UX Designer": [
                     "NOT HIRING YET! 🎨 (Our color wheel is full)",
                     "CANVAS FULL! 🚫 (No blank screens left)",
-                    "NOT YET! 🤫 (We're busy aligning elements)",
-                    "HOLD ON! 📐 (Measuring perfect micro-bounces)"
+                    "NOT YET! 🤫 (We're busy aligning elements)"
                 ],
                 "Growth Engineer": [
                     "NOT HIRING YET! 🚀 (Servers currently melting)",
                     "PAUSED! 🍿 (VOLATILITY LIMIT REACHED)",
-                    "NOT YET! 🔥 (Managing extreme bouncy-loop chaos)",
-                    "SLOW DOWN! 📈 (Growth metrics too high to count)"
+                    "NOT YET! 🔥 (Managing extreme bouncy-loop chaos)"
+                ],
+                "AI Agent Engineer (Intern)": [
+                    "APPLICATION RECEIVED! 🤖 (Evaluating neural pathways...)",
+                    "PROMPT ACCEPTED! ⚡ (Sending to founders...)"
+                ],
+                "UI/UX Design Intern": [
+                    "APPLICATION RECEIVED! 🎨 (Checking border-radius...)",
+                    "NICE PIXELS! 👁️ (We'll be in touch...)"
+                ],
+                "Mobile Dev Intern": [
+                    "APPLICATION RECEIVED! 📱 (Compiling your credentials...)",
+                    "BUILD SUCCESS! 🚀 (Routing to founders...)"
                 ]
             };
 
@@ -522,23 +579,20 @@
                 row.addEventListener('click', (e) => {
                     e.preventDefault();
                     
-                    // Add bouncy wobble animation
                     row.classList.remove('wobble-active');
-                    void row.offsetWidth; // Force reflow to reset CSS transition
+                    void row.offsetWidth; 
                     row.classList.add('wobble-active');
                     
                     const roleTitle = row.querySelector('h3').textContent.trim();
                     const typeSpan = row.querySelector('.role-type');
                     const arrowDiv = row.querySelector('.role-arrow');
                     
-                    // Change status text to a random fun message
-                    const messages = funMessages[roleTitle] || ["Not Hiring Yet! 🍿"];
+                    const messages = funMessages[roleTitle] || ["Incoming... 📡"];
                     const randomMsg = messages[Math.floor(Math.random() * messages.length)];
                     
                     typeSpan.textContent = randomMsg;
                     typeSpan.style.color = 'var(--accent-1)';
                     
-                    // Spin arrow in circles
                     arrowDiv.style.transform = 'rotate(360deg) scale(0.9)';
                     setTimeout(() => {
                         arrowDiv.style.transform = '';
