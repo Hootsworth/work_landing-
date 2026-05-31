@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Singulr - Employee Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -89,6 +90,7 @@
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
+    <!-- LOGIN -->
     <div id="login-view" class="app-view active">
         <div class="login-box hover-target">
             <h1>Singulr<span style="color: var(--accent-1);">.</span> Hub</h1>
@@ -101,6 +103,7 @@
         </div>
     </div>
 
+    <!-- PORTAL -->
     <div id="portal-shell" class="app-view">
         <nav class="sidebar">
             <div class="logo">Singulr<span style="color: var(--accent-1);">.</span></div>
@@ -115,6 +118,7 @@
 
         <main class="main-content">
             
+            <!-- Dashboard -->
             <div id="dashboard" class="content-section">
                 <div class="section-header"><h2>System <br>Overview.</h2></div>
                 <div class="dashboard-grid">
@@ -133,6 +137,7 @@
                 </div>
             </div>
 
+            <!-- Tasks -->
             <div id="tasks" class="content-section" style="display: none;">
                 <div class="section-header">
                     <h2>Active <br>Sprints.</h2>
@@ -143,6 +148,7 @@
                 </div>
             </div>
 
+            <!-- Messages -->
             <div id="messages" class="content-section" style="display: none;">
                 <div class="section-header"><h2>Agency <br>Comm-Link.</h2></div>
                 <div class="chat-container">
@@ -156,6 +162,7 @@
                 </div>
             </div>
 
+            <!-- Blog Editor -->
             <div id="blog" class="content-section" style="display: none;">
                 <div class="section-header">
                     <h2>Draft <br>Journal.</h2>
@@ -175,9 +182,9 @@
         // ==========================================
         // INSERT YOUR SUPABASE CREDENTIALS HERE
         // ==========================================
-        const SUPABASE_URL = 'https://hrmcefpiysptevmqsuaw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhybWNlZnBpeXNwdGV2bXFzdWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTc0ODAsImV4cCI6MjA5NTc5MzQ4MH0.4FOVriV8XW0X8y1kYtF5jpzg_Kugw276GDVOIi32X4o';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // --- Core App Logic ---
         const app = {
@@ -185,8 +192,8 @@
 
             init: async () => {
                 initCursor();
-                // Check if already logged in
-                const { data: { session } } = await supabase.auth.getSession();
+                
+                const { data: { session } } = await supabaseClient.auth.getSession();
                 if (session) {
                     app.currentUserEmail = session.user.email;
                     document.getElementById('login-view').classList.remove('active');
@@ -203,7 +210,7 @@
                 const btn = e.target.querySelector('button');
                 btn.innerText = "Authenticating...";
 
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
                 if (error) {
                     alert(error.message);
@@ -221,7 +228,7 @@
             },
 
             logout: async () => {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 app.currentUserEmail = null;
                 document.getElementById('portal-shell').classList.remove('active');
                 setTimeout(() => {
@@ -252,7 +259,7 @@
 
                 if (!title || !content) return alert("Title and Content are required.");
 
-                const { error } = await supabase.from('blogs').insert([{ title, tags, content }]);
+                const { error } = await supabaseClient.from('blogs').insert([{ title, tags, content }]);
 
                 if (error) {
                     alert(`Error: ${error.message}`);
@@ -265,7 +272,7 @@
             },
 
             loadTasks: async () => {
-                const { data: tasks, error } = await supabase.from('tasks').select('*').order('created_at', { ascending: false });
+                const { data: tasks, error } = await supabaseClient.from('tasks').select('*').order('created_at', { ascending: false });
                 const container = document.getElementById('task-container');
                 
                 if (error || !tasks.length) {
@@ -286,12 +293,12 @@
             },
 
             createDummyTask: async () => {
-                await supabase.from('tasks').insert([{ title: "New Feature Spec", project: "Client Build", status: "In Progress" }]);
+                await supabaseClient.from('tasks').insert([{ title: "New Feature Spec", project: "Client Build", status: "In Progress" }]);
                 app.loadTasks();
             },
 
             loadMessages: async () => {
-                const { data: messages, error } = await supabase.from('messages').select('*').order('created_at', { ascending: true });
+                const { data: messages, error } = await supabaseClient.from('messages').select('*').order('created_at', { ascending: true });
                 const container = document.getElementById('chat-history');
                 
                 if (error || !messages.length) {
@@ -312,7 +319,7 @@
                 const message = input.value;
                 if (!message) return;
 
-                const { error } = await supabase.from('messages').insert([{ sender_email: app.currentUserEmail, message }]);
+                const { error } = await supabaseClient.from('messages').insert([{ sender_email: app.currentUserEmail, message }]);
                 if (!error) {
                     input.value = '';
                     app.loadMessages();
@@ -320,8 +327,8 @@
             },
 
             loadDashboardData: async () => {
-                const { count: blogCount } = await supabase.from('blogs').select('*', { count: 'exact', head: true });
-                const { count: taskCount } = await supabase.from('tasks').select('*', { count: 'exact', head: true });
+                const { count: blogCount } = await supabaseClient.from('blogs').select('*', { count: 'exact', head: true });
+                const { count: taskCount } = await supabaseClient.from('tasks').select('*', { count: 'exact', head: true });
                 
                 document.getElementById('dash-blog-count').innerText = (blogCount || 0).toString().padStart(2, '0');
                 document.getElementById('dash-task-count').innerText = (taskCount || 0).toString().padStart(2, '0');
