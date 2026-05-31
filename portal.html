@@ -8,124 +8,62 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-color: #faf9f6;
-            --text-color: #1a1a1a;
-            --accent-1: #ff90e8;
-            --accent-2: #ffc900;
-            --accent-3: #90e8ff;
-            --accent-4: #c9ff90;
-            
-            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+            --bg-color: #faf9f6; --text-color: #1a1a1a;
+            --accent-1: #ff90e8; --accent-2: #ffc900; --accent-3: #90e8ff; --accent-4: #c9ff90;
+            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275); --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; min-height: 100vh; }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* --- Cursor --- */
-        .cursor-dot, .cursor-outline {
-            position: fixed; top: 0; left: 0; border-radius: 50%;
-            z-index: 9999; pointer-events: none; opacity: 0;
-            will-change: transform, width, height;
-        }
+        /* Cursor */
+        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none; opacity: 0; will-change: transform, width, height; }
         .cursor-dot { width: 8px; height: 8px; background-color: var(--text-color); transition: border-radius 0.2s, height 0.2s, width 0.2s; }
-        .cursor-outline {
-            width: 40px; height: 40px; border: 2px solid var(--text-color);
-            transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease, border-radius 0.3s;
-        }
+        .cursor-outline { width: 40px; height: 40px; border: 2px solid var(--text-color); transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease, border-radius 0.3s; }
         body.text-hover .cursor-dot { height: 24px; width: 2px; border-radius: 0; background-color: var(--accent-1); }
         body.text-hover .cursor-outline { opacity: 0 !important; }
 
         h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
 
-        /* --- Utilities --- */
-        .btn {
-            padding: 1rem 2rem; font-size: 1.1rem; font-weight: 800; font-family: inherit;
-            border-radius: 50px; transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring);
-            border: 2px solid var(--text-color); background: var(--text-color); color: var(--bg-color);
-            display: inline-flex; align-items: center; justify-content: center; text-transform: uppercase;
-        }
-        .btn:hover {
-            transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            background: var(--accent-4); color: var(--text-color);
-        }
-        
-        .huge-input {
-            width: 100%; background: transparent; border: none; border-bottom: 3px solid rgba(0,0,0,0.1);
-            font-family: 'Outfit', sans-serif; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 600;
-            color: var(--text-color); padding: 1rem 0; outline: none; transition: border-color 0.4s var(--spring);
-        }
+        /* Utilities */
+        .btn { padding: 1rem 2rem; font-size: 1.1rem; font-weight: 800; font-family: inherit; border-radius: 50px; transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring); border: 2px solid var(--text-color); background: var(--text-color); color: var(--bg-color); display: inline-flex; align-items: center; justify-content: center; text-transform: uppercase; }
+        .btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15); background: var(--accent-4); color: var(--text-color); }
+        .huge-input { width: 100%; background: transparent; border: none; border-bottom: 3px solid rgba(0,0,0,0.1); font-family: 'Outfit', sans-serif; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 600; color: var(--text-color); padding: 1rem 0; outline: none; transition: border-color 0.4s var(--spring); }
         .huge-input:focus { border-color: var(--accent-1); }
-
-        .bento-card {
-            background: #fff; border-radius: 30px; padding: 2.5rem; border: 2px solid rgba(0,0,0,0.04);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02); transition: box-shadow 0.4s var(--spring), transform 0.5s var(--spring);
-            position: relative; overflow: hidden; transform-style: preserve-3d; perspective: 1000px;
-        }
+        .bento-card { background: #fff; border-radius: 30px; padding: 2.5rem; border: 2px solid rgba(0,0,0,0.04); box-shadow: 0 10px 30px rgba(0,0,0,0.02); transition: box-shadow 0.4s var(--spring), transform 0.5s var(--spring); position: relative; overflow: hidden; transform-style: preserve-3d; perspective: 1000px; }
         .bento-card:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.08); transform: translateY(-5px); }
 
-        /* --- View Controller --- */
+        /* Views */
         .app-view { display: none; opacity: 0; transition: opacity 0.4s var(--smooth); }
         .app-view.active { display: flex; opacity: 1; }
-
-        /* --- Login View --- */
-        #login-view {
-            min-height: 100vh; align-items: center; justify-content: center;
-            background: radial-gradient(circle at 50% 50%, var(--bg-color) 0%, #e8e6e1 100%);
-        }
+        #login-view { min-height: 100vh; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 50%, var(--bg-color) 0%, #e8e6e1 100%); }
         .login-box { max-width: 500px; width: 90%; background: #fff; padding: 4rem; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
         .login-box h1 { font-size: 3rem; margin-bottom: 1rem; }
-        .login-box p { opacity: 0.6; margin-bottom: 3rem; }
-
-        /* --- Portal Shell (Sidebar + Main) --- */
-        #portal-shell { min-height: 100vh; flex-direction: row; }
         
-        .sidebar {
-            width: 280px; background: var(--text-color); color: var(--bg-color);
-            padding: 3rem 2rem; display: flex; flex-direction: column; position: fixed; height: 100vh;
-        }
+        #portal-shell { min-height: 100vh; flex-direction: row; }
+        .sidebar { width: 280px; background: var(--text-color); color: var(--bg-color); padding: 3rem 2rem; display: flex; flex-direction: column; position: fixed; height: 100vh; }
         .sidebar .logo { font-size: 2rem; color: var(--bg-color); margin-bottom: 4rem; display: block; }
         .nav-menu { display: flex; flex-direction: column; gap: 1rem; flex-grow: 1; }
-        .nav-item {
-            padding: 1rem 1.5rem; border-radius: 20px; font-weight: 600; font-size: 1.1rem;
-            transition: all 0.3s var(--spring); opacity: 0.6;
-        }
+        .nav-item { padding: 1rem 1.5rem; border-radius: 20px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s var(--spring); opacity: 0.6; }
         .nav-item:hover { opacity: 1; background: rgba(255,255,255,0.1); transform: translateX(5px); }
         .nav-item.active { opacity: 1; background: var(--accent-1); color: var(--text-color); }
-        
         .main-content { margin-left: 280px; width: calc(100% - 280px); padding: 4rem 5%; }
         
         /* Dashboard Layouts */
         .section-header { margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
         .section-header h2 { font-size: 3.5rem; line-height: 0.9; }
-
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
         .metric-card h3 { font-size: 1.2rem; opacity: 0.7; margin-bottom: 1rem; }
         .metric-card .value { font-size: 4rem; font-weight: 800; color: var(--accent-1); line-height: 1; }
 
-        /* Tasks/Tracker */
+        /* Tasks & Chat */
         .task-list { display: flex; flex-direction: column; gap: 1rem; }
-        .task-row {
-            display: flex; justify-content: space-between; align-items: center;
-            background: #fff; padding: 1.5rem 2rem; border-radius: 20px;
-            border: 2px solid transparent; transition: all 0.3s var(--spring);
-        }
+        .task-row { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 1.5rem 2rem; border-radius: 20px; border: 2px solid transparent; transition: all 0.3s var(--spring); }
         .task-row:hover { border-color: rgba(0,0,0,0.1); transform: translateX(10px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .status-pill {
-            padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase;
-        }
+        .status-pill { padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
         .status-progress { background: var(--accent-2); }
         .status-review { background: var(--accent-3); }
         .status-done { background: var(--accent-4); }
 
-        /* Messages */
         .chat-container { background: #fff; border-radius: 30px; height: 600px; display: flex; flex-direction: column; overflow: hidden; border: 2px solid rgba(0,0,0,0.05); }
         .chat-history { flex-grow: 1; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; }
         .msg { max-width: 70%; padding: 1rem 1.5rem; border-radius: 20px; font-weight: 500; }
@@ -134,7 +72,6 @@
         .chat-input-area { padding: 1.5rem; border-top: 2px solid rgba(0,0,0,0.05); display: flex; gap: 1rem; }
         .chat-input { flex-grow: 1; border: none; background: var(--bg-color); padding: 1rem 1.5rem; border-radius: 50px; font-family: inherit; font-size: 1rem; outline: none; }
 
-        /* Blog Editor */
         .editor-container { max-width: 900px; }
         .editor-textarea { min-height: 400px; resize: none; font-size: 1.2rem; line-height: 1.8; margin-top: 2rem; }
 
@@ -142,13 +79,10 @@
             #portal-shell { flex-direction: column; }
             .sidebar { width: 100%; height: auto; position: relative; padding: 1.5rem; flex-direction: row; align-items: center; justify-content: space-between; }
             .sidebar .logo { margin-bottom: 0; font-size: 1.5rem; }
-            .nav-menu { flex-direction: row; gap: 0.5rem; display: none; /* Add hamburger logic for mobile */ }
+            .nav-menu { display: none; }
             .main-content { margin-left: 0; width: 100%; padding: 2rem 5%; }
         }
-        @media (hover: none) and (pointer: coarse) {
-            * { cursor: auto !important; }
-            .cursor-dot, .cursor-outline { display: none !important; }
-        }
+        @media (hover: none) and (pointer: coarse) { * { cursor: auto !important; } .cursor-dot, .cursor-outline { display: none !important; } }
     </style>
 </head>
 <body>
@@ -160,8 +94,8 @@
             <h1>Singulr<span style="color: var(--accent-1);">.</span> Hub</h1>
             <p>Authorized personnel only.</p>
             <form onsubmit="app.login(event)">
-                <input type="email" class="huge-input text-input" placeholder="agent@singulr.agency" style="margin-bottom: 2rem;" required>
-                <input type="password" class="huge-input text-input" placeholder="Passcode" style="margin-bottom: 3rem;" required>
+                <input id="emailInput" type="email" class="huge-input text-input" placeholder="agent@singulr.agency" style="margin-bottom: 2rem;" required>
+                <input id="passwordInput" type="password" class="huge-input text-input" placeholder="Passcode" style="margin-bottom: 3rem;" required>
                 <button type="submit" class="btn magnetic-btn" style="width: 100%;">Initialize ↗</button>
             </form>
         </div>
@@ -182,33 +116,19 @@
         <main class="main-content">
             
             <div id="dashboard" class="content-section">
-                <div class="section-header">
-                    <h2>System <br>Overview.</h2>
-                </div>
+                <div class="section-header"><h2>System <br>Overview.</h2></div>
                 <div class="dashboard-grid">
                     <div class="bento-card hover-target metric-card">
-                        <h3>Active Projects</h3>
-                        <div class="value">04</div>
+                        <h3>Published Journals</h3>
+                        <div class="value" id="dash-blog-count">--</div>
                     </div>
                     <div class="bento-card hover-target metric-card">
-                        <h3>Pending Reviews</h3>
-                        <div class="value" style="color: var(--accent-2);">12</div>
+                        <h3>Active Tasks</h3>
+                        <div class="value" id="dash-task-count" style="color: var(--accent-2);">--</div>
                     </div>
                     <div class="bento-card hover-target metric-card">
-                        <h3>Agent Uptime</h3>
-                        <div class="value" style="color: var(--accent-4);">99%</div>
-                    </div>
-                </div>
-                
-                <h3 style="margin-bottom: 1.5rem; font-size: 2rem;">Recent Commits</h3>
-                <div class="task-list">
-                    <div class="task-row hover-target">
-                        <div><strong>Wiggle AI</strong> - Pushed physics update to main</div>
-                        <span style="opacity: 0.5; font-size: 0.9rem;">10 mins ago</span>
-                    </div>
-                    <div class="task-row hover-target">
-                        <div><strong>Cortex Kit</strong> - Refactored Phantom Run logic</div>
-                        <span style="opacity: 0.5; font-size: 0.9rem;">2 hrs ago</span>
+                        <h3>System Status</h3>
+                        <div class="value" style="color: var(--accent-4);">Live</div>
                     </div>
                 </div>
             </div>
@@ -216,47 +136,23 @@
             <div id="tasks" class="content-section" style="display: none;">
                 <div class="section-header">
                     <h2>Active <br>Sprints.</h2>
-                    <button class="btn hover-target magnetic-btn" style="background: transparent; color: var(--text-color);">+ New Task</button>
+                    <button class="btn hover-target magnetic-btn" style="background: transparent; color: var(--text-color);" onclick="app.createDummyTask()">+ Add Task (Demo)</button>
                 </div>
-                <div class="task-list">
-                    <div class="task-row hover-target">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.2rem;">Implement WebGL Liquid Effect</h3>
-                            <p style="opacity: 0.6; font-size: 0.9rem;">Singulr Main Landing Page</p>
-                        </div>
-                        <span class="status-pill status-progress">In Progress</span>
-                    </div>
-                    <div class="task-row hover-target">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.2rem;">Supabase Auth Integration</h3>
-                            <p style="opacity: 0.6; font-size: 0.9rem;">Employee Portal Architecture</p>
-                        </div>
-                        <span class="status-pill status-review">In Review</span>
-                    </div>
-                    <div class="task-row hover-target">
-                        <div>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 0.2rem;">DOM Rewrite Injection Animation</h3>
-                            <p style="opacity: 0.6; font-size: 0.9rem;">Wiggle AI Extension</p>
-                        </div>
-                        <span class="status-pill status-done">Merged</span>
-                    </div>
+                <div class="task-list" id="task-container">
+                    <p style="opacity:0.5;">Loading tasks...</p>
                 </div>
             </div>
 
             <div id="messages" class="content-section" style="display: none;">
-                <div class="section-header">
-                    <h2>Agency <br>Comm-Link.</h2>
-                </div>
+                <div class="section-header"><h2>Agency <br>Comm-Link.</h2></div>
                 <div class="chat-container">
                     <div class="chat-history" id="chat-history">
-                        <div class="msg received">The new spring physics curve on the buttons looks incredible.</div>
-                        <div class="msg sent">Thanks! Tweaked the cubic-bezier to (0.175, 0.885, 0.32, 1.275). Feel much more tactile now.</div>
-                        <div class="msg received">Perfect. Let's push that to the portal components today.</div>
+                        <p style="opacity:0.5; text-align:center;">Loading messages...</p>
                     </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chat-msg-input" class="chat-input text-input" placeholder="Type a message...">
-                        <button id="chat-send-btn" class="btn magnetic-btn hover-target" style="padding: 1rem 1.5rem;" onclick="app.sendMessage()">Send</button>
-                    </div>
+                    <form class="chat-input-area" onsubmit="app.sendMessage(event)">
+                        <input id="chatInput" type="text" class="chat-input text-input" placeholder="Type a message..." required>
+                        <button type="submit" class="btn magnetic-btn hover-target" style="padding: 1rem 1.5rem;">Send</button>
+                    </form>
                 </div>
             </div>
 
@@ -266,455 +162,206 @@
                     <button class="btn hover-target magnetic-btn" onclick="app.publishBlog()">Publish to Live ↗</button>
                 </div>
                 <div class="editor-container">
-                    <input type="text" id="blog-title" class="huge-input text-input" placeholder="Article Title (Make it punchy)">
-                    <input type="text" id="blog-tags" class="huge-input text-input" placeholder="Tags (e.g. Engineering, Culture)" style="font-size: 1.5rem; border-color: transparent; opacity: 0.7;">
-                    <textarea id="blog-content" class="huge-input text-input editor-textarea" placeholder="Start writing... The internet is tired of boring text."></textarea>
+                    <input id="blogTitle" type="text" class="huge-input text-input" placeholder="Article Title (Make it punchy)">
+                    <input id="blogTags" type="text" class="huge-input text-input" placeholder="Tags (e.g. Engineering, Culture)" style="font-size: 1.5rem; border-color: transparent; opacity: 0.7;">
+                    <textarea id="blogContent" class="huge-input text-input editor-textarea" placeholder="Start writing..."></textarea>
                 </div>
             </div>
 
         </main>
     </div>
 
-    <!-- Supabase Configuration Modal -->
-    <div id="supabase-config-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(26, 26, 26, 0.95); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-        <div style="background: #fff; padding: 3.5rem; border-radius: 40px; width: 90%; max-width: 550px; box-shadow: 0 30px 60px rgba(0,0,0,0.4); border: 3px solid var(--text-color);">
-            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; text-transform: uppercase;">Connect Supabase</h2>
-            <p style="opacity: 0.7; margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.5;">To activate the live login, CMS, and Comm-Link chat, enter your Supabase Project details below. These are stored locally in your browser.</p>
-            <form onsubmit="setupSupabase(event)">
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="font-weight: 800; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; display: block; margin-bottom: 0.5rem;">Supabase Project URL</label>
-                    <input type="url" id="sb-url" class="huge-input" placeholder="https://xxxx.supabase.co" style="font-size: 1.2rem; padding: 0.5rem 0;" required>
-                </div>
-                <div style="margin-bottom: 2.5rem;">
-                    <label style="font-weight: 800; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; display: block; margin-bottom: 0.5rem;">Supabase Anon Key</label>
-                    <input type="text" id="sb-key" class="huge-input" placeholder="eyJhbGciOi..." style="font-size: 1.2rem; padding: 0.5rem 0;" required>
-                </div>
-                <button type="submit" class="btn" style="width: 100%; padding: 1.2rem;">Connect Database ↗</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- settings wheel widget -->
-    <div class="hover-target" style="position: fixed; bottom: 20px; right: 20px; width: 45px; height: 45px; background: var(--text-color); color: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 999; box-shadow: 0 10px 20px rgba(0,0,0,0.15);" onclick="showSupabaseConfig()">⚙</div>
-
     <script>
-        // --- Supabase Connection Logic ---
-        let SUPABASE_URL = localStorage.getItem('SUPABASE_URL') || '';
-        let SUPABASE_ANON_KEY = localStorage.getItem('SUPABASE_ANON_KEY') || '';
-        let supabase = null;
+        // ==========================================
+        // INSERT YOUR SUPABASE CREDENTIALS HERE
+        // ==========================================
+        const SUPABASE_URL = 'https://hrmcefpiysptevmqsuaw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhybWNlZnBpeXNwdGV2bXFzdWF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMTc0ODAsImV4cCI6MjA5NTc5MzQ4MH0.4FOVriV8XW0X8y1kYtF5jpzg_Kugw276GDVOIi32X4o';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-            try {
-                supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-            } catch (err) {
-                console.error("Failed to initialize Supabase client:", err);
-            }
-        }
-
-        function showSupabaseConfig() {
-            document.getElementById('supabase-config-modal').style.display = 'flex';
-            if (SUPABASE_URL) document.getElementById('sb-url').value = SUPABASE_URL;
-            if (SUPABASE_ANON_KEY) document.getElementById('sb-key').value = SUPABASE_ANON_KEY;
-        }
-
-        function setupSupabase(e) {
-            e.preventDefault();
-            const url = document.getElementById('sb-url').value.trim();
-            const key = document.getElementById('sb-key').value.trim();
-            
-            localStorage.setItem('SUPABASE_URL', url);
-            localStorage.setItem('SUPABASE_ANON_KEY', key);
-            
-            alert("Supabase connected successfully! Reloading page to apply...");
-            window.location.reload();
-        }
-
-        // Close config modal when clicking outside form
-        document.getElementById('supabase-config-modal').addEventListener('mousedown', (e) => {
-            if (e.target === document.getElementById('supabase-config-modal') && SUPABASE_URL) {
-                document.getElementById('supabase-config-modal').style.display = 'none';
-            }
-        });
-
-        // --- Core Application Logic ---
+        // --- Core App Logic ---
         const app = {
-            user: null,
-            chatSubscription: null,
+            currentUserEmail: null,
+
+            init: async () => {
+                initCursor();
+                // Check if already logged in
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    app.currentUserEmail = session.user.email;
+                    document.getElementById('login-view').classList.remove('active');
+                    document.getElementById('portal-shell').classList.add('active');
+                    app.loadDashboardData();
+                }
+            },
 
             login: async (e) => {
                 e.preventDefault();
-                const form = e.target;
-                const email = form.querySelector('input[type="email"]').value.trim();
-                const password = form.querySelector('input[type="password"]').value;
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
+                const email = document.getElementById('emailInput').value;
+                const password = document.getElementById('passwordInput').value;
+                
+                const btn = e.target.querySelector('button');
+                btn.innerText = "Authenticating...";
 
-                if (!supabase) {
-                    showSupabaseConfig();
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    alert(error.message);
+                    btn.innerText = "Initialize ↗";
                     return;
                 }
 
-                submitBtn.innerHTML = "Authenticating... ⌛";
-                submitBtn.disabled = true;
-
-                try {
-                    const { data, error } = await supabase.auth.signInWithPassword({
-                        email: email,
-                        password: password
-                    });
-
-                    if (error) {
-                        if (error.message.includes("Invalid login credentials") || error.message.includes("Email not confirmed")) {
-                            const signup = confirm(`${error.message}. Would you like to register this email as a new employee account?`);
-                            if (signup) {
-                                submitBtn.innerHTML = "Registering... 🧪";
-                                const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-                                    email: email,
-                                    password: password
-                                });
-                                if (signUpError) {
-                                    alert("Registration failed: " + signUpError.message);
-                                } else {
-                                    alert("Registration successful! Check your email for verification link (if email confirmation is enabled in Supabase), or log in if confirmation is disabled.");
-                                }
-                            }
-                        } else {
-                            alert(error.message);
-                        }
-                    } else {
-                        app.user = data.user;
-                        document.getElementById('login-view').classList.remove('active');
-                        setTimeout(() => {
-                            document.getElementById('portal-shell').classList.add('active');
-                            app.initPortalData();
-                            rebindCursor();
-                        }, 400);
-                    }
-                } catch (err) {
-                    alert("Authentication failed: " + err.message);
-                } finally {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }
+                app.currentUserEmail = data.user.email;
+                document.getElementById('login-view').classList.remove('active');
+                setTimeout(() => {
+                    document.getElementById('portal-shell').classList.add('active');
+                    app.loadDashboardData();
+                    rebindCursor();
+                }, 400);
             },
+
             logout: async () => {
-                if (supabase) {
-                    await supabase.auth.signOut();
-                }
-                app.user = null;
-                if (app.chatSubscription) {
-                    supabase.removeChannel(app.chatSubscription);
-                    app.chatSubscription = null;
-                }
+                await supabase.auth.signOut();
+                app.currentUserEmail = null;
                 document.getElementById('portal-shell').classList.remove('active');
                 setTimeout(() => {
                     document.getElementById('login-view').classList.add('active');
                 }, 400);
             },
+
             navigate: (sectionId, navElement) => {
-                document.querySelectorAll('.nav-menu .nav-item').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 navElement.classList.add('active');
                 
-                document.querySelectorAll('.content-section').forEach(el => {
-                    el.style.display = 'none';
-                    el.style.opacity = 0;
-                });
+                document.querySelectorAll('.content-section').forEach(el => { el.style.display = 'none'; el.style.opacity = 0; });
                 const target = document.getElementById(sectionId);
                 target.style.display = 'block';
                 setTimeout(() => target.style.opacity = 1, 50);
 
-                if (sectionId === 'messages') {
-                    app.initChat();
-                }
+                if (sectionId === 'tasks') app.loadTasks();
+                if (sectionId === 'messages') app.loadMessages();
+                if (sectionId === 'dashboard') app.loadDashboardData();
             },
 
-            initPortalData: () => {
-                app.updateDashboardStats();
-            },
-
-            updateDashboardStats: async () => {
-                if (!supabase) return;
-                try {
-                    const { count, error } = await supabase
-                        .from('blogs')
-                        .select('*', { count: 'exact', head: true });
-                        
-                    if (!error && count !== null) {
-                        const metricCard = document.querySelector('.metric-card .value');
-                        if (metricCard) {
-                            metricCard.textContent = String(count).padStart(2, '0');
-                        }
-                    }
-                } catch (err) {
-                    console.error("Failed to load dashboard metrics:", err);
-                }
-            },
-
+            // --- Database Functions ---
+            
             publishBlog: async () => {
-                const title = document.getElementById('blog-title').value.trim();
-                const tags = document.getElementById('blog-tags').value.trim();
-                const content = document.getElementById('blog-content').value.trim();
+                const title = document.getElementById('blogTitle').value;
+                const tags = document.getElementById('blogTags').value;
+                const content = document.getElementById('blogContent').value;
 
-                if (!title || !content) {
-                    alert("Please fill out both the Title and the Content!");
-                    return;
-                }
+                if (!title || !content) return alert("Title and Content are required.");
 
-                if (!supabase) {
-                    alert("Supabase is not initialized!");
-                    return;
-                }
+                const { error } = await supabase.from('blogs').insert([{ title, tags, content }]);
 
-                const publishBtn = document.querySelector('#blog .section-header .btn');
-                const originalText = publishBtn.innerHTML;
-                publishBtn.innerHTML = "Publishing... ⌛";
-                publishBtn.disabled = true;
-
-                try {
-                    const { data, error } = await supabase
-                        .from('blogs')
-                        .insert([
-                            {
-                                title: title,
-                                tags: tags || 'Culture',
-                                content: content,
-                                created_at: new Date().toISOString()
-                            }
-                        ]);
-
-                    if (error) {
-                        if (error.message.includes("relation \"blogs\" does not exist")) {
-                            alert("Table 'blogs' does not exist in Supabase! Please create the table in your Supabase SQL Editor first:\n\n" + 
-                                  "CREATE TABLE blogs (\n" +
-                                  "  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,\n" +
-                                  "  title text NOT NULL,\n" +
-                                  "  tags text NOT NULL,\n" +
-                                  "  content text NOT NULL,\n" +
-                                  "  created_at timestamptz DEFAULT now()\n" +
-                                  ");");
-                        } else {
-                            alert("Failed to publish: " + error.message);
-                        }
-                    } else {
-                        alert("Article successfully published to Live! 🚀");
-                        document.getElementById('blog-title').value = '';
-                        document.getElementById('blog-tags').value = '';
-                        document.getElementById('blog-content').value = '';
-                        app.updateDashboardStats();
-                    }
-                } catch (err) {
-                    alert("Failed to publish: " + err.message);
-                } finally {
-                    publishBtn.innerHTML = originalText;
-                    publishBtn.disabled = false;
-                }
-            },
-
-            initChat: async () => {
-                if (!supabase) return;
-                
-                const chatHistory = document.getElementById('chat-history');
-                chatHistory.innerHTML = '<div style="opacity:0.5; text-align:center; padding: 1rem;">Loading secure Comm-Link...</div>';
-
-                try {
-                    const { data: messages, error } = await supabase
-                        .from('chats')
-                        .select('*')
-                        .order('created_at', { ascending: true });
-
-                    if (error) {
-                        if (error.message.includes("relation \"chats\" does not exist")) {
-                            chatHistory.innerHTML = `<div style="opacity:0.6; text-align:center; padding: 1.5rem; font-size:0.95rem; line-height:1.5; color: var(--text-color);">
-                                <strong>Table 'chats' does not exist in Supabase!</strong><br><br>
-                                Please click the SQL Editor in Supabase and run:<br>
-                                <pre style="text-align:left; background:#f4f4f4; padding:0.8rem; margin-top:0.8rem; font-size:0.85rem; overflow-x:auto; border-radius:10px; color:#1a1a1a; cursor: text;" class="text-input">
-CREATE TABLE chats (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  sender_email text NOT NULL,
-  message text NOT NULL,
-  created_at timestamptz DEFAULT now()
-);</pre></div>`;
-                        } else {
-                            chatHistory.innerHTML = `<div style="color:red; text-align:center;">Failed to load chats: ${error.message}</div>`;
-                        }
-                        rebindCursor();
-                        return;
-                    }
-
-                    chatHistory.innerHTML = '';
-                    if (messages && messages.length > 0) {
-                        messages.forEach(msg => app.renderMessage(msg));
-                    } else {
-                        chatHistory.innerHTML = '<div style="opacity:0.5; text-align:center; padding: 1rem;">No messages yet. Start the conversation!</div>';
-                    }
-                    chatHistory.scrollTop = chatHistory.scrollHeight;
-
-                    // Subscribe to Realtime inserts
-                    if (app.chatSubscription) {
-                        supabase.removeChannel(app.chatSubscription);
-                    }
-
-                    app.chatSubscription = supabase
-                        .channel('schema-db-changes')
-                        .on(
-                            'postgres_changes',
-                            { event: 'INSERT', schema: 'public', table: 'chats' },
-                            payload => {
-                                if (chatHistory.querySelector('div[style*="opacity:0.5"]')) {
-                                    chatHistory.innerHTML = '';
-                                }
-                                app.renderMessage(payload.new);
-                                chatHistory.scrollTop = chatHistory.scrollHeight;
-                            }
-                        )
-                        .subscribe();
-
-                } catch (err) {
-                    console.error("Chat init error:", err);
-                }
-            },
-
-            renderMessage: (msg) => {
-                const chatHistory = document.getElementById('chat-history');
-                const msgDiv = document.createElement('div');
-                const currentUserEmail = app.user ? app.user.email : '';
-                
-                const isSentByMe = msg.sender_email === currentUserEmail;
-                msgDiv.className = `msg ${isSentByMe ? 'sent' : 'received'}`;
-                
-                if (!isSentByMe) {
-                    msgDiv.innerHTML = `<div style="font-size:0.75rem; opacity:0.5; margin-bottom:0.2rem; font-weight:800;">${msg.sender_email}</div>${msg.message}`;
+                if (error) {
+                    alert(`Error: ${error.message}`);
                 } else {
-                    msgDiv.textContent = msg.message;
+                    alert("Published! Check the live blogs page.");
+                    document.getElementById('blogTitle').value = '';
+                    document.getElementById('blogTags').value = '';
+                    document.getElementById('blogContent').value = '';
                 }
-                
-                chatHistory.appendChild(msgDiv);
             },
 
-            sendMessage: async () => {
-                const input = document.getElementById('chat-msg-input');
-                const messageText = input.value.trim();
-                if (!messageText) return;
-
-                if (!supabase) {
-                    alert("Supabase not initialized!");
+            loadTasks: async () => {
+                const { data: tasks, error } = await supabase.from('tasks').select('*').order('created_at', { ascending: false });
+                const container = document.getElementById('task-container');
+                
+                if (error || !tasks.length) {
+                    container.innerHTML = `<p style="opacity:0.5;">No active tasks found.</p>`;
                     return;
                 }
 
-                input.value = '';
-                try {
-                    const { error } = await supabase
-                        .from('chats')
-                        .insert([
-                            {
-                                sender_email: app.user ? app.user.email : 'anonymous@singulr.agency',
-                                message: messageText,
-                                created_at: new Date().toISOString()
-                            }
-                        ]);
+                container.innerHTML = tasks.map(task => `
+                    <div class="task-row hover-target">
+                        <div>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 0.2rem;">${task.title}</h3>
+                            <p style="opacity: 0.6; font-size: 0.9rem;">${task.project}</p>
+                        </div>
+                        <span class="status-pill ${task.status === 'Merged' ? 'status-done' : task.status === 'In Review' ? 'status-review' : 'status-progress'}">${task.status}</span>
+                    </div>
+                `).join('');
+                rebindCursor();
+            },
 
-                    if (error) {
-                        alert("Failed to send message: " + error.message);
-                    }
-                } catch (err) {
-                    console.error("Failed to send:", err);
+            createDummyTask: async () => {
+                await supabase.from('tasks').insert([{ title: "New Feature Spec", project: "Client Build", status: "In Progress" }]);
+                app.loadTasks();
+            },
+
+            loadMessages: async () => {
+                const { data: messages, error } = await supabase.from('messages').select('*').order('created_at', { ascending: true });
+                const container = document.getElementById('chat-history');
+                
+                if (error || !messages.length) {
+                    container.innerHTML = `<p style="opacity:0.5; text-align:center;">Comm-Link is quiet.</p>`;
+                    return;
                 }
+
+                container.innerHTML = messages.map(msg => {
+                    const isMine = msg.sender_email === app.currentUserEmail;
+                    return `<div class="msg ${isMine ? 'sent' : 'received'}" title="${msg.sender_email}">${msg.message}</div>`;
+                }).join('');
+                container.scrollTop = container.scrollHeight;
+            },
+
+            sendMessage: async (e) => {
+                e.preventDefault();
+                const input = document.getElementById('chatInput');
+                const message = input.value;
+                if (!message) return;
+
+                const { error } = await supabase.from('messages').insert([{ sender_email: app.currentUserEmail, message }]);
+                if (!error) {
+                    input.value = '';
+                    app.loadMessages();
+                }
+            },
+
+            loadDashboardData: async () => {
+                const { count: blogCount } = await supabase.from('blogs').select('*', { count: 'exact', head: true });
+                const { count: taskCount } = await supabase.from('tasks').select('*', { count: 'exact', head: true });
+                
+                document.getElementById('dash-blog-count').innerText = (blogCount || 0).toString().padStart(2, '0');
+                document.getElementById('dash-task-count').innerText = (taskCount || 0).toString().padStart(2, '0');
             }
         };
 
         // --- Interaction Engine ---
         let cursorDot, cursorOutline, mouseX, mouseY, outlineX, outlineY;
-        
         function initCursor() {
-            cursorDot = document.querySelector('.cursor-dot');
-            cursorOutline = document.querySelector('.cursor-outline');
-            mouseX = window.innerWidth / 2; mouseY = window.innerHeight / 2;
-            outlineX = mouseX; outlineY = mouseY;
-            
+            cursorDot = document.querySelector('.cursor-dot'); cursorOutline = document.querySelector('.cursor-outline');
+            mouseX = window.innerWidth / 2; mouseY = window.innerHeight / 2; outlineX = mouseX; outlineY = mouseY;
             window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX; mouseY = e.clientY;
-                cursorDot.style.opacity = 1; cursorOutline.style.opacity = 1;
+                mouseX = e.clientX; mouseY = e.clientY; cursorDot.style.opacity = 1; cursorOutline.style.opacity = 1;
                 cursorDot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
             });
-
             function animate() {
-                outlineX += (mouseX - outlineX) * 0.15;
-                outlineY += (mouseY - outlineY) * 0.15;
+                outlineX += (mouseX - outlineX) * 0.15; outlineY += (mouseY - outlineY) * 0.15;
                 cursorOutline.style.transform = `translate(${outlineX - 20}px, ${outlineY - 20}px)`;
                 requestAnimationFrame(animate);
             }
-            animate();
-            rebindCursor();
-
-            // Setup Realtime Chat Keyboard Send Trigger
-            document.getElementById('chat-msg-input').addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    app.sendMessage();
-                }
-            });
-
-            // Automatically check configuration
-            if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-                showSupabaseConfig();
-            }
+            animate(); rebindCursor();
         }
 
         function rebindCursor() {
-            // Hover targets
-            document.querySelectorAll('.hover-target').forEach(target => {
-                target.removeEventListener('mouseenter', handleMouseEnter);
-                target.removeEventListener('mouseleave', handleMouseLeave);
-                target.addEventListener('mouseenter', handleMouseEnter);
-                target.addEventListener('mouseleave', handleMouseLeave);
-            });
-
-            // I-Beam text targeting
-            document.querySelectorAll('.text-input').forEach(input => {
-                input.addEventListener('mouseenter', () => document.body.classList.add('text-hover'));
-                input.addEventListener('mouseleave', () => document.body.classList.remove('text-hover'));
-            });
-
-            // Magnetic Buttons
+            document.querySelectorAll('.hover-target').forEach(t => { t.removeEventListener('mouseenter', handleMouseEnter); t.removeEventListener('mouseleave', handleMouseLeave); t.addEventListener('mouseenter', handleMouseEnter); t.addEventListener('mouseleave', handleMouseLeave); });
+            document.querySelectorAll('.text-input').forEach(i => { i.addEventListener('mouseenter', () => document.body.classList.add('text-hover')); i.addEventListener('mouseleave', () => document.body.classList.remove('text-hover')); });
             document.querySelectorAll('.magnetic-btn').forEach(btn => {
-                btn.addEventListener('mousemove', (e) => {
-                    const rect = btn.getBoundingClientRect();
-                    const x = e.clientX - rect.left - rect.width / 2;
-                    const y = e.clientY - rect.top - rect.height / 2;
-                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
-                });
+                btn.addEventListener('mousemove', (e) => { const r = btn.getBoundingClientRect(); btn.style.transform = `translate(${(e.clientX - r.left - r.width/2) * 0.3}px, ${(e.clientY - r.top - r.height/2) * 0.4}px) scale(1.05)`; });
                 btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px) scale(1)`);
             });
-            
-            // 3D Bento Cards
             document.querySelectorAll('.bento-card').forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                    const rotateX = ((y - rect.height/2) / (rect.height/2)) * -5;
-                    const rotateY = ((x - rect.width/2) / (rect.width/2)) * 5;
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                });
+                card.addEventListener('mousemove', (e) => { const r = card.getBoundingClientRect(); card.style.transform = `perspective(1000px) rotateX(${((e.clientY - r.top - r.height/2) / (r.height/2)) * -5}deg) rotateY(${((e.clientX - r.left - r.width/2) / (r.width/2)) * 5}deg) scale3d(1.02, 1.02, 1.02)`; });
+                card.addEventListener('mouseleave', () => card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`);
             });
         }
+        function handleMouseEnter(e) { cursorOutline.style.width = '70px'; cursorOutline.style.height = '70px'; cursorOutline.style.backgroundColor = e.target.closest('.sidebar') ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)'; cursorOutline.style.borderColor = 'transparent'; }
+        function handleMouseLeave(e) { cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px'; cursorOutline.style.backgroundColor = 'transparent'; cursorOutline.style.borderColor = e.target.closest('.sidebar') ? 'var(--bg-color)' : 'var(--text-color)'; }
 
-        function handleMouseEnter(e) {
-            cursorOutline.style.width = '70px'; cursorOutline.style.height = '70px';
-            const isSidebar = e.target.closest('.sidebar');
-            cursorOutline.style.backgroundColor = isSidebar ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)';
-            cursorOutline.style.borderColor = 'transparent';
-        }
-
-        function handleMouseLeave(e) {
-            cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px';
-            cursorOutline.style.backgroundColor = 'transparent';
-            const isSidebar = e.target.closest('.sidebar');
-            cursorOutline.style.borderColor = isSidebar ? 'var(--bg-color)' : 'var(--text-color)';
-        }
-
-        document.addEventListener('DOMContentLoaded', initCursor);
+        // Start App
+        document.addEventListener('DOMContentLoaded', app.init);
     </script>
 </body>
 </html>
