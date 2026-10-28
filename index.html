@@ -1,954 +1,415 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Singulr - Digital Experiences</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-color: #faf9f6;
-            --text-color: #1a1a1a;
-            --accent-1: #ff90e8; /* Pink */
-            --accent-2: #ffc900; /* Yellow */
-            --accent-3: #90e8ff; /* Blue */
-            --accent-4: #c9ff90; /* Lime */
-            
-            /* Bouncy animation curves */
-            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --spring-heavy: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Singulr Tech — Automation that gets out of your way</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--cobalt:#2336F0;--ink:#0B1033;--amber:#FFB400;--mint:#19D49B;--coral:#FF5A4E;--paper:#F2F4FF;
+--sky:#3CC8FF;--lime:#C8F03C;--violet:#6C47FF;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;
+--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,190px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--amber);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--cobalt);transform:scaleX(0);transform-origin:left}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none; /* Hiding default cursor for our custom one */
-        }
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--amber);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:var(--ink);color:var(--amber);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem;white-space:nowrap;flex-shrink:0}
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        html { overflow-x: hidden; scroll-behavior: smooth; }
+/* hero */
+.hero{min-height:100svh;background:var(--amber);color:var(--ink);display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:auto 1fr auto;column-gap:clamp(24px,4vw,64px);padding:0 var(--gutter);overflow:hidden}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;box-sizing:border-box;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a{display:inline-flex;align-items:center;font-size:.95rem;line-height:1}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav .btn.sm{padding:10px 18px;font-size:.95rem;line-height:1;margin:0;align-self:center}
+.hero-main{align-self:center;padding:5vh 0}
+h1{font-size:clamp(3rem,7vw,6.75rem);line-height:.94;letter-spacing:-.035em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:32em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.sing{width:100%;max-width:500px;justify-self:end;align-self:center;overflow:visible;cursor:pointer}
+.dot{fill:var(--ink)}.core{fill:var(--ink)}.orbit{fill:none;stroke:var(--ink);stroke-width:3}
+.ticker{grid-column:1/-1;border-top:var(--line) solid var(--ink);margin:0 calc(var(--gutter) * -1);overflow:hidden}
+.track{display:flex;align-items:center;width:max-content;animation:tick 30s linear infinite}
+.ticker:hover .track{animation-play-state:paused}
+.track a{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;text-decoration:none;padding:18px 0}
+.track i{width:12px;height:12px;border-radius:50%;background:var(--ink);margin:0 30px;flex:none}
+@keyframes tick{to{transform:translateX(-50%)}}
 
-        .cursor-dot, .cursor-outline {
-            position: fixed;
-            top: 0; left: 0;
-            border-radius: 50%;
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0;
-            will-change: transform, width, height;
-        }
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--text-color);
-        }
-        .cursor-outline {
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--text-color);
-            transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease;
-        }
+/* products */
+.products{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);align-items:start}
+.products h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+.plist{border-bottom:var(--line) solid rgba(242,244,255,.28)}
+.row{display:flex;align-items:baseline;justify-content:space-between;gap:16px;width:100%;padding:18px 0;border:0;border-top:var(--line) solid rgba(242,244,255,.28);background:none;color:var(--paper);font:inherit;text-align:left;cursor:pointer;opacity:.42;transition:opacity .25s,padding-left .4s cubic-bezier(.3,1.6,.5,1)}
+.row span{font-size:clamp(2.2rem,5vw,4.5rem);font-weight:700;letter-spacing:-.035em;line-height:1;transition:color .25s}
+.row small{font-size:.95rem;font-weight:600;text-align:right}
+.row:hover,.row.on{opacity:1}.row.on{padding-left:20px}.row.on span{color:var(--amber)}
+.panel{--pbg:var(--cobalt);--pfg:var(--paper);background:var(--pbg);color:var(--pfg);border-radius:var(--r);min-height:500px;padding:clamp(24px,3vw,40px);display:flex;transition:background-color .55s cubic-bezier(.2,.8,.2,1),color .55s}
+.panel[data-p=wavvy]{--pbg:var(--cobalt);--pfg:var(--paper)}
+.panel[data-p=fish]{--pbg:var(--coral);--pfg:var(--ink)}
+.panel[data-p=linkup]{--pbg:var(--sky);--pfg:var(--ink)}
+.panel[data-p=wiggle]{--pbg:var(--lime);--pfg:var(--ink)}
+.panel[data-p=xrisk]{--pbg:var(--violet);--pfg:var(--paper)}
+.panel[data-p=next]{--pbg:var(--mint);--pfg:var(--ink)}
+.pp{display:none;flex-direction:column;justify-content:space-between;gap:28px;width:100%}.pp.on{display:flex}
+.glyph{width:clamp(120px,14vw,170px);height:auto}
+.chip{display:inline-block;border:var(--line) solid currentColor;border-radius:8px;padding:4px 10px;font-size:.8rem;font-weight:700;margin-bottom:16px}
+.pp h3{font-size:clamp(2.3rem,4vw,3.5rem);letter-spacing:-.03em;line-height:1;font-weight:700;margin-bottom:14px}
+.pp p{font-size:1.15rem;line-height:1.5;max-width:28em;margin-bottom:24px}
+.panel-acts{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.panel .btn{background:var(--pfg);color:var(--pbg);border-color:var(--pfg)}
+.panel .btn:hover:not(:disabled){background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.panel .btn.ghost{background:transparent;color:var(--pfg);border-color:currentColor}
+.panel .btn.ghost:hover{background:var(--pfg);color:var(--pbg);border-color:var(--pfg)}
+.spark{transform-box:fill-box;transform-origin:center;animation:tw 2.4s ease-in-out infinite}
+.spark.b{animation-delay:.8s}.spark.c{animation-delay:1.6s}
+@keyframes tw{50%{transform:scale(.35) rotate(45deg)}}
+.spin{transform-origin:100px 100px;animation:spin 22s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
-        .highlight {
-            background: linear-gradient(120deg, var(--accent-1), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            padding: 0 0.2rem;
-        }
-        section { padding: 8rem 5%; }
+/* approach */
+.approach{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650;margin-bottom:clamp(56px,10vh,110px)}
+.big span{transition:color .2s}.big span:hover{color:var(--cobalt)}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.cells article{padding:clamp(22px,3vw,40px);transition:background .25s,color .25s}
+.cells article+article{border-left:var(--line) solid var(--fg)}
+.cells article:hover{background:var(--amber);color:var(--ink)}
+.cells i{display:block;width:30px;height:30px;border-radius:8px;margin-bottom:clamp(40px,8vh,90px)}
+.cells h3{font-size:1.6rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cells p{line-height:1.55;font-size:1.05rem}
 
-        /* Scroll Animations */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s var(--smooth), transform 0.8s var(--smooth);
-        }
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+/* cta */
+.cta2{background:var(--cobalt);color:var(--paper);padding:var(--sec) var(--gutter)}
+.cta2 h2{font-size:clamp(2.6rem,7vw,6.5rem);line-height:.96;letter-spacing:-.04em;font-weight:700;max-width:11em;margin-bottom:1.5rem}
+.cta2 p{max-width:30em;font-size:1.2rem;line-height:1.5;color:#D3D9FF;margin-bottom:2.5rem}
+.cta2 .btn{background:var(--amber);color:var(--ink)}.cta2 .btn:hover{background:var(--paper)}
+.cta2 .btn.ghost{background:transparent;color:var(--paper);border-color:var(--paper)}.cta2 .btn.ghost:hover{background:var(--paper);color:var(--cobalt)}
 
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            padding: 2rem 5%;
-            align-items: center;
-            position: fixed;
-            top: 0; width: 100%;
-            background: rgba(250, 249, 246, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 1000;
-        }
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            user-select: none;
-            text-decoration: none;
-            color: var(--text-color);
-        }
-        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 600;
-            position: relative;
-            padding: 0.5rem 0;
-            display: inline-block;
-            transition: transform 0.3s var(--spring), color 0.3s ease;
-        }
-        .nav-links a:hover {
-            transform: translateY(-3px);
-            color: var(--accent-1);
-        }
-        .nav-links a::after {
-            content: ''; position: absolute;
-            bottom: 0px; left: 0;
-            width: 0%; height: 3px;
-            background-color: var(--accent-1);
-            transition: width 0.3s var(--spring);
-            border-radius: 2px;
-        }
-        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}
+.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--amber)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(25vw,28rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
 
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            padding: 12rem 5% 4rem;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .hero-layout {
-            display: grid;
-            grid-template-columns: 1.8fr 1fr;
-            gap: 4rem;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            align-items: end;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-main { display: flex; flex-direction: column; gap: 2rem; }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-weight: 600;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 0.8rem 1.5rem;
-            border: 1px solid rgba(26, 26, 26, 0.1);
-            border-radius: 50px;
-            width: fit-content;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        .hero-badge .dot {
-            width: 8px; height: 8px;
-            background-color: var(--accent-1);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .hero h1 {
-            font-size: clamp(3.5rem, 8vw, 8.5rem);
-            line-height: 0.9;
-            letter-spacing: -2px;
-            text-transform: uppercase;
-        }
-
-        .hero h1 .line {
-            display: block; opacity: 0; transform: translateY(30px);
-            animation: heroReveal 0.8s var(--smooth) forwards;
-        }
-        .hero h1 .line:nth-child(1) { animation-delay: 0.1s; }
-        .hero h1 .line:nth-child(2) { animation-delay: 0.3s; }
-
-        @keyframes heroReveal { to { opacity: 1; transform: translateY(0); } }
-
-        @keyframes organicBlob {
-            0%, 100% { border-radius: 60px 40px 50px 70px / 50px 60px 40px 60px; }
-            50% { border-radius: 40px 60px 70px 40px / 60px 40px 60px 50px; }
-        }
-
-        .inline-blob {
-            display: inline-block;
-            width: clamp(80px, 12vw, 150px);
-            height: clamp(50px, 7vw, 90px);
-            background: var(--accent-3);
-            border-radius: 60px;
-            vertical-align: middle;
-            margin: 0 0.5rem;
-            transition: all 0.5s var(--spring);
-            position: relative;
-            top: -5px;
-            box-shadow: inset 10px 10px 20px rgba(255,255,255,0.5), 
-                        inset -10px -10px 20px rgba(0,0,0,0.1);
-            animation: organicBlob 4s ease-in-out infinite;
-        }
-        .inline-blob:hover {
-            background: var(--accent-1);
-            width: clamp(120px, 18vw, 220px);
-            transform: rotate(-5deg);
-        }
-
-        .hero-sidebar {
-            display: flex; flex-direction: column; gap: 3rem; padding-bottom: 2rem;
-        }
-        .hero-sidebar p {
-            font-size: clamp(1.2rem, 1.8vw, 1.6rem);
-            line-height: 1.5; opacity: 0.8; font-weight: 300;
-        }
-
-        .circle-btn-container { align-self: flex-start; position: relative; }
-        .circle-btn {
-            position: relative; display: flex; justify-content: center; align-items: center;
-            width: 160px; height: 160px; border-radius: 50%;
-            background: var(--text-color); color: var(--bg-color);
-            text-decoration: none; transition: transform 0.4s var(--spring), background 0.3s;
-        }
-        .circle-btn:hover { background: var(--accent-1); transform: scale(1.05); }
-        .circle-btn:hover .circle-arrow { transform: translate(5px, -5px) rotate(45deg); }
-
-        .circle-text-svg {
-            position: absolute; width: 100%; height: 100%;
-            animation: rotateText 15s linear infinite;
-        }
-        .circle-text-svg text {
-            font-family: 'Outfit', sans-serif; font-size: 13.5px;
-            font-weight: 600; letter-spacing: 3px; fill: var(--bg-color); text-transform: uppercase;
-        }
-        .circle-arrow { font-size: 2.5rem; font-weight: 300; transition: transform 0.4s var(--spring); }
-
-        .hero-deco {
-            position: absolute; border-radius: 50%; filter: blur(60px);
-            z-index: 1; opacity: 0.4; transition: transform 0.1s linear;
-        }
-        .deco-1 {
-            width: 400px; height: 400px; background: var(--accent-1);
-            top: -100px; right: -100px; animation: floatShape 10s ease-in-out infinite alternate;
-        }
-        .deco-2 {
-            width: 300px; height: 300px; background: var(--accent-3);
-            bottom: 10%; left: -50px; animation: floatShape 12s ease-in-out infinite alternate-reverse;
-        }
-
-        @keyframes rotateText { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes floatShape { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-30px, 50px) scale(1.1); } }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 144, 232, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 144, 232, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 144, 232, 0); } }
-
-        .marquee-container {
-            width: 100%; overflow: hidden; background: var(--text-color);
-            color: var(--bg-color); padding: 2rem 0; transform: rotate(-2deg) scale(1.05);
-            margin: 0 0 6rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative; z-index: 10; transition: transform 0.5s var(--spring), background-color 0.5s ease;
-        }
-        .marquee-container:hover {
-            transform: rotate(0deg) scale(1.05) skewX(-2deg);
-            background: var(--accent-4); color: var(--text-color);
-        }
-        .marquee-content {
-            display: flex; white-space: nowrap; animation: marquee 20s linear infinite;
-            font-size: 2rem; font-weight: 800; text-transform: uppercase; transition: animation-play-state 0.3s;
-        }
-        .marquee-container:hover .marquee-content { animation-play-state: paused; }
-        .marquee-content span { margin: 0 2vw; }
-        .marquee-content span.star { 
-            color: var(--accent-1); display: inline-block;
-            transition: transform 0.5s var(--spring), color 0.3s ease;
-        }
-        .marquee-container:hover .marquee-content span.star {
-            color: var(--text-color); transform: scale(1.3) rotate(180deg);
-        }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        .services {
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-        }
-        .services-header { 
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 4rem; 
-            flex-wrap: wrap;
-            gap: 2rem;
-            position: relative;
-            z-index: 2;
-        }
-        .services-header h2 { 
-            font-size: clamp(3rem, 6vw, 5rem); 
-            line-height: 1;
-            max-width: 600px;
-        }
-        .services-header p {
-            font-size: 1.2rem;
-            opacity: 0.7;
-            max-width: 400px;
-            padding-bottom: 0.5rem;
-        }
-        
-        .services-mesh-bg {
-            position: absolute;
-            top: -5%; left: -2%; right: -2%; bottom: -5%;
-            z-index: 0;
-            overflow: hidden;
-            border-radius: 60px;
-            pointer-events: none;
-            opacity: 0.8;
-        }
-        .mesh-blob {
-            position: absolute;
-            filter: blur(90px);
-            opacity: 0.6;
-            border-radius: 50%;
-            animation: floatShape 15s infinite alternate ease-in-out;
-            will-change: transform;
-        }
-        .mesh-1 { width: 500px; height: 500px; background: var(--accent-1); top: -10%; left: -10%; }
-        .mesh-2 { width: 600px; height: 600px; background: var(--accent-3); bottom: -10%; right: -10%; animation-delay: -7s; }
-        .mesh-3 { width: 400px; height: 400px; background: var(--accent-4); top: 30%; left: 30%; animation-duration: 25s; }
-        .mesh-4 { width: 450px; height: 450px; background: var(--accent-2); top: 10%; right: 20%; animation-delay: -3s; }
-
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 2rem;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.2) 100%);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            padding: 3rem;
-            border-radius: 40px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03), inset 0 0 0 1px rgba(255,255,255,0.5);
-            transition: box-shadow 0.5s var(--spring), transform 0.5s var(--spring);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 380px;
-            transform-style: preserve-3d;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Asymmetrical Grid Placements */
-        .card:nth-child(1) { grid-column: span 7; } 
-        .card:nth-child(2) { grid-column: span 5; } 
-        .card:nth-child(3) { grid-column: span 5; } 
-        .card:nth-child(4) { grid-column: span 7; } 
-
-        .card:hover {
-            box-shadow: 0 30px 60px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(255,255,255,0.8);
-            z-index: 5;
-        }
-
-        /* Large Background Numbers */
-        .card-number {
-            position: absolute;
-            top: -20px;
-            right: -10px;
-            font-size: 14rem;
-            font-weight: 800;
-            opacity: 0.04;
-            line-height: 1;
-            pointer-events: none;
-            transition: transform 0.5s var(--spring), opacity 0.5s ease;
-        }
-        .card:hover .card-number {
-            transform: scale(1.1) translate(-20px, 20px);
-            opacity: 0.08;
-        }
-
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            transform: translateZ(30px);
-        }
-
-        .card-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: transform 0.4s var(--spring);
-        }
-        
-        .card:nth-child(1) .card-icon { background: var(--accent-1); color: #fff; }
-        .card:nth-child(2) .card-icon { background: var(--accent-2); color: #fff; }
-        .card:nth-child(3) .card-icon { background: var(--accent-3); color: var(--text-color); }
-        .card:nth-child(4) .card-icon { background: var(--accent-4); color: var(--text-color); }
-
-        .card:hover .card-icon {
-            transform: scale(1.2) rotate(10deg);
-        }
-
-        .card-tag {
-            padding: 0.5rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border: 1px solid rgba(0,0,0,0.1);
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(4px);
-        }
-
-        .card-content {
-            transform: translateZ(40px);
-            margin-top: 4rem;
-        }
-        
-        .card h3 { font-size: 2.5rem; margin-bottom: 1rem; transition: transform 0.3s; }
-        .card p { opacity: 0.7; line-height: 1.6; font-size: 1.1rem; max-width: 90%; }
-        
-        .process-section {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            border-radius: 60px;
-            margin: 6rem 2%;
-            padding: 8rem 6%;
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 6rem;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.2);
-        }
-
-        .process-content { position: relative; z-index: 2; }
-        .process-content h2 { 
-            font-size: clamp(3rem, 5vw, 4.5rem); 
-            margin-bottom: 2rem; 
-            color: var(--accent-4); /* Lime pop on dark bg */
-            line-height: 1.1;
-        }
-        .process-content p { 
-            font-size: 1.3rem; 
-            opacity: 0.8; 
-            margin-bottom: 3rem; 
-            line-height: 1.8; 
-            font-weight: 300;
-        }
-
-        .btn {
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            font-family: inherit;
-            border-radius: 50px;
-            transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring), background 0.3s;
-            display: inline-block;
-            text-decoration: none;
-            border: 2px solid var(--text-color);
-        }
-        .btn-process {
-            background-color: var(--accent-4);
-            color: var(--text-color);
-            border-color: var(--accent-4);
-        }
-        .btn-process:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(201, 255, 144, 0.2);
-            background-color: transparent;
-            color: var(--accent-4);
-        }
-
-        .art-container {
-            position: relative;
-            height: 500px;
-            width: 100%;
-            border-radius: 40px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .art-hint {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0.4;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            pointer-events: none;
-            animation: pulseText 2s infinite;
-        }
-        @keyframes pulseText { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.6; } }
-
-        /* The reactive abstract shapes */
-        .react-shape {
-            position: absolute;
-            transition: transform 0.8s var(--spring-heavy), border-radius 0.6s ease;
-            will-change: transform;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .rs-1 { width: 180px; height: 180px; background: var(--accent-1); border-radius: 40px; left: 10%; top: 20%; transform: rotate(15deg); }
-        .rs-2 { width: 120px; height: 120px; background: var(--accent-3); border-radius: 50%; right: 20%; top: 15%; }
-        .rs-3 { width: 220px; height: 100px; background: var(--accent-2); border-radius: 100px; right: 10%; bottom: 25%; transform: rotate(-20deg); }
-        .rs-4 { width: 90px; height: 90px; border: 15px solid var(--accent-4); border-radius: 30px; left: 25%; bottom: 15%; transform: rotate(45deg); }
-        .rs-5 { width: 60px; height: 60px; background: #fff; border-radius: 50%; top: 40%; left: 45%; }
-
-        /* Inner details for shapes */
-        .rs-1::after { content: ''; width: 40px; height: 40px; background: rgba(0,0,0,0.2); border-radius: 50%; }
-        .rs-3::after { content: ''; width: 20px; height: 20px; background: rgba(0,0,0,0.2); border-radius: 50%; box-shadow: 40px 0 0 rgba(0,0,0,0.2), -40px 0 0 rgba(0,0,0,0.2); }
-
-        footer {
-            padding: 8rem 5% 4rem;
-            text-align: center;
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            border-top-left-radius: 60px;
-            border-top-right-radius: 60px;
-        }
-        footer h2 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 3rem; color: var(--bg-color); }
-        .footer-btn {
-            font-size: 2rem; padding: 1.5rem 4rem; background: var(--bg-color);
-            color: var(--text-color); border: 2px solid var(--bg-color); border-radius: 50px;
-            text-decoration: none; display: inline-block; transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s;
-        }
-        .footer-btn:hover { background: var(--accent-1); border-color: var(--accent-1); transform: translateY(-5px) scale(1.05); }
-        .footer-btn-outline {
-            font-size: 2rem; padding: 1.5rem 4rem; background: transparent;
-            color: var(--bg-color); border: 2px solid var(--bg-color); border-radius: 50px;
-            text-decoration: none; display: inline-block; transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s, color 0.3s;
-        }
-        .footer-btn-outline:hover { background: rgba(250, 249, 246, 0.1); border-color: var(--accent-1); color: var(--accent-1); transform: translateY(-5px) scale(1.05); }
-        .footer-bottom {
-            margin-top: 8rem; display: flex; justify-content: space-between; align-items: center;
-            padding-top: 2rem; border-top: 1px solid rgba(250, 249, 246, 0.2); opacity: 0.7;
-        }
-        .social-links { display: flex; gap: 1.5rem; }
-        .social-links a { color: var(--bg-color); text-decoration: none; }
-
-        @media (max-width: 1024px) {
-            .hero-layout { grid-template-columns: 1fr; gap: 2rem; text-align: left; }
-            .hero-sidebar { flex-direction: row; align-items: center; justify-content: space-between; padding-bottom: 0; }
-            .hero-sidebar p { max-width: 50%; }
-            .circle-btn { width: 130px; height: 130px; }
-            
-            .card:nth-child(n) { grid-column: span 6; } /* Reset bento for tablet */
-            .process-section { grid-template-columns: 1fr; text-align: center; padding: 6rem 5%; border-radius: 40px; margin: 2rem 2%;}
-            .art-container { height: 400px; }
-        }
-        
-        @media (max-width: 768px) {
-            .card:nth-child(n) { grid-column: span 12; min-height: auto; } /* Stack cards on mobile */
-            .nav-links { display: none; }
-            section { padding: 5rem 5%; }
-            .footer-bottom { flex-direction: column; gap: 1rem; }
-            .hero-sidebar { flex-direction: column; align-items: flex-start; gap: 2rem; }
-            .hero-sidebar p { max-width: 100%; }
-            .hero h1 { font-size: 3.5rem; }
-            .process-content h2 { font-size: 2.5rem; }
-            .services-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .footer-btn, .footer-btn-outline { font-size: 1.2rem; padding: 1rem 2rem; width: 100%; text-align: center; }
-        }
-
-        /* Disable custom interactions on touch devices */
-        @media (hover: none) and (pointer: coarse) {
-            * { cursor: auto !important; }
-            .cursor-dot, .cursor-outline { display: none !important; }
-            .card:hover { transform: translateY(0); box-shadow: none; }
-            .react-shape { transition: transform 2s ease-in-out; }
-        }
-    </style>
+@media (max-width:1040px){.nav a:not(.btn){display:none}}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;grid-template-rows:none}.hero>*{grid-column:1/-1}
+  .top{order:1}.sing{order:2;max-width:220px;justify-self:start;margin-top:8px}.hero-main{order:3;padding:24px 0 40px}.ticker{order:4}
+  .products{grid-template-columns:1fr}.panel{min-height:440px}
+  .cells{grid-template-columns:1fr}.cells article+article{border-left:0;border-top:var(--line) solid var(--fg)}.cells i{margin-bottom:28px}
+}
+@media (max-width:480px){
+  .top{gap:8px}
+  .brand svg{width:26px;height:26px}
+  .btn.sm{padding:8px 14px;font-size:.88rem}
+}
+@media (prefers-reduced-motion:reduce){.track,.spark,.spin{animation:none}}
+html.calm .prog{display:none}html.calm .big span{opacity:1}
+</style>
 </head>
 <body>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
+<div class="prog" aria-hidden="true"><i></i></div>
 
-    <nav class="navbar">
-        <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
-            <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
-                <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
-                <circle cx="10" cy="27" r="6" fill="#ff2d93" />
-                <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
-                <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
-            </svg>
-        </a>
-        <ul class="nav-links">
-            <li><a href="#services" class="hover-target">Services</a></li>
-            <li><a href="work.html" class="hover-target">Work</a></li>
-            <li><a href="about.html" class="hover-target">Agency</a></li>
-            <li><a href="blogs.html" class="hover-target">Blogs</a></li>
-        </ul>
+<header class="hero">
+  <div class="top">
+    <a class="brand" href="#">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+      <span>Singulr</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#products">Products</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="#approach">Approach</a>
+      <a class="btn sm" href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
     </nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Automation</span></span><span class="ln"><span>that gets out</span></span><span class="ln"><span>of your way.</span></span></h1>
+    <p class="sub">Singulr Tech builds automation and AI products that handle the boring parts of your day, then step aside.</p>
+    <div class="cta"><a class="btn" href="#products">Meet the products</a><a class="btn ghost" href="#approach">How we think</a></div>
+  </div>
+  <svg class="sing" viewBox="0 0 400 400" role="img" aria-label="Many dots collapsing into a single point. Click to replay.">
+    <circle class="orbit" cx="200" cy="200" r="170"/>
+    <g id="dots"></g>
+    <circle class="core" cx="200" cy="200" r="14"/>
+  </svg>
+  <div class="ticker" aria-label="Our products">
+    <div class="track">
+      <a href="#products" data-jump="wavvy">Wavvy</a><i></i>
+      <a href="#products" data-jump="fish">Shiny Fishstick</a><i></i>
+      <a href="#products" data-jump="linkup">LinkUp</a><i></i>
+      <a href="#products" data-jump="wiggle">Wiggle</a><i></i>
+      <a href="#products" data-jump="xrisk">XRisk</a><i></i>
+      <a href="#products" data-jump="next">More on the way</a><i></i>
+      <a href="#products" data-jump="wavvy">Wavvy</a><i></i>
+      <a href="#products" data-jump="fish">Shiny Fishstick</a><i></i>
+      <a href="#products" data-jump="linkup">LinkUp</a><i></i>
+      <a href="#products" data-jump="wiggle">Wiggle</a><i></i>
+      <a href="#products" data-jump="xrisk">XRisk</a><i></i>
+      <a href="#products" data-jump="next">More on the way</a><i></i>
+    </div>
+  </div>
+</header>
 
-    <main>
-        <header class="hero">
-            <div class="hero-layout">
-                <div class="hero-main fade-up">
-                    <div class="hero-badge hover-target">
-                        <span class="dot"></span> Digital Studio
-                    </div>
-                    <h1>
-                        <span class="line">Unbox <span class="inline-blob hover-target"></span> the</span>
-                        <span class="line">digital <span class="highlight hover-target">ordinary.</span></span>
-                    </h1>
-                </div>
-
-                <div class="hero-sidebar fade-up" style="transition-delay: 0.2s;">
-                    <p>We build digital spaces that feel alive. Discarding rigid templates for bouncy, tactile, and human-centric design.</p>
-                    <div class="circle-btn-container">
-                        <a href="#contact" class="circle-btn hover-target magnetic-btn">
-                            <svg class="circle-text-svg" viewBox="0 0 100 100">
-                                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
-                                <text><textPath href="#circlePath" startOffset="0%">Work with us • Say Hi • </textPath></text>
-                            </svg>
-                            <span class="circle-arrow">↗</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-deco deco-1" aria-hidden="true"></div>
-            <div class="hero-deco deco-2" aria-hidden="true"></div>
-        </header>
-
-        <div class="marquee-container hover-target">
-            <div class="marquee-content">
-                <span>Innovative</span><span class="star">✦</span>
-                <span>Playful</span><span class="star">✦</span>
-                <span>Human-Centric</span><span class="star">✦</span>
-                <span>Minimalist</span><span class="star">✦</span>
-                <span>Singular</span><span class="star">✦</span>
-                <span>Innovative</span><span class="star">✦</span>
-                <span>Playful</span><span class="star">✦</span>
-                <span>Human-Centric</span><span class="star">✦</span>
-                <span>Minimalist</span><span class="star">✦</span>
-                <span>Singular</span><span class="star">✦</span>
-            </div>
+<section class="products" id="products">
+  <div>
+    <h2>Our products.</h2>
+    <div class="plist" role="group" aria-label="Choose a product">
+      <button class="row on" type="button" data-p="wavvy" aria-pressed="true"><span>Wavvy</span><small>Wi-Fi login, handled</small></button>
+      <button class="row" type="button" data-p="fish" aria-pressed="false"><span>Shiny Fishstick</span><small>Website to SDK compiler</small></button>
+      <button class="row" type="button" data-p="linkup" aria-pressed="false"><span>LinkUp</span><small>Peer-to-peer remote desktop</small></button>
+      <button class="row" type="button" data-p="wiggle" aria-pressed="false"><span>Wiggle</span><small>Cursor AI agent</small></button>
+      <button class="row" type="button" data-p="xrisk" aria-pressed="false"><span>XRisk</span><small>AI agent safety layer</small></button>
+      <button class="row" type="button" data-p="next" aria-pressed="false"><span>Next up</span><small>In the lab</small></button>
+    </div>
+  </div>
+  <div class="panel" id="panel" data-p="wavvy" aria-live="polite">
+    <div class="pp on" data-p="wavvy">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round">
+        <path d="M71.7 121.7A40 40 0 0 1 128.3 121.7"/><path d="M47 97A75 75 0 0 1 153 97"/><path d="M22.2 72.2A110 110 0 0 1 177.8 72.2"/>
+        <circle cx="100" cy="150" r="14" fill="#FFB400" stroke="none"/>
+      </svg>
+      <div>
+        <span class="chip">Chrome extension</span>
+        <h3>Wavvy</h3>
+        <p>Spots Wi-Fi login portals on campus, hotel and airport networks, fills in your details and gets you online before you’ve opened a tab.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Wi-Fi%20Portal%20Auto%20Login.html">Open Wavvy</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/Wavvy" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
-
-        <section class="services" id="services">
-            <div class="services-mesh-bg" aria-hidden="true">
-                <div class="mesh-blob mesh-1"></div>
-                <div class="mesh-blob mesh-2"></div>
-                <div class="mesh-blob mesh-3"></div>
-                <div class="mesh-blob mesh-4"></div>
-            </div>
-
-            <div class="services-header fade-up">
-                <h2>Our playground.</h2>
-                <p>We cover the full spectrum of digital product creation, ensuring every touchpoint feels exceptional.</p>
-            </div>
-            <div class="bento-grid">
-                
-                <div class="card hover-target fade-up">
-                    <span class="card-number">01</span>
-                    <div class="card-top">
-                        <div class="card-tag">Foundation</div>
-                        <div class="card-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3>Strategy</h3>
-                        <p>Deep research and product positioning that ensures your brand stands out and dominates in a crowded market.</p>
-                    </div>
-                </div>
-
-                <div class="card hover-target fade-up" style="transition-delay: 0.1s;">
-                    <span class="card-number">02</span>
-                    <div class="card-top">
-                        <div class="card-tag">Aesthetics</div>
-                        <div class="card-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3>Design</h3>
-                        <p>Interfaces that feel alive. We craft visual languages that are incredibly satisfying to interact with.</p>
-                    </div>
-                </div>
-
-                <div class="card hover-target fade-up" style="transition-delay: 0.2s;">
-                    <span class="card-number">03</span>
-                    <div class="card-top">
-                        <div class="card-tag">Execution</div>
-                        <div class="card-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3>Development</h3>
-                        <p>Pixel-perfect execution. Clean, performant code that brings bouncy, tactile designs to reality.</p>
-                    </div>
-                </div>
-
-                <div class="card hover-target fade-up" style="transition-delay: 0.3s;">
-                    <span class="card-number">04</span>
-                    <div class="card-top">
-                        <div class="card-tag">Evolution</div>
-                        <div class="card-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3>Growth</h3>
-                        <p>Continuous iteration based on analytics and user feedback to scale your product sustainably.</p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <section class="process-section fade-up">
-            <div class="process-content">
-                <h2>Design that reacts to you.</h2>
-                <p>The web has become too stiff. Everything is a rigid box. We use code to inject physics, organic interactions, and unexpected joy into standard layouts. Hover over the playground to see what we mean.</p>
-                <a href="about.html" class="btn btn-process hover-target magnetic-btn">Learn our process</a>
-            </div>
-            
-            <div class="art-container hover-target" id="playground">
-                <div class="art-hint">Move Cursor Here</div>
-                <div class="react-shape rs-1" data-speed="1.2"></div>
-                <div class="react-shape rs-2" data-speed="0.8"></div>
-                <div class="react-shape rs-3" data-speed="1.5"></div>
-                <div class="react-shape rs-4" data-speed="0.5"></div>
-                <div class="react-shape rs-5" data-speed="2.0"></div>
-            </div>
-        </section>
-    </main>
-
-    <footer id="contact">
-        <div class="fade-up">
-            <h2 class="hover-target">Let's build something <span class="highlight">fun.</span></h2>
-            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem;">
-                <a href="mailto:hello@singulr.agency" class="footer-btn-outline hover-target magnetic-btn">Say Hello</a>
-                <a href="contact.html" class="footer-btn hover-target magnetic-btn">Start a Project</a>
-            </div>
+      </div>
+    </div>
+    <div class="pp" data-p="fish">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true">
+        <g transform="rotate(-18 100 100)"><rect x="40" y="68" width="120" height="64" rx="16" fill="#FFB400" stroke="#0B1033" stroke-width="5"/><path d="M80 80v40M100 80v40M120 80v40" stroke="#0B1033" stroke-width="5" stroke-linecap="round" opacity=".35"/></g>
+        <g transform="translate(160 44)"><path class="spark" fill="#F2F4FF" d="M0-16L5-5 16 0 5 5 0 16-5 5-16 0-5-5z"/></g>
+        <g transform="translate(36 56)"><path class="spark b" fill="#F2F4FF" d="M0-12L4-4 12 0 4 4 0 12-4 4-12 0-4-4z"/></g>
+        <g transform="translate(168 154)"><path class="spark c" fill="#F2F4FF" d="M0-10L3-3 10 0 3 3 0 10-3 3-10 0-3-3z"/></g>
+      </svg>
+      <div>
+        <span class="chip">Agent SDK compiler</span>
+        <h3>Shiny Fishstick</h3>
+        <p>Crawls a site once, discovers what it can do, and compiles it into a typed, agent-ready SDK for Python, TypeScript, and Rust. No brittle CSS selectors.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Shiny%20Fishstick.html">Open Shiny Fishstick</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/shiny-fishstick" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Singulr Agency. All rights reserved.</p>
-            <div class="social-links">
-                <a href="#" class="hover-target">Twitter</a>
-                <a href="#" class="hover-target">Dribbble</a>
-                <a href="#" class="hover-target">Instagram</a>
-                <a href="careers.html" class="hover-target">Careers</a>
-            </div>
+      </div>
+    </div>
+    <div class="pp" data-p="linkup">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="24" y="68" width="58" height="42" rx="10" fill="#F2F4FF" stroke="#0B1033" stroke-width="5"/>
+        <path d="M40 110v12M28 122h48" stroke="#0B1033" stroke-width="5"/>
+        <rect x="118" y="68" width="58" height="42" rx="10" fill="#F2F4FF" stroke="#0B1033" stroke-width="5"/>
+        <path d="M134 110v12M122 122h48" stroke="#0B1033" stroke-width="5"/>
+        <path d="M82 89h36" stroke="#0B1033" stroke-width="6" stroke-dasharray="3 8"/>
+        <circle cx="100" cy="89" r="7" fill="#FF4FA3" stroke="#0B1033" stroke-width="3"/>
+        <g transform="translate(160 38)"><path class="spark" fill="#0B1033" d="M0-12L4-4 12 0 4 4 0 12-4 4-12 0-4-4z"/></g>
+        <g transform="translate(36 44)"><path class="spark b" fill="#0B1033" d="M0-10L3-3 10 0 3 3 0 10-3 3-10 0-3-3z"/></g>
+      </svg>
+      <div>
+        <span class="chip">Remote desktop • Rust & WebRTC</span>
+        <h3>LinkUp</h3>
+        <p>Connects two devices directly with end-to-end encryption. Screen, mouse, keyboard and files never detour through corporate servers. 60fps control.</p>
+        <div class="panel-acts">
+          <a class="btn" href="LinkUp.html">Open LinkUp</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/LinkUp" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
-    </footer>
+      </div>
+    </div>
+    <div class="pp" data-p="wiggle">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true">
+        <g transform="translate(54, 40)">
+          <path d="M6 4v68l18-16 12 26 12-5.5-12-26 24-1.5z" fill="#6C47FF" stroke="#0B1033" stroke-width="6" stroke-linejoin="round"/>
+        </g>
+        <g transform="translate(150 48)"><path class="spark" fill="#0B1033" d="M0-14L5-5 14 0 5 5 0 14-5 5-14 0-5-5z"/></g>
+        <g transform="translate(38 138)"><path class="spark b" fill="#0B1033" d="M0-11L4-4 11 0 4 4 0 11-4 4-11 0-4-4z"/></g>
+        <g transform="translate(156 142)"><path class="spark c" fill="#0B1033" d="M0-9L3-3 9 0 3 3 0 9-3 3-9 0-3-3z"/></g>
+      </svg>
+      <div>
+        <span class="chip">Chrome extension • AI agent</span>
+        <h3>Wiggle</h3>
+        <p>Turns your mouse cursor into an autonomous AI agent. It navigates web pages, inspects elements, fills forms, and rewrites text directly in place.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Wiggle.html">Open Wiggle</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/wiggle" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="xrisk">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round">
+        <circle cx="100" cy="100" r="76" stroke="var(--paper)"/>
+        <path d="M68 68l64 64M132 68L68 132" stroke="#FFB400"/>
+        <circle cx="100" cy="100" r="14" fill="#19D49B" stroke="none"/>
+      </svg>
+      <div>
+        <span class="chip">Open source • AI agent safety</span>
+        <h3>XRisk</h3>
+        <p>Sits between an agent’s intended action and execution. Checks policy, prompts, secrets and network use, then allows, confirms or blocks.</p>
+        <div class="panel-acts">
+          <a class="btn" href="XRisk.html">Open XRisk</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/XRisk" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="next">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="#0B1033" stroke-width="7" stroke-linecap="round">
+        <circle class="spin" cx="100" cy="100" r="70" stroke-dasharray="1 17"/><path d="M100 78v44M78 100h44"/>
+      </svg>
+      <div>
+        <span class="chip">In the lab</span>
+        <h3>More on the way</h3>
+        <p>More Singulr automation and AI products are currently brewing in our lab.</p>
+        <button class="btn" type="button" disabled>Stay tuned</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cursorDot = document.querySelector('.cursor-dot');
-            const cursorOutline = document.querySelector('.cursor-outline');
-            const hoverTargets = document.querySelectorAll('.hover-target');
-            const magneticBtns = document.querySelectorAll('.magnetic-btn');
-            
-            // --- 1. Cursor Logic ---
-            let mouseX = window.innerWidth / 2;
-            let mouseY = window.innerHeight / 2;
-            let outlineX = mouseX;
-            let outlineY = mouseY;
-            let outlineSize = 40;
-            let hasMoved = false;
+<section class="approach" id="approach">
+  <p class="big">Most software asks for your attention. Ours asks for none. Singulr Tech builds automation and AI products that find the boring task, handle it, and quietly step aside.</p>
+  <div class="cells">
+    <article><i style="background:var(--cobalt)"></i><h3>One job, done well</h3><p>Every product starts with a single annoying task and removes it completely.</p></article>
+    <article><i style="background:var(--coral)"></i><h3>Quiet by default</h3><p>Our tools work in the background and only speak up when something needs you.</p></article>
+    <article><i style="background:var(--mint)"></i><h3>Yours to control</h3><p>Clear settings, honest defaults, and your data kept on your own device wherever possible.</p></article>
+  </div>
+</section>
 
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                
-                if (!hasMoved) {
-                    cursorDot.style.opacity = 1;
-                    cursorOutline.style.opacity = 1;
-                    hasMoved = true;
-                }
-                cursorDot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
-            });
+<section class="cta2">
+  <h2>See what we’ve built.</h2>
+  <p>Five automation and AI tools, each built to solve a single annoying task and quietly step aside.</p>
+  <div class="cta">
+    <a class="btn" href="#products">Explore all products</a>
+    <a class="btn ghost" href="about.html">About Singulr</a>
+    <a class="btn ghost" href="careers.html">Work with us</a>
+  </div>
+</section>
 
-            function animateCursor() {
-                const easing = 0.15;
-                outlineX += (mouseX - outlineX) * easing;
-                outlineY += (mouseY - outlineY) * easing;
-                cursorOutline.style.transform = `translate(${outlineX - (outlineSize / 2)}px, ${outlineY - (outlineSize / 2)}px)`;
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
+<footer class="foot">
+  <div class="foot-top">
+    <div>
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+        <span>Singulr Tech</span>
+      </div>
+      <p class="foot-tag">Automation that gets out of your way.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="#products">All Products</a>
+      <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
+      <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
+      <a href="LinkUp.html">LinkUp</a>
+      <a href="Wiggle.html">Wiggle</a>
+      <a href="XRisk.html">XRisk</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="#approach">Approach</a>
+      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>S</span><span>i</span><span>n</span><span>g</span><span>u</span><span>l</span><span>r</span></p>
+  <div class="foot-bottom"><span>© 2026 Singulr Tech. All rights reserved.</span><span>Automation and AI products.</span></div>
+</footer>
 
-            // --- 1.5 Background Parallax Effect (Hero) ---
-            const deco1 = document.querySelector('.deco-1');
-            const deco2 = document.querySelector('.deco-2');
-            
-            window.addEventListener('mousemove', (e) => {
-                const x = (e.clientX / window.innerWidth - 0.5) * 60;
-                const y = (e.clientY / window.innerHeight - 0.5) * 60;
-                if (deco1 && deco2) {
-                    deco1.style.transform = `translate(${x}px, ${y}px)`;
-                    deco2.style.transform = `translate(${-x}px, ${-y}px)`;
-                }
-            });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-            // Cursor Hover States
-            hoverTargets.forEach(target => {
-                target.addEventListener('mouseenter', () => {
-                    outlineSize = 70;
-                    cursorOutline.style.width = `${outlineSize}px`;
-                    cursorOutline.style.height = `${outlineSize}px`;
-                    
-                    const isDarkSection = target.closest('footer') || target.closest('.process-section') || target.classList.contains('marquee-container');
-                    if (isDarkSection) {
-                        cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.2)';
-                        cursorOutline.style.borderColor = 'transparent';
-                    } else {
-                        cursorOutline.style.backgroundColor = 'rgba(26, 26, 26, 0.06)';
-                        cursorOutline.style.borderColor = 'transparent';
-                    }
-                });
+/* hero dots: a constellation of "many tasks" */
+const NS="http://www.w3.org/2000/svg",dg=$("#dots");
+for(let i=0;i<36;i++){
+  const ring=i%3,r=[80,125,170][ring],a=(i/36)*Math.PI*2*3+ring*.7;
+  const c=document.createElementNS(NS,"circle");
+  c.setAttribute("class","dot");c.setAttribute("cx",200+r*Math.cos(a));c.setAttribute("cy",200+r*Math.sin(a));c.setAttribute("r",[6,8,10][ring]);
+  dg.appendChild(c);
+}
 
-                target.addEventListener('mouseleave', () => {
-                    outlineSize = 40;
-                    cursorOutline.style.width = `${outlineSize}px`;
-                    cursorOutline.style.height = `${outlineSize}px`;
-                    cursorOutline.style.backgroundColor = 'transparent';
-                    
-                    const isDarkSection = target.closest('footer') || target.closest('.process-section') || target.classList.contains('marquee-container');
-                    if (isDarkSection) {
-                        cursorOutline.style.borderColor = 'var(--bg-color)';
-                    } else {
-                        cursorOutline.style.borderColor = 'var(--text-color)';
-                    }
-                });
-            });
+/* product selector */
+const rows=$$(".row"),blocks=$$(".pp"),panel=$("#panel");
+function pick(p){
+  if(panel.dataset.p===p)return;
+  panel.dataset.p=p;
+  rows.forEach(r=>{const on=r.dataset.p===p;r.classList.toggle("on",on);r.setAttribute("aria-pressed",on);});
+  blocks.forEach(b=>b.classList.toggle("on",b.dataset.p===p));
+  if(g&&!reduce){
+    const b=$(".pp.on");
+    g.fromTo(b.querySelector(".glyph"),{scale:.5,rotation:-14,autoAlpha:0},{scale:1,rotation:0,autoAlpha:1,duration:.7,ease:"back.out(2.2)"});
+    g.fromTo(b.querySelectorAll("div>*"),{y:22,autoAlpha:0},{y:0,autoAlpha:1,duration:.55,stagger:.07,ease:"power3.out",delay:.08});
+  }
+}
+rows.forEach(r=>{
+  r.addEventListener("click",()=>pick(r.dataset.p));
+  r.addEventListener("focus",()=>pick(r.dataset.p));
+  r.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")pick(r.dataset.p);});
+});
+$$(".track a").forEach(a=>{
+  a.addEventListener("click",()=>{
+    const p=a.dataset.jump;
+    if(p)pick(p);
+  });
+});
 
-            // --- 2. Magnetic Buttons ---
-            magneticBtns.forEach(btn => {
-                btn.addEventListener('mousemove', (e) => {
-                    const position = btn.getBoundingClientRect();
-                    const x = e.clientX - position.left - position.width / 2;
-                    const y = e.clientY - position.top - position.height / 2;
-                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
-                });
-                btn.addEventListener('mouseleave', () => {
-                    btn.style.transform = `translate(0px, 0px) scale(1)`;
-                });
-            });
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{
+  document.documentElement.classList.add("calm");
+  g.set(".dot",{autoAlpha:0});g.set(".core",{attr:{r:44}});
+  return()=>document.documentElement.classList.remove("calm");
+});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  /* load sequence */
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".ticker",{yPercent:100,duration:1,ease:"power3.out"},.9);
 
-            // --- 3. 3D Card Tilt Effect (Updated for Bento) ---
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -5; // Subtler tilt for large cards
-                    const rotateY = ((x - centerX) / centerX) * 5;
-                    
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                    card.style.transition = 'transform 0.5s var(--spring), box-shadow 0.4s var(--spring), background-color 0.4s ease';
-                });
-                card.addEventListener('mouseenter', () => {
-                    card.style.transition = 'box-shadow 0.4s var(--spring), background-color 0.4s ease';
-                });
-            });
+  /* many dots collapse into one point; click to replay */
+  const dots=$$(".dot"),sing=g.timeline({delay:.9});
+  sing.to(dots,{attr:{cx:200,cy:200,r:2},duration:1.2,ease:"power3.in",stagger:{each:.035,from:"random"}})
+      .to(".core",{attr:{r:44},duration:.7,ease:"back.out(3)"},"-=.35")
+      .fromTo(".orbit",{opacity:1,scale:1},{opacity:0,scale:.55,svgOrigin:"200 200",duration:.9,ease:"power2.in"},"-=.2")
+      .fromTo(".orbit",{opacity:0,scale:.55},{opacity:1,scale:1,svgOrigin:"200 200",duration:.9,ease:"expo.out"},">-.05");
+  $(".sing").addEventListener("click",()=>sing.restart());
 
-            // --- 4. Magnetic Repulsion Playground (Process Section) ---
-            const playground = document.getElementById('playground');
-            const shapes = document.querySelectorAll('.react-shape');
-            
-            if(playground) {
-                playground.addEventListener('mousemove', (e) => {
-                    const rect = playground.getBoundingClientRect();
-                    const pgX = e.clientX - rect.left;
-                    const pgY = e.clientY - rect.top;
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
 
-                    shapes.forEach(shape => {
-                        const speed = parseFloat(shape.getAttribute('data-speed'));
-                        const shapeRect = shape.getBoundingClientRect();
-                        // Get center of shape relative to playground
-                        const shapeX = (shapeRect.left - rect.left) + (shapeRect.width / 2);
-                        const shapeY = (shapeRect.top - rect.top) + (shapeRect.height / 2);
-                        
-                        const distX = pgX - shapeX;
-                        const distY = pgY - shapeY;
-                        const distance = Math.sqrt(distX * distX + distY * distY);
-                        
-                        const maxDistance = 200; // Activation radius
-                        
-                        if (distance < maxDistance) {
-                            // Calculate repulsion vector
-                            const force = (maxDistance - distance) / maxDistance;
-                            const moveX = -(distX / distance) * force * 100 * speed;
-                            const moveY = -(distY / distance) * force * 100 * speed;
-                            
-                            // Squish effect based on proximity
-                            const scale = 1 - (force * 0.1);
-                            const rotate = (moveX * 0.2);
+  /* words light up as you read */
+  const p=$(".big");
+  p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+  g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
 
-                            shape.style.transform = `translate(${moveX}px, ${moveY}px) scale(${scale}) rotate(${rotate}deg)`;
-                            shape.style.borderRadius = `${30 + force * 40}%`; // Deform slightly
-                        } else {
-                            // Reset position softly
-                            shape.style.transform = 'translate(0px, 0px) scale(1) rotate(0deg)';
-                            shape.style.borderRadius = ''; // Reverts to CSS default
-                        }
-                    });
-                });
-                
-                playground.addEventListener('mouseleave', () => {
-                    shapes.forEach(shape => {
-                        shape.style.transform = 'translate(0px, 0px) scale(1) rotate(0deg)';
-                        shape.style.borderRadius = '';
-                    });
-                });
-            }
-
-            // --- 5. Scroll Reveal Animations ---
-            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-        });
-    </script>
+  /* principle markers pop in */
+  g.from(".cells i",{scale:0,duration:.7,stagger:.14,ease:"back.out(3)",scrollTrigger:{trigger:".cells",start:"top 85%"}});
+  g.from(".panel",{yPercent:6,autoAlpha:0,duration:.9,ease:"power3.out",scrollTrigger:{trigger:".products",start:"top 70%"}});
+});
+}
+</script>
 </body>
 </html>

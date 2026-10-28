@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>XRisk — Allow, confirm or block every agent action</title>
+<meta name="description" content="XRisk is an open-source safety and control layer that sits between an AI agent's intended action and the thing that executes it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--violet:#6C47FF;--vl:#B9A8FF;--pink:#FF4FA3;--sky:#3CC8FF;--ink:#0B1033;--paper:#F2F4FF;--cobalt:#2336F0;--amber:#FFB400;--mint:#19D49B;--coral:#FF5A4E;--lime:#C8F03C;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;--gutter:clamp(24px,6vw,96px);--sec:clamp(88px,15vh,180px);
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--violet);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--amber);transform:scaleX(0);transform-origin:left}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--vl);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover{background:var(--paper);color:var(--ink)}.btn:active{transform:translateY(2px)}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}.btn.ghost:hover{background:var(--ink);color:var(--vl);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}.btn.ok{background:var(--mint);color:var(--ink);border-color:var(--mint)}
+h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700}
+code{font-family:var(--mono)}
+
+/* hero */
+.hero{min-height:100svh;background:var(--violet);color:var(--paper);display:grid;grid-template-columns:1.05fr .95fr;grid-template-rows:auto 1fr auto;column-gap:clamp(24px,4vw,64px);padding:0 var(--gutter);overflow:hidden}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a{display:inline-flex;align-items:center;font-size:.95rem;line-height:1}
+.nav a:not(.btn){text-decoration:none}.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav .btn.sm{padding:10px 18px;font-size:.95rem;line-height:1;margin:0;align-self:center}
+.hero-main{align-self:center;padding:5vh 0}
+h1{font-size:clamp(3.2rem,8vw,7.4rem);line-height:.94;letter-spacing:-.035em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:33em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.art{align-self:center;justify-self:end;width:100%;max-width:560px}
+.art svg{width:100%;height:auto;overflow:visible;display:block}
+.box{fill:var(--paper);stroke:var(--ink);stroke-width:4;transition:fill .3s}
+.exec.done .box{fill:var(--mint)}
+.wire{fill:none;stroke:var(--ink);stroke-width:5;stroke-linecap:round}.wire.d{stroke-dasharray:10 10}
+.lbl{font:700 18px "Bricolage Grotesque",sans-serif;fill:var(--ink);text-anchor:middle}
+.bar{fill:var(--ink)}
+.gc{fill:var(--paper);stroke:var(--ink);stroke-width:4;transition:fill .3s}
+.gl{font:700 30px "Bricolage Grotesque",sans-serif;fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.gate.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.pk{transform:translate(128px,173px);transition:transform .7s cubic-bezier(.4,0,.2,1)}
+.pk rect{fill:var(--amber);stroke:var(--ink);stroke-width:3;transition:fill .3s}
+.pk text{font:700 12px var(--mono);fill:var(--ink);text-anchor:middle}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.ctl button{font:700 .86rem var(--mono);color:var(--paper);background:transparent;border:var(--line) solid var(--paper);border-radius:10px;padding:9px 14px;cursor:pointer;transition:background .2s,color .2s}
+.ctl button:hover{background:rgba(242,244,255,.2)}
+.ctl button[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+.ctl button:focus-visible{outline-color:var(--amber)}
+.read{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:16px;min-height:2.6rem}
+.dec{font:700 .9rem var(--mono);border:var(--line) solid var(--ink);border-radius:8px;padding:5px 12px;background:var(--paper);color:var(--ink);transition:background .25s}
+.dec.allow{background:var(--mint)}.dec.confirm{background:var(--amber)}.dec.block{background:var(--coral)}
+.read p{flex:1 1 16em;line-height:1.45;font-weight:600;font-size:.98rem}
+.risk{display:flex;align-items:center;gap:5px;font:700 .8rem var(--mono)}
+.risk span{margin-right:6px}.risk i{width:26px;height:10px;border-radius:5px;background:rgba(242,244,255,.32)}.risk i.on{background:var(--ink)}
+.note{margin-top:10px;font-size:.88rem;opacity:.85}
+.strip{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);border-top:var(--line) solid var(--ink)}
+.strip div{padding:22px 0 30px;font-weight:650}.strip div+div{padding-left:clamp(16px,3vw,40px);border-left:var(--line) solid var(--ink)}
+
+/* statement */
+.problem{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650}
+.big span{transition:color .2s}.big span:hover{color:var(--vl)}
+
+/* pinned pipeline */
+.how{height:100svh;background:var(--cobalt);color:var(--paper);overflow:hidden}
+.h-in{height:100%;display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:center;padding:0 var(--gutter)}
+.steps h2{font-size:clamp(1.9rem,3.4vw,3.1rem);line-height:1.02;max-width:11em;margin-bottom:2.75rem}
+.cap-wrap{position:relative;min-height:13rem;padding-left:2.25rem}
+.rail{position:absolute;left:0;top:0;bottom:0;width:4px;background:rgba(242,244,255,.28)}
+.rail i{display:block;height:100%;background:var(--amber);transform:scaleY(0);transform-origin:top}
+.cap{position:absolute;inset:0 0 auto 2.25rem;opacity:0;visibility:hidden}.cap.on{opacity:1;visibility:visible}
+.cap h3{font-size:1.7rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cap p{max-width:34ch;font-size:1.1rem;line-height:1.55;color:#D3D9FF}
+.stage{height:min(72svh,580px)}
+.map{position:relative;height:100%;background:var(--paper);color:var(--ink);border:var(--line) solid var(--ink);border-radius:var(--r);overflow:hidden;padding:22px 22px 22px 124px}
+.pipe{height:100%;display:grid;grid-template-rows:repeat(4,1fr);gap:12px}
+.stn{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;padding:12px 18px;border:var(--line) solid var(--ink);border-radius:12px;background:#fff;opacity:.3}
+.stn b{font-size:1.25rem;letter-spacing:-.02em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font:700 .76rem var(--mono);border:var(--line) solid var(--ink);border-radius:8px;padding:4px 9px;background:var(--paper)}
+.chips .a{background:var(--mint)}.chips .c{background:var(--amber)}.chips .b{background:var(--coral)}
+.pkt{position:absolute;left:14px;top:0;width:96px;padding:6px 0;text-align:center;border:var(--line) solid var(--ink);border-radius:8px;background:var(--amber);font:700 .78rem var(--mono)}
+
+/* features */
+.feat{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.feat h2{max-width:11em;margin-bottom:clamp(36px,6vh,64px)}
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cell{border-radius:var(--r);padding:clamp(20px,2.4vw,32px);min-height:250px;display:flex;flex-direction:column;justify-content:space-between;gap:24px;color:var(--ink);transition:background .25s,color .25s}
+.cell:hover{background:var(--ink)!important;color:var(--paper)}
+.cell.w2{grid-column:span 2}
+.cell h3{font-size:clamp(1.4rem,2vw,1.9rem);letter-spacing:-.02em;line-height:1.05;font-weight:700;margin-bottom:.6rem}
+.cell p{line-height:1.5;font-size:1rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tags span{font:700 .78rem var(--mono);border:var(--line) solid currentColor;border-radius:8px;padding:4px 9px}
+.chain{display:flex;align-items:center}.chain i{width:30px;height:30px;border:var(--line) solid currentColor;border-radius:8px;flex:none}.chain b{height:2px;width:22px;background:currentColor;flex:none}
+
+/* install */
+.dl{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.dl h2{margin-bottom:1rem}.dl .lead{font-size:1.2rem;color:#B8C0F0;margin-bottom:clamp(36px,6vh,64px);max-width:34em;line-height:1.5}
+.ways{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--line);background:var(--paper);border:var(--line) solid var(--paper);border-radius:var(--r);overflow:hidden}
+.way{position:relative;display:flex;flex-direction:column;gap:12px;padding:clamp(22px,2.6vw,34px);min-height:310px;background:var(--ink)}
+.way b{font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.035em;line-height:1}
+.way small{font-size:1rem;line-height:1.5;color:#B8C0F0}
+.way pre{margin:auto 0 0;font:600 .8rem/1.6 var(--mono);white-space:pre-wrap;word-break:break-all;background:rgba(242,244,255,.1);border-radius:10px;padding:12px}
+.way .btn{align-self:flex-start}
+.way .btn.sm{background:var(--paper);color:var(--ink);border-color:var(--paper)}.way .btn.sm:hover{background:var(--amber);border-color:var(--amber)}
+.way.rec{background:var(--vl);color:var(--ink)}.way.rec small{color:var(--ink)}.way.rec pre{background:rgba(11,16,51,.12)}
+.way.rec .btn.sm{background:var(--ink);color:var(--vl);border-color:var(--ink)}.way.rec .btn.sm:hover{background:var(--paper);color:var(--ink)}
+.rc{position:absolute;right:16px;top:16px;background:var(--ink);color:var(--vl);border-radius:8px;padding:4px 10px;font-weight:700;font-size:.8rem}
+.dl .more{margin-top:20px;color:#B8C0F0}.dl .more a{color:var(--vl);font-weight:650}
+
+/* cli */
+.split{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:5fr 6fr;gap:var(--gutter);align-items:center}
+.split h2{margin-bottom:1.25rem}.split p{max-width:30em;font-size:1.15rem;line-height:1.55;color:var(--mute)}
+.reqs{margin-top:22px;display:grid;gap:8px;font-weight:600;font-size:.98rem}.reqs span{border:var(--line) solid var(--fg);border-radius:8px;padding:8px 12px;line-height:1.4}
+.reqs b{margin-right:6px;font-family:var(--mono)}
+.win{background:var(--ink);color:var(--paper);border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.wbar{height:44px;display:flex;align-items:center;padding:0 18px;border-bottom:var(--line) solid rgba(242,244,255,.25);font:600 .82rem var(--mono)}
+.term{padding:20px;font:clamp(.74rem,1.1vw,.9rem)/1.9 var(--mono);white-space:pre;overflow-x:auto}.cm{color:#8F9AD6}
+.cpb{margin:0 18px 18px;background:var(--vl);color:var(--ink);border-color:var(--vl)}.cpb:hover{background:var(--paper)}
+
+/* roadmap */
+.road{background:var(--mint);color:var(--ink);padding:var(--sec) var(--gutter)}
+.road h2{margin-bottom:clamp(36px,6vh,64px)}
+.rd{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px)}
+.rd h3{font-size:1.6rem;letter-spacing:-.02em;font-weight:700;margin-bottom:1rem}
+.rd ul{list-style:none;margin:0;padding:0;border-bottom:var(--line) solid var(--ink)}
+.rd li{padding:14px 0;border-top:var(--line) solid var(--ink);font-size:1.15rem;font-weight:650;line-height:1.35}
+.rd .pl li{border-top-style:dashed}
+
+/* cta */
+.cta2{background:var(--violet);color:var(--paper);padding:var(--sec) var(--gutter)}
+.cta2 h2{font-size:clamp(2.6rem,7vw,6.4rem);letter-spacing:-.04em;max-width:11em;margin-bottom:1.5rem}
+.cta2 p{max-width:34em;font-size:1.2rem;line-height:1.55;margin-bottom:2.5rem}.cta2 .btn{margin:0 12px 12px 0}
+
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--vl)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(30vw,30rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--vl);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
+
+@media (max-width:1040px){.nav a:not(.btn){display:none}.ways{grid-template-columns:1fr 1fr}}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;grid-template-rows:none}.hero>*{grid-column:1/-1}
+  .top{order:1}.art{order:2;max-width:420px;justify-self:start;margin-top:8px}.hero-main{order:3;padding:24px 0 36px}.strip{order:4;grid-template-columns:1fr}
+  .strip div+div{padding-left:0;border-left:0;border-top:var(--line) solid var(--ink)}
+  .h-in{grid-template-columns:1fr;align-content:center;gap:22px}.stage{order:-1;height:52svh}.steps h2{display:none}
+  .cap-wrap{min-height:10.5rem}.cap h3{font-size:1.35rem}.cap p{font-size:1rem}
+  .map{padding:12px 12px 12px 92px}.pipe{gap:8px}.stn{padding:8px 12px}.stn b{font-size:1.05rem}.chips span{font-size:.68rem;padding:3px 7px}.pkt{width:70px;left:10px;font-size:.68rem}
+  .bento{grid-template-columns:1fr 1fr}.cell{min-height:220px}
+  .split{grid-template-columns:1fr}.rd{grid-template-columns:1fr}
+}
+@media (max-width:560px){.bento{grid-template-columns:1fr}.cell.w2{grid-column:auto}.ways{grid-template-columns:1fr}.way{min-height:0}}
+@media (max-width:480px){.top{gap:8px}.brand svg{width:26px;height:26px}.btn.sm{padding:8px 14px;font-size:.88rem}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.pk{transition:none}.gate.shake{animation:none}}
+html.calm .how{height:auto;padding:12vh 0}html.calm .cap{position:static;opacity:1;visibility:visible;margin-bottom:1.4rem}html.calm .cap-wrap{min-height:0}
+html.calm .stn{opacity:1}html.calm .pkt{display:none}html.calm .prog{display:none}html.calm .big span{opacity:1}
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+
+<header class="hero" id="top">
+  <div class="top">
+    <a class="brand" href="#top">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="15" cy="15" r="12"/><path d="M10 10l10 10M20 10L10 20"/></svg>
+      <span>XRisk</span>
+    </a>
+    <nav class="nav" aria-label="Main"><a href="index.html">← Singulr</a><a href="#how">How it decides</a><a href="#features">Features</a><a href="#install">Install</a>
+      <a class="btn sm" href="https://github.com/Hootsworth/XRisk" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Allow.</span></span><span class="ln"><span>Confirm.</span></span><span class="ln"><span>Block.</span></span></h1>
+    <p class="sub">XRisk sits between an agent’s intended action and the thing that executes it. It checks policy, prompts, secrets and network use, then returns one of those three answers, with the reasons attached.</p>
+    <div class="cta"><a class="btn" href="#install">Install XRisk</a><a class="btn ghost" href="#how">How it decides</a></div>
+  </div>
+  <div class="art">
+    <svg viewBox="0 0 560 380" role="img" aria-label="An agent sends an action toward an executor through a gate. Pick an action below to see the gate allow it, hold it for confirmation, or block it.">
+      <g class="exec" id="exec"><rect class="box" x="440" y="140" width="110" height="100" rx="14"/><text class="lbl" x="495" y="196">Executor</text></g>
+      <rect class="box" x="10" y="140" width="110" height="100" rx="14"/><text class="lbl" x="65" y="196">Agent</text>
+      <path class="wire" d="M120 190H276"/><path class="wire d" d="M284 190H440"/>
+      <g class="gate" id="gate"><rect class="bar" x="276" y="70" width="8" height="240" rx="4"/><circle class="gc" id="gc" cx="280" cy="190" r="32"/><text class="gl" id="gl" x="280" y="191">·</text></g>
+      <g class="pk" id="pk"><rect width="112" height="34" rx="8"/><text id="pkt" x="56" y="22">read_file</text></g>
+    </svg>
+    <div class="ctl" role="group" aria-label="Choose an example action">
+      <button type="button" data-k="read_file" aria-pressed="true">read_file</button>
+      <button type="button" data-k="deploy" aria-pressed="false">deploy</button>
+      <button type="button" data-k="manage_power" aria-pressed="false">manage_power</button>
+    </div>
+    <div class="read" id="read" aria-live="off">
+      <span class="dec" id="dec">checking</span>
+      <p id="why">Pick an action to see what XRisk does with it.</p>
+      <span class="risk" aria-label="Risk level"><span id="rl">risk</span><i></i><i></i><i></i></span>
+    </div>
+    <p class="note">Illustrative. Real decisions come from your own policy pack.</p>
+  </div>
+  <div class="strip"><div>Policy, prompts, secrets and egress in one check</div><div>Open source under Apache 2.0</div><div>Runs with Node.js or as a standalone binary</div></div>
+</header>
+
+<section class="problem">
+  <p class="big">Agents fail in predictable ways: tools with too much power, prompts that get hijacked, secrets that leak, and requests that head somewhere they shouldn’t. XRisk sits in the gap between intent and action and says allow, confirm or block, with its reasons attached.</p>
+</section>
+
+<section class="how" id="how" aria-label="How XRisk decides">
+  <div class="h-in">
+    <div class="steps">
+      <h2>From intent to decision.</h2>
+      <div class="cap-wrap">
+        <div class="rail"><i></i></div>
+        <article class="cap on"><h3>Policy comes first</h3><p>Rules from global, project and user layers are matched against the action. The most restrictive effect wins: block over confirm over allow.</p></article>
+        <article class="cap"><h3>Then the content</h3><p>The prompt is inspected for injection and anomalies. The payload is checked for secrets and personal data.</p></article>
+        <article class="cap"><h3>Then the boundaries</h3><p>Role limits, capability tokens and network egress rules decide whether this actor can do this thing, and reach that address.</p></article>
+        <article class="cap"><h3>Then a decision, on the record</h3><p>Risk signals are combined, the circuit breaker updates, and the decision lands in a hash-chained audit trail with reasons attached.</p></article>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="map" id="map">
+        <div class="pipe">
+          <div class="stn"><b>Policy</b><div class="chips"><span>global</span><span>project</span><span>user</span></div></div>
+          <div class="stn"><b>Content</b><div class="chips"><span>prompt injection</span><span>secrets and PII</span></div></div>
+          <div class="stn"><b>Boundaries</b><div class="chips"><span>role</span><span>capability token</span><span>egress</span></div></div>
+          <div class="stn"><b>Decision</b><div class="chips"><span class="a">allow</span><span class="c">confirm</span><span class="b">block</span></div></div>
+        </div>
+        <div class="pkt" id="pkt2">deploy</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feat" id="features">
+  <h2>Guardrails that work together.</h2>
+  <div class="bento">
+    <article class="cell w2" style="background:var(--vl)"><div><h3>Policy as code</h3><p>Layered global, project and user rules, validated against a schema. Check policy packs in CI for conflicts, shadowed rules and critical allow overrides before they roll out.</p></div><div class="tags"><span>block</span><span>beats confirm</span><span>beats allow</span></div></article>
+    <article class="cell" style="background:var(--amber)"><div><h3>Explainable risk</h3><p>Weighted scoring with a breakdown. Every decision says why.</p></div></article>
+    <article class="cell" style="background:var(--mint)"><div><h3>Prompt-injection detection</h3><p>Inspects prompts and scores anomalies before the action runs.</p></div></article>
+    <article class="cell" style="background:var(--coral)"><div><h3>Secrets and PII</h3><p>Detects sensitive data and gives you redaction utilities.</p></div></article>
+    <article class="cell" style="background:var(--sky)"><div><h3>Capability tokens</h3><p>Sandbox what an actor may do, and for how long.</p></div><div class="tags"><span>scope</span><span>TTL</span><span>single-use</span></div></article>
+    <article class="cell" style="background:var(--lime)"><div><h3>Egress control</h3><p>Allowlists and denylists for outbound network requests.</p></div></article>
+    <article class="cell" style="background:var(--pink)"><div><h3>Circuit breaker</h3><p>Stops repeated loops and escalating risk before they snowball.</p></div></article>
+    <article class="cell w2" style="background:var(--mint)"><div><h3>Tamper-evident audit trail</h3><p>Decisions are written to a hash chain. Deterministic forensic hashes let you replay a past decision and check it still holds.</p></div><div class="chain" aria-hidden="true"><i></i><b></b><i></i><b></b><i></i><b></b><i></i></div></article>
+    <article class="cell" style="background:var(--amber)"><div><h3>Supply-chain gates</h3><p>Signature and provenance checks before enforcement.</p></div></article>
+    <article class="cell" style="background:var(--vl)"><div><h3>Model output checks</h3><p>Verifies consistency and evidence in what the model claims.</p></div></article>
+  </div>
+</section>
+
+<section class="dl" id="install">
+  <h2>Install XRisk.</h2>
+  <p class="lead">Four ways to get the same <code>xrisk</code> command. Start with npx if you only want to try it.</p>
+  <div class="ways">
+    <div class="way rec"><span class="rc">Fastest to try</span><b>npx</b><small>Zero-install. Runs the check without adding anything to your machine.</small><pre>npx xrisk-engine assess --action-file examples/action.json</pre><button class="btn sm" type="button" data-copy>Copy</button></div>
+    <div class="way"><b>curl</b><small>A standalone binary. No Node.js or npm needed.</small><pre>curl -fsSL https://raw.githubusercontent.com/Hootsworth/XRisk/main/install.sh | sh</pre><button class="btn sm" type="button" data-copy>Copy</button></div>
+    <div class="way"><b>Homebrew</b><small>A system package for macOS or Linux.</small><pre>brew tap hootsworth/xrisk
+brew install xrisk</pre><button class="btn sm" type="button" data-copy>Copy</button></div>
+    <div class="way"><b>npm</b><small>Install globally in your Node environment.</small><pre>npm install -g xrisk-engine</pre><button class="btn sm" type="button" data-copy>Copy</button></div>
+  </div>
+  <p class="more">Prefer to embed it? The README covers <code>createNodeXRisk</code> on the <a href="https://github.com/Hootsworth/XRisk" target="_blank" rel="noopener noreferrer">GitHub page</a>.</p>
+</section>
+
+<section class="split" id="cli">
+  <div>
+    <h2>Use it from the terminal.</h2>
+    <p>Pipe in an action and read the decision. Pick a profile to match how strict you need to be. XRisk is a safety layer, not a replacement for hardening your infrastructure.</p>
+    <div class="reqs"><span><b>assess</b>Allow, confirm or block a proposed action</span><span><b>verify-model</b>Check model output for consistency and evidence</span><span><b>validate-policies</b>Catch policy problems before rollout</span><span><b>profiles</b>developer, enterprise or high_security</span></div>
+  </div>
+  <div class="win"><div class="wbar">terminal</div>
+<div class="term" id="cmds"><span class="cm"># assess an action from stdin</span>
+echo '{"tool":"read_file","actorRole":"planner"}' | xrisk assess --profile developer
+
+<span class="cm"># assess with your own policy pack</span>
+xrisk assess --action-file examples/action.json \
+  --policies-file examples/policies/baseline-policy-pack.json \
+  --profile enterprise
+
+<span class="cm"># verify model output</span>
+xrisk verify-model --input-file examples/verify-model-input.json --profile enterprise
+
+<span class="cm"># gate policy changes in CI</span>
+xrisk validate-policies --policies-file examples/policies/baseline-policy-pack.json</div>
+    <button class="btn sm cpb" id="copy" type="button">Copy commands</button></div>
+</section>
+
+<section class="road">
+  <h2>Where it’s going.</h2>
+  <div class="rd">
+    <div><h3>Shipped</h3><ul>
+      <li>Policy pack verification</li>
+      <li>Supply-chain integrity enforcement</li>
+      <li>Deterministic forensics and replay</li>
+      <li>Installers for npx, curl and Homebrew</li>
+      <li>An interactive validation playground</li>
+    </ul></div>
+    <div class="pl"><h3>Planned</h3><ul>
+      <li>Real-time threat intelligence correlation</li>
+      <li>Zero-trust workload identity</li>
+      <li>Autonomous containment orchestration</li>
+      <li>An adversarial simulation harness</li>
+      <li>Multi-party cryptographic approvals</li>
+      <li>Data lineage and purpose-bound controls</li>
+    </ul></div>
+  </div>
+</section>
+
+<section class="cta2">
+  <h2>Open source, and open to contributions.</h2>
+  <p>XRisk is released under the Apache License 2.0. Fork it, add tests for any behaviour change, run <code>npm test</code>, and explain policy or risk changes in your pull request.</p>
+  <a class="btn" href="https://github.com/Hootsworth/XRisk" target="_blank" rel="noopener noreferrer">View on GitHub</a><a class="btn ghost" href="#install">Install XRisk</a>
+</section>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div><div class="brand"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="15" cy="15" r="12"/><path d="M10 10l10 10M20 10L10 20"/></svg><span>XRisk</span></div><p class="foot-tag">A safety layer for AI agents.</p></div>
+    <nav class="foot-links" aria-label="Footer"><a href="index.html">← Singulr Tech</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="#how">How it decides</a><a href="#install">Install</a><a href="https://github.com/Hootsworth/XRisk" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://github.com/Hootsworth/XRisk/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">License</a></nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>X</span><span>R</span><span>i</span><span>s</span><span>k</span></p>
+  <div class="foot-bottom"><span>© 2026 XRisk. Apache 2.0.</span><span>A <a href="index.html" style="text-decoration:underline">Singulr Tech</a> product.</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* copy buttons */
+async function copyText(btn,text,label){
+  let ok=true;
+  try{await navigator.clipboard.writeText(text);}catch(_){ok=false;}
+  btn.textContent=ok?"Copied":"Select and copy instead";btn.classList.toggle("ok",ok);
+  setTimeout(()=>{btn.textContent=label;btn.classList.remove("ok");},2000);
+}
+$$("[data-copy]").forEach(b=>b.addEventListener("click",()=>copyText(b,b.parentElement.querySelector("pre").textContent,"Copy")));
+$("#copy").addEventListener("click",e=>copyText(e.currentTarget,$("#cmds").textContent.replace(/^\s*#.*$/gm,"").replace(/\n{2,}/g,"\n").trim(),"Copy commands"));
+
+/* hero gate: allow, confirm or block an example action */
+const SC={
+  read_file:{dec:"allow",why:"Planner role may read files. No injection, secrets or risky egress found.",risk:1,glyph:"✓",col:"var(--mint)"},
+  deploy:{dec:"confirm",why:"Policy confirm-deploy: approval required before this runs.",risk:2,glyph:"?",col:"var(--amber)"},
+  manage_power:{dec:"block",why:"Policy block-power: blocked by default. An incident summary is generated.",risk:3,glyph:"×",col:"var(--coral)"}
+};
+const pk=$("#pk"),pkr=pk.querySelector("rect"),gc=$("#gc"),gl=$("#gl"),gate=$("#gate"),exec=$("#exec");
+const dec=$("#dec"),why=$("#why"),rl=$("#rl"),segs=$$(".risk i"),btns=$$(".ctl button"),readBox=$("#read");
+let timers=[],autoT=null,auto=!reduce,idx=0;
+const at=(fn,ms)=>timers.push(setTimeout(fn,reduce?0:ms));
+const place=x=>{pk.style.transform="translate("+x+"px,173px)";};
+function run(k){
+  const s=SC[k];
+  timers.forEach(clearTimeout);timers=[];
+  btns.forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===k));
+  $("#pkt").textContent=k;
+  pk.style.transition="none";place(128);void pk.getBoundingClientRect();pk.style.transition="";
+  pkr.style.fill="var(--amber)";gc.style.fill="var(--paper)";gl.textContent="·";
+  exec.classList.remove("done");gate.classList.remove("shake");
+  dec.className="dec";dec.textContent="checking";why.textContent="Checking policy, content, boundaries…";
+  rl.textContent="risk";segs.forEach(i=>i.classList.remove("on"));
+  at(()=>place(156),60);
+  at(()=>{
+    dec.className="dec "+s.dec;dec.textContent=s.dec;why.textContent=s.why;
+    rl.textContent=["","low","medium","high"][s.risk];segs.forEach((i,n)=>i.classList.toggle("on",n<s.risk));
+    gc.style.fill=s.col;gl.textContent=s.glyph;pkr.style.fill=s.col;
+    if(s.dec==="block"){gate.classList.add("shake");at(()=>place(128),500);}
+    if(s.dec==="allow"){at(()=>place(322),450);at(()=>exec.classList.add("done"),1200);}
+  },900);
+}
+btns.forEach(b=>b.addEventListener("click",()=>{
+  auto=false;clearTimeout(autoT);readBox.setAttribute("aria-live","polite");run(b.dataset.k);
+}));
+const order=["read_file","deploy","manage_power"];
+function tick(){if(!auto)return;run(order[idx++%order.length]);autoT=setTimeout(tick,5200);}
+if(reduce){run("read_file");}else{autoT=setTimeout(tick,1200);}
+
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{document.documentElement.classList.add("calm");return()=>document.documentElement.classList.remove("calm");});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".art",{autoAlpha:0,y:20,duration:1},.5)
+    .from(".strip div",{autoAlpha:0,y:14,duration:.9,stagger:.1},1);
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+
+  const p=$(".big");p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+  g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+
+  /* pinned pipeline: policy, content, boundaries, decision */
+  const T=[0,1.2,2.4,3.5],END=4.8,stn=$$(".stn"),pkt=$("#pkt2");
+  const cy=i=>stn[i].offsetTop+stn[i].offsetHeight/2-pkt.offsetHeight/2;
+  g.set(pkt,{y:()=>cy(0)});
+  const tl=g.timeline({defaults:{ease:"power2.inOut"},scrollTrigger:{trigger:".how",start:"top top",end:"+=3600",pin:true,scrub:.8,anticipatePin:1,invalidateOnRefresh:true}});
+  tl.to(".rail i",{scaleY:1,ease:"none",duration:END},0);
+  $$(".cap").forEach((c,i,all)=>{
+    if(i)tl.fromTo(c,{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.3},T[i]-.1);
+    if(i<all.length-1)tl.to(c,{autoAlpha:0,y:-26,duration:.3},T[i+1]-.3);
+  });
+  stn.forEach((s,i)=>{
+    tl.to(s,{opacity:1,duration:.3},T[i]+(i?0:.05));
+    if(i)tl.to(pkt,{y:()=>cy(i),duration:.5},T[i]-.1);
+  });
+  tl.to({},{duration:.2},END-.2);
+
+  g.from(".cell",{yPercent:8,autoAlpha:0,duration:.8,stagger:.08,ease:"power3.out",scrollTrigger:{trigger:".bento",start:"top 82%"}});
+  g.from(".way",{yPercent:6,autoAlpha:0,duration:.8,stagger:.08,ease:"power3.out",scrollTrigger:{trigger:".ways",start:"top 85%"}});
+});
+}
+</script>
+</body>
+</html>

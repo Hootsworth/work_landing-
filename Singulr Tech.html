@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Singulr Tech — Automation that gets out of your way</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--cobalt:#2336F0;--ink:#0B1033;--amber:#FFB400;--mint:#19D49B;--coral:#FF5A4E;--paper:#F2F4FF;
+--sky:#3CC8FF;--lime:#C8F03C;--violet:#6C47FF;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;
+--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,190px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--amber);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--cobalt);transform:scaleX(0);transform-origin:left}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--amber);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:var(--ink);color:var(--amber);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem;white-space:nowrap;flex-shrink:0}
+
+/* hero */
+.hero{min-height:100svh;background:var(--amber);color:var(--ink);display:grid;grid-template-columns:1.2fr .8fr;grid-template-rows:auto 1fr auto;column-gap:clamp(24px,4vw,64px);padding:0 var(--gutter);overflow:hidden}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;box-sizing:border-box;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a{display:inline-flex;align-items:center;font-size:.95rem;line-height:1}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav .btn.sm{padding:10px 18px;font-size:.95rem;line-height:1;margin:0;align-self:center}
+.hero-main{align-self:center;padding:5vh 0}
+h1{font-size:clamp(3rem,7vw,6.75rem);line-height:.94;letter-spacing:-.035em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:32em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.sing{width:100%;max-width:500px;justify-self:end;align-self:center;overflow:visible;cursor:pointer}
+.dot{fill:var(--ink)}.core{fill:var(--ink)}.orbit{fill:none;stroke:var(--ink);stroke-width:3}
+.ticker{grid-column:1/-1;border-top:var(--line) solid var(--ink);margin:0 calc(var(--gutter) * -1);overflow:hidden}
+.track{display:flex;align-items:center;width:max-content;animation:tick 30s linear infinite}
+.ticker:hover .track{animation-play-state:paused}
+.track a{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;text-decoration:none;padding:18px 0}
+.track i{width:12px;height:12px;border-radius:50%;background:var(--ink);margin:0 30px;flex:none}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* products */
+.products{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);align-items:start}
+.products h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+.plist{border-bottom:var(--line) solid rgba(242,244,255,.28)}
+.row{display:flex;align-items:baseline;justify-content:space-between;gap:16px;width:100%;padding:18px 0;border:0;border-top:var(--line) solid rgba(242,244,255,.28);background:none;color:var(--paper);font:inherit;text-align:left;cursor:pointer;opacity:.42;transition:opacity .25s,padding-left .4s cubic-bezier(.3,1.6,.5,1)}
+.row span{font-size:clamp(2.2rem,5vw,4.5rem);font-weight:700;letter-spacing:-.035em;line-height:1;transition:color .25s}
+.row small{font-size:.95rem;font-weight:600;text-align:right}
+.row:hover,.row.on{opacity:1}.row.on{padding-left:20px}.row.on span{color:var(--amber)}
+.panel{--pbg:var(--cobalt);--pfg:var(--paper);background:var(--pbg);color:var(--pfg);border-radius:var(--r);min-height:500px;padding:clamp(24px,3vw,40px);display:flex;transition:background-color .55s cubic-bezier(.2,.8,.2,1),color .55s}
+.panel[data-p=wavvy]{--pbg:var(--cobalt);--pfg:var(--paper)}
+.panel[data-p=fish]{--pbg:var(--coral);--pfg:var(--ink)}
+.panel[data-p=linkup]{--pbg:var(--sky);--pfg:var(--ink)}
+.panel[data-p=wiggle]{--pbg:var(--lime);--pfg:var(--ink)}
+.panel[data-p=xrisk]{--pbg:var(--violet);--pfg:var(--paper)}
+.panel[data-p=next]{--pbg:var(--mint);--pfg:var(--ink)}
+.pp{display:none;flex-direction:column;justify-content:space-between;gap:28px;width:100%}.pp.on{display:flex}
+.glyph{width:clamp(120px,14vw,170px);height:auto}
+.chip{display:inline-block;border:var(--line) solid currentColor;border-radius:8px;padding:4px 10px;font-size:.8rem;font-weight:700;margin-bottom:16px}
+.pp h3{font-size:clamp(2.3rem,4vw,3.5rem);letter-spacing:-.03em;line-height:1;font-weight:700;margin-bottom:14px}
+.pp p{font-size:1.15rem;line-height:1.5;max-width:28em;margin-bottom:24px}
+.panel-acts{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.panel .btn{background:var(--pfg);color:var(--pbg);border-color:var(--pfg)}
+.panel .btn:hover:not(:disabled){background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.panel .btn.ghost{background:transparent;color:var(--pfg);border-color:currentColor}
+.panel .btn.ghost:hover{background:var(--pfg);color:var(--pbg);border-color:var(--pfg)}
+.spark{transform-box:fill-box;transform-origin:center;animation:tw 2.4s ease-in-out infinite}
+.spark.b{animation-delay:.8s}.spark.c{animation-delay:1.6s}
+@keyframes tw{50%{transform:scale(.35) rotate(45deg)}}
+.spin{transform-origin:100px 100px;animation:spin 22s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* approach */
+.approach{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650;margin-bottom:clamp(56px,10vh,110px)}
+.big span{transition:color .2s}.big span:hover{color:var(--cobalt)}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.cells article{padding:clamp(22px,3vw,40px);transition:background .25s,color .25s}
+.cells article+article{border-left:var(--line) solid var(--fg)}
+.cells article:hover{background:var(--amber);color:var(--ink)}
+.cells i{display:block;width:30px;height:30px;border-radius:8px;margin-bottom:clamp(40px,8vh,90px)}
+.cells h3{font-size:1.6rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cells p{line-height:1.55;font-size:1.05rem}
+
+/* cta */
+.cta2{background:var(--cobalt);color:var(--paper);padding:var(--sec) var(--gutter)}
+.cta2 h2{font-size:clamp(2.6rem,7vw,6.5rem);line-height:.96;letter-spacing:-.04em;font-weight:700;max-width:11em;margin-bottom:1.5rem}
+.cta2 p{max-width:30em;font-size:1.2rem;line-height:1.5;color:#D3D9FF;margin-bottom:2.5rem}
+.cta2 .btn{background:var(--amber);color:var(--ink)}.cta2 .btn:hover{background:var(--paper)}
+.cta2 .btn.ghost{background:transparent;color:var(--paper);border-color:var(--paper)}.cta2 .btn.ghost:hover{background:var(--paper);color:var(--cobalt)}
+
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}
+.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--amber)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(25vw,28rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
+
+@media (max-width:1040px){.nav a:not(.btn){display:none}}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;grid-template-rows:none}.hero>*{grid-column:1/-1}
+  .top{order:1}.sing{order:2;max-width:220px;justify-self:start;margin-top:8px}.hero-main{order:3;padding:24px 0 40px}.ticker{order:4}
+  .products{grid-template-columns:1fr}.panel{min-height:440px}
+  .cells{grid-template-columns:1fr}.cells article+article{border-left:0;border-top:var(--line) solid var(--fg)}.cells i{margin-bottom:28px}
+}
+@media (max-width:480px){
+  .top{gap:8px}
+  .brand svg{width:26px;height:26px}
+  .btn.sm{padding:8px 14px;font-size:.88rem}
+}
+@media (prefers-reduced-motion:reduce){.track,.spark,.spin{animation:none}}
+html.calm .prog{display:none}html.calm .big span{opacity:1}
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+
+<header class="hero">
+  <div class="top">
+    <a class="brand" href="#">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+      <span>Singulr</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#products">Products</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="#approach">Approach</a>
+      <a class="btn sm" href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Automation</span></span><span class="ln"><span>that gets out</span></span><span class="ln"><span>of your way.</span></span></h1>
+    <p class="sub">Singulr Tech builds automation and AI products that handle the boring parts of your day, then step aside.</p>
+    <div class="cta"><a class="btn" href="#products">Meet the products</a><a class="btn ghost" href="#approach">How we think</a></div>
+  </div>
+  <svg class="sing" viewBox="0 0 400 400" role="img" aria-label="Many dots collapsing into a single point. Click to replay.">
+    <circle class="orbit" cx="200" cy="200" r="170"/>
+    <g id="dots"></g>
+    <circle class="core" cx="200" cy="200" r="14"/>
+  </svg>
+  <div class="ticker" aria-label="Our products">
+    <div class="track">
+      <a href="#products" data-jump="wavvy">Wavvy</a><i></i>
+      <a href="#products" data-jump="fish">Shiny Fishstick</a><i></i>
+      <a href="#products" data-jump="linkup">LinkUp</a><i></i>
+      <a href="#products" data-jump="wiggle">Wiggle</a><i></i>
+      <a href="#products" data-jump="xrisk">XRisk</a><i></i>
+      <a href="#products" data-jump="next">More on the way</a><i></i>
+      <a href="#products" data-jump="wavvy">Wavvy</a><i></i>
+      <a href="#products" data-jump="fish">Shiny Fishstick</a><i></i>
+      <a href="#products" data-jump="linkup">LinkUp</a><i></i>
+      <a href="#products" data-jump="wiggle">Wiggle</a><i></i>
+      <a href="#products" data-jump="xrisk">XRisk</a><i></i>
+      <a href="#products" data-jump="next">More on the way</a><i></i>
+    </div>
+  </div>
+</header>
+
+<section class="products" id="products">
+  <div>
+    <h2>Our products.</h2>
+    <div class="plist" role="group" aria-label="Choose a product">
+      <button class="row on" type="button" data-p="wavvy" aria-pressed="true"><span>Wavvy</span><small>Wi-Fi login, handled</small></button>
+      <button class="row" type="button" data-p="fish" aria-pressed="false"><span>Shiny Fishstick</span><small>Website to SDK compiler</small></button>
+      <button class="row" type="button" data-p="linkup" aria-pressed="false"><span>LinkUp</span><small>Peer-to-peer remote desktop</small></button>
+      <button class="row" type="button" data-p="wiggle" aria-pressed="false"><span>Wiggle</span><small>Cursor AI agent</small></button>
+      <button class="row" type="button" data-p="xrisk" aria-pressed="false"><span>XRisk</span><small>AI agent safety layer</small></button>
+      <button class="row" type="button" data-p="next" aria-pressed="false"><span>Next up</span><small>In the lab</small></button>
+    </div>
+  </div>
+  <div class="panel" id="panel" data-p="wavvy" aria-live="polite">
+    <div class="pp on" data-p="wavvy">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round">
+        <path d="M71.7 121.7A40 40 0 0 1 128.3 121.7"/><path d="M47 97A75 75 0 0 1 153 97"/><path d="M22.2 72.2A110 110 0 0 1 177.8 72.2"/>
+        <circle cx="100" cy="150" r="14" fill="#FFB400" stroke="none"/>
+      </svg>
+      <div>
+        <span class="chip">Chrome extension</span>
+        <h3>Wavvy</h3>
+        <p>Spots Wi-Fi login portals on campus, hotel and airport networks, fills in your details and gets you online before you’ve opened a tab.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Wi-Fi%20Portal%20Auto%20Login.html">Open Wavvy</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/Wavvy" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="fish">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true">
+        <g transform="rotate(-18 100 100)"><rect x="40" y="68" width="120" height="64" rx="16" fill="#FFB400" stroke="#0B1033" stroke-width="5"/><path d="M80 80v40M100 80v40M120 80v40" stroke="#0B1033" stroke-width="5" stroke-linecap="round" opacity=".35"/></g>
+        <g transform="translate(160 44)"><path class="spark" fill="#F2F4FF" d="M0-16L5-5 16 0 5 5 0 16-5 5-16 0-5-5z"/></g>
+        <g transform="translate(36 56)"><path class="spark b" fill="#F2F4FF" d="M0-12L4-4 12 0 4 4 0 12-4 4-12 0-4-4z"/></g>
+        <g transform="translate(168 154)"><path class="spark c" fill="#F2F4FF" d="M0-10L3-3 10 0 3 3 0 10-3 3-10 0-3-3z"/></g>
+      </svg>
+      <div>
+        <span class="chip">Agent SDK compiler</span>
+        <h3>Shiny Fishstick</h3>
+        <p>Crawls a site once, discovers what it can do, and compiles it into a typed, agent-ready SDK for Python, TypeScript, and Rust. No brittle CSS selectors.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Shiny%20Fishstick.html">Open Shiny Fishstick</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/shiny-fishstick" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="linkup">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="24" y="68" width="58" height="42" rx="10" fill="#F2F4FF" stroke="#0B1033" stroke-width="5"/>
+        <path d="M40 110v12M28 122h48" stroke="#0B1033" stroke-width="5"/>
+        <rect x="118" y="68" width="58" height="42" rx="10" fill="#F2F4FF" stroke="#0B1033" stroke-width="5"/>
+        <path d="M134 110v12M122 122h48" stroke="#0B1033" stroke-width="5"/>
+        <path d="M82 89h36" stroke="#0B1033" stroke-width="6" stroke-dasharray="3 8"/>
+        <circle cx="100" cy="89" r="7" fill="#FF4FA3" stroke="#0B1033" stroke-width="3"/>
+        <g transform="translate(160 38)"><path class="spark" fill="#0B1033" d="M0-12L4-4 12 0 4 4 0 12-4 4-12 0-4-4z"/></g>
+        <g transform="translate(36 44)"><path class="spark b" fill="#0B1033" d="M0-10L3-3 10 0 3 3 0 10-3 3-10 0-3-3z"/></g>
+      </svg>
+      <div>
+        <span class="chip">Remote desktop • Rust & WebRTC</span>
+        <h3>LinkUp</h3>
+        <p>Connects two devices directly with end-to-end encryption. Screen, mouse, keyboard and files never detour through corporate servers. 60fps control.</p>
+        <div class="panel-acts">
+          <a class="btn" href="LinkUp.html">Open LinkUp</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/LinkUp" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="wiggle">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true">
+        <g transform="translate(54, 40)">
+          <path d="M6 4v68l18-16 12 26 12-5.5-12-26 24-1.5z" fill="#6C47FF" stroke="#0B1033" stroke-width="6" stroke-linejoin="round"/>
+        </g>
+        <g transform="translate(150 48)"><path class="spark" fill="#0B1033" d="M0-14L5-5 14 0 5 5 0 14-5 5-14 0-5-5z"/></g>
+        <g transform="translate(38 138)"><path class="spark b" fill="#0B1033" d="M0-11L4-4 11 0 4 4 0 11-4 4-11 0-4-4z"/></g>
+        <g transform="translate(156 142)"><path class="spark c" fill="#0B1033" d="M0-9L3-3 9 0 3 3 0 9-3 3-9 0-3-3z"/></g>
+      </svg>
+      <div>
+        <span class="chip">Chrome extension • AI agent</span>
+        <h3>Wiggle</h3>
+        <p>Turns your mouse cursor into an autonomous AI agent. It navigates web pages, inspects elements, fills forms, and rewrites text directly in place.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Wiggle.html">Open Wiggle</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/wiggle" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="xrisk">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round">
+        <circle cx="100" cy="100" r="76" stroke="var(--paper)"/>
+        <path d="M68 68l64 64M132 68L68 132" stroke="#FFB400"/>
+        <circle cx="100" cy="100" r="14" fill="#19D49B" stroke="none"/>
+      </svg>
+      <div>
+        <span class="chip">Open source • AI agent safety</span>
+        <h3>XRisk</h3>
+        <p>Sits between an agent’s intended action and execution. Checks policy, prompts, secrets and network use, then allows, confirms or blocks.</p>
+        <div class="panel-acts">
+          <a class="btn" href="XRisk.html">Open XRisk</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/XRisk" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="next">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="#0B1033" stroke-width="7" stroke-linecap="round">
+        <circle class="spin" cx="100" cy="100" r="70" stroke-dasharray="1 17"/><path d="M100 78v44M78 100h44"/>
+      </svg>
+      <div>
+        <span class="chip">In the lab</span>
+        <h3>More on the way</h3>
+        <p>More Singulr automation and AI products are currently brewing in our lab.</p>
+        <button class="btn" type="button" disabled>Stay tuned</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="approach" id="approach">
+  <p class="big">Most software asks for your attention. Ours asks for none. Singulr Tech builds automation and AI products that find the boring task, handle it, and quietly step aside.</p>
+  <div class="cells">
+    <article><i style="background:var(--cobalt)"></i><h3>One job, done well</h3><p>Every product starts with a single annoying task and removes it completely.</p></article>
+    <article><i style="background:var(--coral)"></i><h3>Quiet by default</h3><p>Our tools work in the background and only speak up when something needs you.</p></article>
+    <article><i style="background:var(--mint)"></i><h3>Yours to control</h3><p>Clear settings, honest defaults, and your data kept on your own device wherever possible.</p></article>
+  </div>
+</section>
+
+<section class="cta2">
+  <h2>See what we’ve built.</h2>
+  <p>Five automation and AI tools, each built to solve a single annoying task and quietly step aside.</p>
+  <div class="cta">
+    <a class="btn" href="#products">Explore all products</a>
+    <a class="btn ghost" href="about.html">About Singulr</a>
+    <a class="btn ghost" href="careers.html">Work with us</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div>
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+        <span>Singulr Tech</span>
+      </div>
+      <p class="foot-tag">Automation that gets out of your way.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="#products">All Products</a>
+      <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
+      <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
+      <a href="LinkUp.html">LinkUp</a>
+      <a href="Wiggle.html">Wiggle</a>
+      <a href="XRisk.html">XRisk</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="#approach">Approach</a>
+      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>S</span><span>i</span><span>n</span><span>g</span><span>u</span><span>l</span><span>r</span></p>
+  <div class="foot-bottom"><span>© 2026 Singulr Tech. All rights reserved.</span><span>Automation and AI products.</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* hero dots: a constellation of "many tasks" */
+const NS="http://www.w3.org/2000/svg",dg=$("#dots");
+for(let i=0;i<36;i++){
+  const ring=i%3,r=[80,125,170][ring],a=(i/36)*Math.PI*2*3+ring*.7;
+  const c=document.createElementNS(NS,"circle");
+  c.setAttribute("class","dot");c.setAttribute("cx",200+r*Math.cos(a));c.setAttribute("cy",200+r*Math.sin(a));c.setAttribute("r",[6,8,10][ring]);
+  dg.appendChild(c);
+}
+
+/* product selector */
+const rows=$$(".row"),blocks=$$(".pp"),panel=$("#panel");
+function pick(p){
+  if(panel.dataset.p===p)return;
+  panel.dataset.p=p;
+  rows.forEach(r=>{const on=r.dataset.p===p;r.classList.toggle("on",on);r.setAttribute("aria-pressed",on);});
+  blocks.forEach(b=>b.classList.toggle("on",b.dataset.p===p));
+  if(g&&!reduce){
+    const b=$(".pp.on");
+    g.fromTo(b.querySelector(".glyph"),{scale:.5,rotation:-14,autoAlpha:0},{scale:1,rotation:0,autoAlpha:1,duration:.7,ease:"back.out(2.2)"});
+    g.fromTo(b.querySelectorAll("div>*"),{y:22,autoAlpha:0},{y:0,autoAlpha:1,duration:.55,stagger:.07,ease:"power3.out",delay:.08});
+  }
+}
+rows.forEach(r=>{
+  r.addEventListener("click",()=>pick(r.dataset.p));
+  r.addEventListener("focus",()=>pick(r.dataset.p));
+  r.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")pick(r.dataset.p);});
+});
+$$(".track a").forEach(a=>{
+  a.addEventListener("click",()=>{
+    const p=a.dataset.jump;
+    if(p)pick(p);
+  });
+});
+
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{
+  document.documentElement.classList.add("calm");
+  g.set(".dot",{autoAlpha:0});g.set(".core",{attr:{r:44}});
+  return()=>document.documentElement.classList.remove("calm");
+});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  /* load sequence */
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".ticker",{yPercent:100,duration:1,ease:"power3.out"},.9);
+
+  /* many dots collapse into one point; click to replay */
+  const dots=$$(".dot"),sing=g.timeline({delay:.9});
+  sing.to(dots,{attr:{cx:200,cy:200,r:2},duration:1.2,ease:"power3.in",stagger:{each:.035,from:"random"}})
+      .to(".core",{attr:{r:44},duration:.7,ease:"back.out(3)"},"-=.35")
+      .fromTo(".orbit",{opacity:1,scale:1},{opacity:0,scale:.55,svgOrigin:"200 200",duration:.9,ease:"power2.in"},"-=.2")
+      .fromTo(".orbit",{opacity:0,scale:.55},{opacity:1,scale:1,svgOrigin:"200 200",duration:.9,ease:"expo.out"},">-.05");
+  $(".sing").addEventListener("click",()=>sing.restart());
+
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+
+  /* words light up as you read */
+  const p=$(".big");
+  p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+  g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+
+  /* principle markers pop in */
+  g.from(".cells i",{scale:0,duration:.7,stagger:.14,ease:"back.out(3)",scrollTrigger:{trigger:".cells",start:"top 85%"}});
+  g.from(".panel",{yPercent:6,autoAlpha:0,duration:.9,ease:"power3.out",scrollTrigger:{trigger:".products",start:"top 70%"}});
+});
+}
+</script>
+</body>
+</html>

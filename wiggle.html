@@ -1,795 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Singulr - Wiggle AI</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #faf9f6;
-            --text-color: #1a1a1a;
-            --accent-1: #ff90e8;
-            --accent-2: #ffc900;
-            --accent-3: #90e8ff;
-            --accent-4: #c9ff90;
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wiggle — Your cursor, upgraded to an AI agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--lime:#C8F03C;--violet:#6C47FF;--ink:#0B1033;--paper:#F2F4FF;--red:#FF3B30;--coral:#FF5A4E;--amber:#FFB400;--cobalt:#2336F0;--mint:#19D49B;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;--gutter:clamp(24px,6vw,96px);--sec:clamp(88px,15vh,180px);
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--lime);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--violet);transform:scaleX(0);transform-origin:left}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--lime);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover{background:var(--paper);color:var(--ink)}.btn:active{transform:translateY(2px)}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}.btn.ghost:hover{background:var(--ink);color:var(--lime);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem;white-space:nowrap;flex-shrink:0}.btn.ok{background:var(--violet);color:var(--paper);border-color:var(--violet)}
+h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700}
+code,kbd{font-family:var(--mono)}
+kbd{display:inline-block;border:var(--line) solid currentColor;border-radius:6px;padding:1px 7px;font-size:.85em;font-weight:700}
 
-            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
+/* hero */
+.hero{position:relative;min-height:100svh;background:var(--lime);color:var(--ink);display:grid;grid-template-columns:1.1fr .9fr;grid-template-rows:auto 1fr auto;column-gap:clamp(24px,4vw,64px);padding:0 var(--gutter);overflow:hidden}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;box-sizing:border-box;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a{display:inline-flex;align-items:center;font-size:.95rem;line-height:1}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav .btn.sm{padding:10px 18px;font-size:.95rem;line-height:1;margin:0;align-self:center}
+.hero-main{align-self:center;padding:5vh 0}
+h1{font-size:clamp(3rem,7.2vw,6.9rem);line-height:.94;letter-spacing:-.035em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:33em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.art{position:relative;width:100%;max-width:500px;aspect-ratio:1;justify-self:end;align-self:center}
+.disc{position:absolute;inset:6%;border-radius:50%;background:var(--violet)}
+.mk{position:absolute;width:44px;height:44px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:700;border:var(--line) solid var(--ink)}
+.aim{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);background:var(--paper);border:var(--line) solid var(--ink);border-radius:10px;padding:7px 14px;font:700 .85rem var(--mono);white-space:nowrap}
+.cur{position:absolute;left:0;top:0;width:clamp(64px,8vw,104px);pointer-events:none;z-index:5}
+.cur svg{display:block;width:100%;height:auto;overflow:visible;transform-origin:8% 6%}
+.strip{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);border-top:var(--line) solid var(--ink)}
+.strip div{padding:22px 0 30px;font-weight:650;line-height:1.4}.strip div+div{padding-left:clamp(16px,3vw,40px);border-left:var(--line) solid var(--ink)}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
-        }
+/* problem */
+.problem{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650}
+.big span{transition:color .2s}.big span:hover{color:var(--lime)}
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        html { overflow-x: hidden; scroll-behavior: smooth; }
+/* pinned demo */
+.demo{height:100svh;background:var(--violet);color:var(--paper);overflow:hidden}
+.d-in{height:100%;display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:center;padding:0 var(--gutter)}
+.steps h2{font-size:clamp(1.9rem,3.4vw,3.1rem);line-height:1.02;max-width:11em;margin-bottom:2.75rem}
+.cap-wrap{position:relative;min-height:13rem;padding-left:2.25rem}
+.rail{position:absolute;left:0;top:0;bottom:0;width:4px;background:rgba(242,244,255,.28)}
+.rail i{display:block;height:100%;background:var(--lime);transform:scaleY(0);transform-origin:top}
+.jump{position:absolute;left:0;top:0;bottom:0;width:0}
+.jump button{position:absolute;left:-7px;width:18px;height:18px;padding:0;border-radius:50%;border:var(--line) solid var(--lime);background:var(--violet);cursor:pointer;transition:transform .35s cubic-bezier(.3,1.6,.5,1),background .2s}
+.jump button:nth-child(1){top:0}.jump button:nth-child(2){top:33%}.jump button:nth-child(3){top:66%}.jump button:nth-child(4){top:calc(100% - 18px)}
+.jump button:hover{transform:scale(1.3)}.jump button.on{background:var(--lime);transform:scale(1.25)}
+.cap{position:absolute;inset:0 0 auto 2.25rem;opacity:0;visibility:hidden}.cap.on{opacity:1;visibility:visible}
+.cap h3{font-size:1.7rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cap p{max-width:34ch;font-size:1.1rem;line-height:1.55;color:#E4DDFF}
+.stage{height:min(72svh,580px)}
+.mwin{height:100%;background:var(--paper);color:var(--ink);border:var(--line) solid var(--ink);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.mbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:var(--line) solid var(--ink);font:600 .8rem var(--mono)}
+.agent{background:var(--lime);border:var(--line) solid var(--ink);border-radius:8px;padding:3px 10px}
+.mbody{position:relative;flex:1;padding:24px;display:flex;flex-direction:column;gap:22px;background:var(--paper);color:var(--ink)}
+.site{display:flex;align-items:center;gap:16px;font-weight:650}.site b{font-size:1.2rem;letter-spacing:-.02em;margin-right:8px}.push{flex:1}
+.lnk,.sbtn,.fld,.sub2{position:relative}
+.sbtn,.sub2{background:var(--violet);color:#fff;border-radius:8px;padding:8px 14px;font-size:.9rem;font-weight:650}
+.tog{border:var(--line) solid currentColor;border-radius:99px;padding:5px 12px;font-size:.78rem;font-weight:700;opacity:0;transform:scale(0)}
+.bd{position:absolute;top:-12px;left:-12px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;font:700 .72rem/22px var(--mono);text-align:center;font-style:normal;transform:scale(0)}
+.pbox{position:relative;border:var(--line) solid transparent;border-radius:10px;padding:12px;font-size:clamp(1rem,1.7vw,1.35rem);line-height:1.4;font-weight:600;min-height:5.4em}
+.pbox .new{position:absolute;inset:12px}.new span{opacity:0;display:inline-block;white-space:pre}
+.form{display:grid;gap:12px;max-width:420px}
+.fld{border:var(--line) solid currentColor;border-radius:8px;padding:11px 14px;font-size:.92rem;min-height:44px}.fv.ph{opacity:.55}
+.sub2{justify-self:start}
+.curs{position:absolute;left:68%;top:82%;width:30px;z-index:3}
 
-        /* Custom Cursor */
-        .cursor-dot, .cursor-outline {
-            position: fixed;
-            top: 0; left: 0;
-            border-radius: 50%;
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0;
-            will-change: transform, width, height;
-        }
-        .cursor-dot { width: 8px; height: 8px; background-color: var(--text-color); }
-        .cursor-outline {
-            width: 40px; height: 40px; border: 2px solid var(--text-color);
-            transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease;
-        }
+/* commands */
+.cmds{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);align-items:start}
+.cmds h2{margin-bottom:1rem}.cmds .lead{max-width:26em;font-size:1.15rem;line-height:1.55;color:var(--mute);margin-bottom:2.25rem}
+.plist{border-bottom:var(--line) solid var(--fg)}
+.row{display:flex;align-items:baseline;justify-content:space-between;gap:16px;width:100%;padding:14px 0;border:0;border-top:var(--line) solid var(--fg);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;opacity:.4;transition:opacity .25s,padding-left .4s cubic-bezier(.3,1.6,.5,1)}
+.row span{font-size:clamp(1.9rem,3.8vw,3.2rem);font-weight:700;letter-spacing:-.035em;line-height:1;transition:color .25s}
+.row small{font-size:.9rem;font-weight:650;text-align:right}
+.row:hover,.row.on{opacity:1}.row.on{padding-left:18px}.row.on span{color:var(--violet)}
+.panel{--pbg:var(--violet);--pfg:var(--paper);background:var(--pbg);color:var(--pfg);border-radius:var(--r);min-height:470px;padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;justify-content:space-between;gap:28px;transition:background-color .55s cubic-bezier(.2,.8,.2,1),color .55s}
+.panel[data-c=lime]{--pbg:var(--lime);--pfg:var(--ink)}.panel[data-c=coral]{--pbg:var(--coral);--pfg:var(--ink)}.panel[data-c=amber]{--pbg:var(--amber);--pfg:var(--ink)}
+.panel[data-c=cobalt]{--pbg:var(--cobalt);--pfg:var(--paper)}.panel[data-c=mint]{--pbg:var(--mint);--pfg:var(--ink)}.panel[data-c=ink]{--pbg:var(--ink);--pfg:var(--paper)}
+.chip{display:inline-block;border:var(--line) solid currentColor;border-radius:8px;padding:4px 10px;font-size:.8rem;font-weight:700;margin-bottom:16px}
+.panel h3{font-size:clamp(2.3rem,4vw,3.5rem);letter-spacing:-.03em;line-height:1;font-weight:700;margin-bottom:14px}
+.panel p{font-size:1.15rem;line-height:1.5;max-width:28em}
+.prompt{border:var(--line) solid currentColor;border-radius:10px;padding:14px 16px;font:600 1rem var(--mono);min-height:3.4em;word-break:break-word}
+.prompt::after{content:"";display:inline-block;width:.6em;height:1.05em;margin-left:3px;vertical-align:-.15em;background:currentColor;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
 
-        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
-        .highlight {
-            background: linear-gradient(120deg, var(--accent-1), var(--accent-2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            padding: 0 0.2rem;
-        }
+/* install */
+.get{background:var(--lime);color:var(--ink);padding:var(--sec) var(--gutter)}
+.get h2{font-size:clamp(2.4rem,6vw,5.5rem);max-width:12em;margin-bottom:clamp(40px,7vh,80px)}
+.steps3{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--ink);border-radius:var(--r);overflow:hidden}
+.steps3 li{--ln:1;position:relative;padding:clamp(22px,3vw,40px) clamp(22px,3vw,40px) clamp(30px,3.4vw,46px);font-size:1.1rem;line-height:1.55}
+.steps3 li+li{border-left:var(--line) solid var(--ink)}
+.steps3 li::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:6px;background:var(--violet);transform:scaleX(var(--ln));transform-origin:left}
+.n{display:block;font-size:clamp(3rem,6vw,5rem);font-weight:700;line-height:1;letter-spacing:-.04em;color:var(--violet);margin-bottom:1.3rem}
+.steps3 b{display:block;font-size:1.5rem;letter-spacing:-.015em;margin-bottom:.5rem}.steps3 .btn{margin-top:1rem}
+.ghb{margin-top:clamp(40px,6vh,72px);background:var(--ink);color:var(--paper);border-radius:var(--r);padding:clamp(24px,4vw,48px);display:flex;gap:28px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.ghb h3{font-size:clamp(1.8rem,3.2vw,2.6rem);letter-spacing:-.025em;font-weight:700;margin-bottom:.5rem}.ghb p{max-width:30em;line-height:1.5;color:#C9D0FF}
+.ghb .acts{display:flex;gap:12px;flex-wrap:wrap}.ghb .btn{background:var(--lime);color:var(--ink);border-color:var(--lime)}.ghb .btn:hover{background:var(--paper);border-color:var(--paper)}
+.ghb .btn.ghost{background:transparent;color:var(--paper);border-color:var(--paper)}.ghb .btn.ghost:hover{background:var(--paper);color:var(--ink)}
 
-        /* Navigation */
-        .navbar {
-            display: flex; justify-content: space-between; padding: 2rem 5%;
-            align-items: center; position: fixed; top: 0; width: 100%;
-            background: rgba(250, 249, 246, 0.8); backdrop-filter: blur(10px); z-index: 1000;
-        }
-        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: var(--text-color); }
-        .logo span { color: var(--accent-1); }
-        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-        .nav-links a {
-            text-decoration: none; color: var(--text-color); font-weight: 600;
-            position: relative; padding: 0.5rem 0;
-            display: inline-block;
-            transition: transform 0.3s var(--spring), color 0.3s ease;
-        }
-        .nav-links a:hover {
-            transform: translateY(-3px);
-            color: var(--accent-1);
-        }
-        .nav-links a::after {
-            content: ''; position: absolute; bottom: 0px; left: 0;
-            width: 0%; height: 3px; background-color: var(--accent-1);
-            transition: width 0.3s var(--spring); border-radius: 2px;
-        }
-        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--lime)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(26vw,30rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--lime);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em) rotate(-4deg)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
 
-        /* Animations */
-        .fade-up {
-            opacity: 0; transform: translateY(40px);
-            transition: opacity 0.8s var(--smooth), transform 0.8s var(--smooth);
-        }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
-
-        /* Editorial Hero */
-        .hero { padding: 12rem 5% 4rem; display: flex; align-items: center; }
-        .hero-grid { width: 100%; position: relative; max-width: 1400px; margin: 0 auto; }
-        .hero-meta {
-            display: flex; justify-content: space-between; align-items: flex-start;
-            border-bottom: 2px solid rgba(26, 26, 26, 0.1); padding-bottom: 2rem; margin-bottom: 4rem;
-        }
-        .hero-tag { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 1rem; color: var(--text-color); }
-        .hero-sub { max-width: 500px; font-size: 1.25rem; line-height: 1.6; opacity: 0.8; font-weight: 400; }
-        .hero-title {
-            font-size: clamp(3.5rem, 9vw, 11rem); line-height: 0.85;
-            letter-spacing: -3px; text-transform: uppercase; position: relative; z-index: 2;
-        }
-        .hero-title .line {
-            display: block; opacity: 0; transform: translateY(50px) rotate(3deg);
-            transform-origin: left; animation: heroReveal 0.8s var(--spring) forwards;
-        }
-        .hero-title .indent-1 { padding-left: 10vw; animation-delay: 0.1s; }
-        .hero-title .indent-2 { padding-left: 20vw; animation-delay: 0.2s; }
-        
-        .hero-italic {
-            font-family: Georgia, serif; font-style: italic; text-transform: lowercase;
-            color: var(--accent-1); font-weight: 400; padding: 0 0.5rem;
-            display: inline-block; transition: color 0.3s ease, transform 0.4s var(--spring);
-        }
-        .hero-italic:hover { color: var(--text-color); transform: scale(1.05) rotate(-2deg); }
-
-        @keyframes heroReveal { to { opacity: 1; transform: translateY(0) rotate(0deg); } }
-
-        /* --- INTERACTIVE BLOB DEMO SECTION --- */
-        .demo-section {
-            padding: 2rem 5% 6rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        .demo-container {
-            background: var(--text-color);
-            border-radius: 40px;
-            padding: 8rem 5%;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 600px;
-        }
-        
-        @keyframes demoBlobMorph {
-            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: rotate(180deg) scale(1.1); }
-        }
-        
-        .demo-blob {
-            position: absolute;
-            width: clamp(300px, 40vw, 600px);
-            height: clamp(300px, 40vw, 600px);
-            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
-            filter: blur(80px);
-            opacity: 0.4;
-            animation: demoBlobMorph 15s ease-in-out infinite;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .demo-content {
-            position: relative;
-            z-index: 2;
-            color: var(--bg-color);
-            text-align: center;
-            max-width: 800px;
-        }
-        
-        .demo-content h2 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            line-height: 1.1;
-            margin-bottom: 2rem;
-            user-select: text;
-        }
-
-        /* Selection styling specifically for the demo area to encourage highlighting */
-        .demo-content ::selection {
-            background: var(--accent-1);
-            color: var(--text-color);
-        }
-
-        .demo-hint {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.6;
-            margin-bottom: 3rem;
-        }
-
-        /* The Dummy AI Tooltip */
-        .ai-tooltip {
-            position: fixed;
-            top: 0; left: 0;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--bg-color);
-            padding: 1.5rem;
-            border-radius: 20px;
-            width: 300px;
-            z-index: 10000;
-            pointer-events: none;
-            opacity: 0;
-            transform: scale(0.9) translateY(10px);
-            transition: opacity 0.3s var(--spring), transform 0.3s var(--spring);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        .ai-tooltip.active {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-        .ai-tooltip-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 800;
-            color: var(--accent-1);
-            margin-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 0.5rem;
-        }
-        .ai-tooltip-header .pulse-dot {
-            width: 8px; height: 8px;
-            background: var(--accent-1);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-        .ai-tooltip-content {
-            font-size: 1rem;
-            line-height: 1.5;
-            font-weight: 300;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 144, 232, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 144, 232, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 144, 232, 0); }
-        }
-
-        /* Statement Section */
-        .statement-section {
-            padding: 4rem 5% 8rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        .statement-section h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 2rem; }
-        .statement-section p {
-            font-size: clamp(1.2rem, 2vw, 1.4rem);
-            line-height: 1.8;
-            opacity: 0.75;
-            margin-bottom: 1.5rem;
-            font-weight: 300;
-        }
-
-        /* Features Bento Grid */
-        .bento-section { padding: 4rem 5% 8rem; max-width: 1300px; margin: 0 auto; width: 100%; }
-        .bento-header { margin-bottom: 4rem; text-align: left; }
-        .bento-header h2 { font-size: clamp(2.5rem, 5vw, 4rem); }
-        
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-        
-        .bento-card {
-            background: #fff;
-            border-radius: 40px;
-            padding: 3rem;
-            text-decoration: none;
-            color: var(--text-color);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            border: 2px solid rgba(0,0,0,0.04);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-            transition: box-shadow 0.4s var(--spring), transform 0.5s var(--spring);
-            overflow: hidden;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-        .bento-card:hover { box-shadow: 0 30px 60px rgba(0,0,0,0.12); }
-        .bento-card.wide { grid-column: span 2; }
-        .bento-card.full { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-
-        .card-content-wrap { transform: translateZ(30px); transition: transform 0.3s; position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
-        .bento-card:hover .card-content-wrap { transform: translateZ(50px); }
-
-        .card-icon {
-            width: 60px; height: 60px; border-radius: 15px;
-            background: var(--bg-color); display: flex; justify-content: center; align-items: center;
-            font-size: 1.8rem; margin-bottom: 1rem; border: 1px solid rgba(0,0,0,0.05);
-        }
-        
-        .bento-card h3 { font-size: clamp(1.5rem, 2vw, 2.2rem); line-height: 1.1; margin-bottom: 0.5rem; }
-        .bento-card p { opacity: 0.75; line-height: 1.6; font-size: 1.05rem; margin-top: auto; }
-
-        .card-bg-graphic {
-            position: absolute; border-radius: 50%; opacity: 0.3;
-            filter: blur(40px); z-index: 0; pointer-events: none;
-            transition: transform 0.6s var(--spring);
-        }
-        .bento-card:hover .card-bg-graphic { transform: scale(1.5); opacity: 0.6; }
-        .bg-cyan { width: 250px; height: 250px; background: var(--accent-3); top: -50px; right: -50px; }
-        .bg-pink { width: 250px; height: 250px; background: var(--accent-1); bottom: -50px; left: -50px; }
-        .bg-yellow { width: 300px; height: 300px; background: var(--accent-2); top: 50%; right: -50px; }
-        .bg-lime { width: 200px; height: 200px; background: var(--accent-4); top: -20px; left: -20px; }
-
-        /* Installation / Terminal Section */
-        .terminal-section {
-            padding: 2rem 5% 6rem;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .terminal-window {
-            background: #1a1a1a;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            color: #fff;
-        }
-        .terminal-header {
-            background: #2a2a2a;
-            padding: 1rem 1.5rem;
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-        .term-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .term-dot.red { background: #ff5f56; }
-        .term-dot.yellow { background: #ffbd2e; }
-        .term-dot.green { background: #27c93f; }
-        .term-title { margin-left: 1rem; font-family: monospace; opacity: 0.5; font-size: 0.9rem; }
-        
-        .terminal-body {
-            padding: 2.5rem;
-            font-family: 'Courier New', Courier, monospace;
-            line-height: 1.8;
-            font-size: 1.1rem;
-        }
-        .terminal-body .comment { color: #6a9955; }
-        .terminal-body .command { color: #9cdcfe; font-weight: bold; }
-        .terminal-body .keyword { color: #c586c0; }
-        .terminal-body .string { color: #ce9178; }
-        .terminal-body ul { list-style: none; margin-top: 1rem; margin-bottom: 2rem; }
-        .terminal-body li::before { content: '>'; color: var(--accent-1); margin-right: 10px; font-weight: bold; }
-
-        /* Buttons */
-        .btn-primary {
-            background-color: var(--text-color); color: var(--bg-color);
-            padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px;
-            text-decoration: none; display: inline-block; border: 2px solid var(--text-color);
-            transition: transform 0.3s var(--spring), background 0.3s;
-        }
-        .btn-primary:hover { transform: translateY(-5px) scale(1.05); background-color: var(--accent-1); border-color: var(--accent-1); color: var(--text-color); }
-        .btn-outline {
-            background-color: transparent; color: var(--text-color);
-            padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px;
-            text-decoration: none; display: inline-block; border: 2px solid var(--text-color);
-            transition: transform 0.3s var(--spring), background 0.3s, color 0.3s;
-        }
-        .btn-outline:hover { transform: translateY(-5px) scale(1.05); background-color: var(--text-color); color: var(--bg-color); }
-
-        /* Footer */
-        footer {
-            padding: 8rem 5% 4rem; text-align: center; background-color: var(--text-color);
-            color: var(--bg-color); border-top-left-radius: 60px; border-top-right-radius: 60px;
-            margin-top: 4rem;
-        }
-        footer h2 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 3rem; color: var(--bg-color); }
-        .footer-btn {
-            font-size: 2rem; padding: 1.5rem 4rem; background: var(--bg-color);
-            color: var(--text-color); border-color: var(--bg-color); text-decoration: none;
-            border-radius: 50px; font-weight: 600; display: inline-block;
-            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s;
-            border: 2px solid var(--bg-color);
-        }
-        .footer-btn:hover {
-            background: var(--accent-2);
-            border-color: var(--accent-2);
-            transform: translateY(-5px) scale(1.05);
-        }
-        .footer-btn-outline {
-            font-size: 2rem;
-            padding: 1.5rem 4rem;
-            background: transparent;
-            color: var(--bg-color);
-            border: 2px solid var(--bg-color);
-            border-radius: 50px;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s, color 0.3s;
-        }
-        .footer-btn-outline:hover {
-            background: rgba(250, 249, 246, 0.1);
-            border-color: var(--accent-2);
-            color: var(--accent-2);
-            transform: translateY(-5px) scale(1.05);
-        }
-        .footer-bottom {
-            margin-top: 8rem; display: flex; justify-content: space-between; align-items: center;
-            padding-top: 2rem; border-top: 1px solid rgba(250, 249, 246, 0.2); opacity: 0.7;
-        }
-        .social-links { display: flex; gap: 1.5rem; }
-        .social-links a { color: var(--bg-color); text-decoration: none; font-weight: 600; }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .nav-links { display: none; }
-            .hero-meta { flex-direction: column; gap: 1.5rem; border-bottom: none; margin-bottom: 2rem; padding-bottom: 0; }
-            .hero-title .indent-1 { padding-left: 0; }
-            .hero-title .indent-2 { padding-left: 5vw; }
-            .bento-grid { grid-template-columns: 1fr; }
-            .bento-card.wide, .bento-card.full { grid-column: 1 / -1; }
-            .bento-card.full { grid-template-columns: 1fr; gap: 2rem; }
-            .terminal-body { padding: 1.5rem; font-size: 0.95rem; }
-        }
-        @media (hover: none) and (pointer: coarse) {
-            * { cursor: auto !important; }
-            .cursor-dot, .cursor-outline { display: none !important; }
-        }
-    </style>
+@media (max-width:1040px){.nav a:not(.btn){display:none}}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;grid-template-rows:none}.hero>*{grid-column:1/-1}
+  .top{order:1}.art{order:2;max-width:260px;justify-self:start}.hero-main{order:3;padding:24px 0 36px}.strip{order:4;grid-template-columns:1fr}
+  .strip div+div{padding-left:0;border-left:0;border-top:var(--line) solid var(--ink)}
+  .d-in{grid-template-columns:1fr;align-content:center;gap:22px}.stage{order:-1;height:50svh}.steps h2{display:none}
+  .cap-wrap{min-height:10.5rem}.cap h3{font-size:1.35rem}.cap p{font-size:1rem}.mbody{padding:16px;gap:14px}
+  .cmds{grid-template-columns:1fr}.panel{min-height:440px}
+  .steps3{grid-template-columns:1fr}.steps3 li+li{border-left:0;border-top:var(--line) solid var(--ink)}
+}
+@media (max-width:480px){
+  .top{gap:8px}
+  .brand svg{width:22px;height:26px}
+  .btn.sm{padding:8px 14px;font-size:.88rem}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.prompt::after{animation:none}}
+html.calm .demo{height:auto;padding:12vh 0}html.calm .cap{position:static;opacity:1;visibility:visible;margin-bottom:1.4rem}html.calm .cap-wrap{min-height:0}
+html.calm .jump,html.calm .prog,html.calm .curs{display:none}html.calm .pbox .old{display:none}html.calm .new{position:static}html.calm .new span{opacity:1}
+html.calm .tog{opacity:1;transform:none}html.calm .big span{opacity:1}
+</style>
 </head>
 <body>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
+<div class="prog" aria-hidden="true"><i></i></div>
 
-    <!-- The Dummy AI Tooltip UI -->
-    <div class="ai-tooltip" id="aiTooltip">
-        <div class="ai-tooltip-header">
-            <div class="pulse-dot"></div>
-            <span>Wiggle AI Agent</span>
-        </div>
-        <div class="ai-tooltip-content" id="aiTooltipText">
-            Analyzing context...
-        </div>
+<header class="hero" id="top">
+  <div class="top">
+    <a class="brand" href="#top">
+      <svg width="26" height="30" viewBox="0 0 26 30" aria-hidden="true"><path d="M3 2v22l5.6-5.2 4 8.4 4-1.9-4-8.2 7.6-.4z" fill="#6C47FF" stroke="#0B1033" stroke-width="2.5" stroke-linejoin="round"/></svg>
+      <span>Wiggle</span>
+    </a>
+    <nav class="nav" aria-label="Main"><a href="Singulr%20Tech.html">← Singulr</a><a href="#demo">See it work</a><a href="#commands">Commands</a><a href="#install">Install</a>
+      <a class="btn sm" href="https://github.com/Hootsworth/wiggle" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Your cursor,</span></span><span class="ln"><span>upgraded to</span></span><span class="ln"><span>an AI agent.</span></span></h1>
+    <p class="sub">Wiggle is a Chrome extension that turns your mouse into an AI agent. It sees what you see, clicks through the page, fills in forms and rewrites what’s on screen. No more tab-switching, no more copy-pasting.</p>
+    <div class="cta"><a class="btn" href="#install">Install Wiggle</a><a class="btn ghost" href="#demo">See it work</a></div>
+  </div>
+  <div class="art" aria-hidden="true">
+    <div class="disc"></div>
+    <span class="mk" style="left:2%;top:30%">1</span><span class="mk" style="right:0;top:18%">2</span><span class="mk" style="right:6%;bottom:30%">3</span>
+    <span class="aim">AI Mode: on</span>
+  </div>
+  <div class="cur" aria-hidden="true"><svg viewBox="0 0 26 30"><path d="M3 2v22l5.6-5.2 4 8.4 4-1.9-4-8.2 7.6-.4z" fill="#F2F4FF" stroke="#0B1033" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+  <div class="strip"><div><kbd>Ctrl/Cmd</kbd> <kbd>K</kbd> deploys the autonomous agent</div><div><kbd>Ctrl/Cmd</kbd> <kbd>Shift</kbd> <kbd>L</kbd> turns on AI selection mode</div><div>Runs on your own Gemini API key</div></div>
+</header>
+
+<section class="problem">
+  <p class="big">The modern web is fragmented. Deep research means ten tabs. Complex forms are tedious. Summarising a two-hour video means leaving the page. Wiggle collapses all of it into one panel that floats above your browser.</p>
+</section>
+
+<section class="demo" id="demo" aria-label="Wiggle demo">
+  <div class="d-in">
+    <div class="steps">
+      <h2>Point at the web. Change it.</h2>
+      <div class="cap-wrap">
+        <div class="rail"><i></i></div>
+        <div class="jump" role="group" aria-label="Jump to a step"><button type="button" aria-label="Step 1: rewrite"></button><button type="button" aria-label="Step 2: sniper vision"></button><button type="button" aria-label="Step 3: auto-fill"></button><button type="button" aria-label="Step 4: inject UI"></button></div>
+        <article class="cap on"><h3>Click anything, rewrite it</h3><p>Turn on AI Mode, click any text and ask Wiggle to rewrite it. The new words flow into the live page one by one.</p></article>
+        <article class="cap"><h3>Sniper vision picks the target</h3><p>Hit Ctrl/Cmd + K. Wiggle puts a numbered badge on every interactive element, takes a snapshot, and decides what to click.</p></article>
+        <article class="cap"><h3>Ghost auto-fill</h3><p>Type /autofill and Wiggle fills the whole form at once, using your long-term memory profile.</p></article>
+        <article class="cap"><h3>Inject new UI</h3><p>Ask for a dark mode toggle or a sticky note. Wiggle writes the code and grafts it into the page you’re on.</p></article>
+      </div>
     </div>
-
-    <nav class="navbar">
-        <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
-            <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
-                <!-- Logo Mark -->
-                <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
-                <circle cx="10" cy="27" r="6" fill="#ff2d93" />
-                <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
-                <!-- Text -->
-                <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
-            </svg>
-        </a>
-        <ul class="nav-links">
-            <li><a href="index.html#services" class="hover-target">Services</a></li>
-            <li><a href="work.html" class="hover-target">Work</a></li>
-            <li><a href="about.html" class="hover-target">Agency</a></li>
-            <li><a href="blogs.html" class="hover-target">Blogs</a></li>
-        </ul>
-    </nav>
-
-    <main>
-        <header class="hero">
-            <div class="hero-grid">
-                <div class="hero-meta fade-up">
-                    <span class="hero-tag hover-target">005 // Product</span>
-                    <p class="hero-sub fade-up" style="transition-delay: 0.1s;">A bleeding-edge browser extension that fundamentally changes how you interact with the internet. Just deploy Wiggle.</p>
-                </div>
-                <h1 class="hero-title">
-                    <span class="line">Wiggle</span>
-                    <span class="line indent-1"><span class="hero-italic hover-target">Autonomous</span></span>
-                    <span class="line indent-2">AI.</span>
-                </h1>
-            </div>
-        </header>
-
-        <!-- Interactive Blob Demo -->
-        <section class="demo-section fade-up">
-            <div class="demo-container hover-target">
-                <div class="demo-blob"></div>
-                <div class="demo-content">
-                    <div class="demo-hint">↓ Wiggle your cursor & select text below ↓</div>
-                    <h2>"The modern web is highly fragmented. Doing deep research requires managing ten different tabs. Wiggle collapses all of these workflows directly into a single, beautiful glassmorphic interface."</h2>
-                </div>
-            </div>
-        </section>
-
-        <!-- Manifesto / Problem -->
-        <section class="statement-section fade-up">
-            <h2>The Cursor <br><span class="highlight">Evolved.</span></h2>
-            <p>Wiggle AI upgrades your standard mouse cursor into an autonomous, multi-modal AI agent that can see what you see, control your browser, and instantly alter the reality of any webpage you visit.</p>
-            <p>No more switching tabs. No more copy-pasting to external LLMs. Filling out complex forms, summarizing 2-hour videos, or researching across the web happens precisely where your cursor already is.</p>
-            
-            <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <a href="#installation" class="btn-primary hover-target magnetic-btn">Install Extension</a>
-                <a href="https://github.com/Hootsworth/wiggle" target="_blank" class="btn-outline hover-target magnetic-btn">View on GitHub</a>
-            </div>
-        </section>
-
-        <!-- Features Bento Grid -->
-        <section class="bento-section">
-            <div class="bento-header fade-up">
-                <h2>Production Features.</h2>
-            </div>
-            
-            <div class="bento-grid">
-                
-                <!-- Feature 1: DOM Rewrite (Full width) -->
-                <div class="bento-card full hover-target fade-up">
-                    <div class="card-bg-graphic bg-pink"></div>
-                    <div class="card-content-wrap" style="justify-content: center;">
-                        <div class="card-icon">🪄</div>
-                        <h3>Live DOM Rewrite & Hallucination</h3>
-                        <p>Toggle AI Mode, click any text, button, or paragraph on a website and ask Wiggle to rewrite it. Wiggle instantly regenerates the text and visually "wooshes" it into the actual webpage using a beautiful injection animation. Use <strong>/inject</strong> to build completely new UI elements directly into live pages.</p>
-                    </div>
-                    <div class="card-content-wrap" style="align-items: center; justify-content: center;">
-                        <!-- Abstract representation of a DOM rewrite -->
-                        <div style="width: 100%; height: 200px; background: rgba(0,0,0,0.05); border-radius: 20px; display: flex; align-items: center; padding: 2rem; position: relative;">
-                            <div style="width: 60%; height: 20px; background: var(--text-color); border-radius: 10px; opacity: 0.2; margin-bottom: 1rem;"></div>
-                            <div style="position: absolute; right: 2rem; background: var(--accent-1); color: var(--text-color); padding: 0.5rem 1rem; border-radius: 50px; font-weight: 800; font-size: 0.8rem; transform: rotate(-5deg); box-shadow: 0 10px 20px rgba(255, 144, 232, 0.4);">/rewrite tone: professional</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feature 2: Ghost Autofill -->
-                <div class="bento-card hover-target fade-up">
-                    <div class="card-bg-graphic bg-cyan"></div>
-                    <div class="card-content-wrap">
-                        <div class="card-icon">👻</div>
-                        <h3>Ghost Auto-Fill</h3>
-                        <p>Tired of job applications? Toggle AI Mode, type <strong>/autofill</strong>, and watch as Wiggle cross-references your Long-Term Memory Profile to invisibly "ghost type" into dozens of input fields simultaneously.</p>
-                    </div>
-                </div>
-
-                <!-- Feature 3: Sniper Vision -->
-                <div class="bento-card hover-target fade-up" style="transition-delay: 0.1s;">
-                    <div class="card-bg-graphic bg-yellow"></div>
-                    <div class="card-content-wrap">
-                        <div class="card-icon">🎯</div>
-                        <h3>Sniper Vision Agent</h3>
-                        <p>Hit Cmd+K. Wiggle utilizes "Set-of-Mark" visual prompting, overlaying physical red badges on interactive elements, taking a snapshot, and deciding exactly what to click with 100% pixel-perfect precision.</p>
-                    </div>
-                </div>
-
-                <!-- Feature 4: Teach Mode -->
-                <div class="bento-card hover-target fade-up" style="transition-delay: 0.2s;">
-                    <div class="card-bg-graphic bg-lime"></div>
-                    <div class="card-content-wrap">
-                        <div class="card-icon">🎓</div>
-                        <h3>Teach Mode</h3>
-                        <p>Train the Wiggle Agent. Perform a sequence of complex clicks and save it as a Skill. Later, type <strong>/run [Skill]</strong>, and Wiggle will autonomously execute those actions for you.</p>
-                    </div>
-                </div>
-
-                <!-- Feature 5: Swarm Research (Wide) -->
-                <div class="bento-card wide hover-target fade-up">
-                    <div class="card-bg-graphic bg-pink"></div>
-                    <div class="card-content-wrap">
-                        <div class="card-icon">🕷️</div>
-                        <h3>Swarm Web Research</h3>
-                        <p>Type <strong>/research [topic]</strong>. Wiggle silently deploys background Swarm Agents that bypass CORS, rip data directly from live search results, and synthesize a master research document inside your chat panel in seconds.</p>
-                    </div>
-                </div>
-
-                <!-- Feature 6: Local Sandbox -->
-                <div class="bento-card hover-target fade-up" style="transition-delay: 0.1s;">
-                    <div class="card-bg-graphic bg-cyan"></div>
-                    <div class="card-content-wrap">
-                        <div class="card-icon">💻</div>
-                        <h3>Local Code Sandbox</h3>
-                        <p>Type <strong>/code [problem]</strong>. Wiggle writes the raw algorithm, securely executes it in an isolated local sandbox, and gives you the math/data results instantly.</p>
-                    </div>
-                </div>
-
-                <!-- Feature 7: YT Interceptor (Wide) -->
-                <div class="bento-card wide hover-target fade-up">
-                    <div class="card-bg-graphic bg-yellow"></div>
-                    <div class="card-content-wrap">
-                        <div class="card-icon">📺</div>
-                        <h3>YouTube Interceptor</h3>
-                        <p>On any video, type <strong>/chatvideo</strong>. Wiggle instantly bypasses the UI, intercepts the hidden subtitle XML data directly from YouTube's server, and lets you chat with a 3-hour long video instantly.</p>
-                    </div>
-                </div>
-
-                <!-- Feature 8: Semantic Memory -->
-                <div class="bento-card hover-target fade-up" style="transition-delay: 0.1s;">
-                    <div class="card-bg-graphic bg-lime"></div>
-                    <div class="card-content-wrap">
-                        <div class="card-icon">🧠</div>
-                        <h3>Semantic Memory</h3>
-                        <p>Wiggle secretly indexes every webpage you visit entirely offline. Type <strong>/history [concept]</strong> to perform a neural search over everything you have ever read.</p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Installation / Terminal Setup -->
-        <section class="terminal-section fade-up" id="installation">
-            <h2 style="font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 2rem; text-align: center;">How to Deploy.</h2>
-            
-            <div class="terminal-window hover-target">
-                <div class="terminal-header">
-                    <div class="term-dot red"></div>
-                    <div class="term-dot yellow"></div>
-                    <div class="term-dot green"></div>
-                    <div class="term-title">bash — wiggle-setup.sh</div>
-                </div>
-                <div class="terminal-body">
-                    <span class="comment"># 1. Install the Extension manually</span><br>
-                    <ul>
-                        <li>Open <span class="string">chrome://extensions</span> in Chrome.</li>
-                        <li>Enable <span class="command">Developer mode</span> (top right).</li>
-                        <li>Click <span class="command">Load unpacked</span> and select the Wiggle folder.</li>
-                    </ul>
-
-                    <span class="comment"># 2. Add your Brain</span><br>
-                    <ul>
-                        <li>Click the Wiggle icon in your toolbar.</li>
-                        <li>Securely paste your <span class="keyword">Gemini API key</span>.</li>
-                    </ul>
-
-                    <span class="comment"># 3. Engage Commands</span><br>
-                    <span class="command">Cmd + Shift + L</span> <span class="string">: Activate AI Selection Mode. Click elements or type /autofill.</span><br>
-                    <span class="command">Cmd + K</span> <span class="string">: Deploy the Autonomous Agent (Sniper Vision).</span><br>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="fade-up">
-            <h2 class="hover-target">Ready to <span class="highlight">Wiggle?</span></h2>
-            <div class="btn-group" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem;">
-                <a href="https://github.com/Hootsworth/wiggle" target="_blank" class="footer-btn-outline hover-target magnetic-btn">Clone Repository</a>
-                <a href="contact.html" class="footer-btn hover-target magnetic-btn">Start a Project</a>
-            </div>
+    <div class="stage">
+      <div class="mwin">
+        <div class="mbar"><span>northwind.example</span><span class="agent">AI Mode</span></div>
+        <div class="mbody" id="mb">
+          <div class="site"><b>Northwind</b><span class="lnk">Shop<i class="bd">1</i></span><span class="push"></span><span class="tog" id="tog">Dark mode</span><span class="sbtn" id="sb">Sign up<i class="bd">2</i></span></div>
+          <div class="pbox" id="pbox"><p class="old">Our packs are strong and they hold a lot of stuff for trips.</p><p class="new">Built tough for the trail and roomy enough for the whole week.</p></div>
+          <div class="form">
+            <div class="fld" id="fn"><span class="fv ph" data-ph="Name">Name</span><i class="bd">3</i></div>
+            <div class="fld" id="fe"><span class="fv ph" data-ph="Email">Email</span><i class="bd">4</i></div>
+            <div class="sub2" id="fs">Submit<i class="bd">5</i></div>
+          </div>
+          <svg class="curs" id="cur2" viewBox="0 0 26 30" aria-hidden="true"><path d="M3 2v22l5.6-5.2 4 8.4 4-1.9-4-8.2 7.6-.4z" fill="#0B1033" stroke="#F2F4FF" stroke-width="1.6" stroke-linejoin="round"/></svg>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Singulr Agency. Wiggle AI is Open Source.</p>
-            <div class="social-links">
-                <a href="#" class="hover-target">Twitter</a>
-                <a href="#" class="hover-target">GitHub</a>
-            </div>
-        </div>
-    </footer>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cursorDot = document.querySelector('.cursor-dot');
-            const cursorOutline = document.querySelector('.cursor-outline');
-            const hoverTargets = document.querySelectorAll('.hover-target');
-            const magneticBtns = document.querySelectorAll('.magnetic-btn');
-            
-            // --- 1. Cursor Logic ---
-            let mouseX = window.innerWidth / 2; let mouseY = window.innerHeight / 2;
-            let outlineX = mouseX; let outlineY = mouseY;
-            let outlineSize = 40; let hasMoved = false;
+<section class="cmds" id="commands">
+  <div>
+    <h2>Seven slash commands.</h2>
+    <p class="lead">Open the panel in AI Mode and type. Pick one to see what it does.</p>
+    <div class="plist" id="plist" role="group" aria-label="Choose a command"></div>
+  </div>
+  <div class="panel" id="panel" data-c="violet" aria-live="polite">
+    <div><span class="chip" id="pk">Slash command</span><h3 id="pt"></h3><p id="pd"></p></div>
+    <div class="prompt" id="pp"></div>
+  </div>
+</section>
 
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX; mouseY = e.clientY;
-                if (!hasMoved) { cursorDot.style.opacity = 1; cursorOutline.style.opacity = 1; outlineX = mouseX; outlineY = mouseY; hasMoved = true; }
-                cursorDot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
-            });
+<section class="get" id="install">
+  <h2>Set it up in three steps.</h2>
+  <ol class="steps3">
+    <li><span class="n">1</span><b>Load the extension</b>Open chrome://extensions, turn on Developer mode, choose Load unpacked and select the <code>extension</code> folder from the repo.<br><button class="btn ghost sm" id="copy" type="button">Copy chrome://extensions</button></li>
+    <li><span class="n">2</span><b>Add your brain</b>Click the Wiggle icon in your toolbar and paste your Gemini API key.</li>
+    <li><span class="n">3</span><b>Engage</b><kbd>Ctrl/Cmd</kbd> <kbd>Shift</kbd> <kbd>L</kbd> for AI selection mode. <kbd>Ctrl/Cmd</kbd> <kbd>K</kbd> to deploy the agent.</li>
+  </ol>
+  <div class="ghb">
+    <div><h3>Get Wiggle on GitHub</h3><p>Open source under the Apache License 2.0.</p></div>
+    <div class="acts"><a class="btn" href="https://github.com/Hootsworth/wiggle" target="_blank" rel="noopener noreferrer">Get on GitHub</a><a class="btn ghost" href="https://github.com/Hootsworth/wiggle/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Read the license</a></div>
+  </div>
+</section>
 
-            function animateCursor() {
-                const easing = 0.15;
-                outlineX += (mouseX - outlineX) * easing; outlineY += (mouseY - outlineY) * easing;
-                cursorOutline.style.transform = `translate(${outlineX - (outlineSize / 2)}px, ${outlineY - (outlineSize / 2)}px)`;
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
+<footer class="foot">
+  <div class="foot-top">
+    <div><div class="brand"><svg width="26" height="30" viewBox="0 0 26 30" aria-hidden="true"><path d="M3 2v22l5.6-5.2 4 8.4 4-1.9-4-8.2 7.6-.4z" fill="#C8F03C" stroke="#F2F4FF" stroke-width="2.5" stroke-linejoin="round"/></svg><span>Wiggle</span></div><p class="foot-tag">Your cursor, upgraded to an AI agent.</p></div>
+    <nav class="foot-links" aria-label="Footer"><a href="Singulr%20Tech.html">← Singulr Tech</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="#demo">See it work</a><a href="#commands">Commands</a><a href="#install">Install</a><a href="https://github.com/Hootsworth/wiggle" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>W</span><span>i</span><span>g</span><span>g</span><span>l</span><span>e</span></p>
+  <div class="foot-bottom"><span>© 2026 Wiggle. Apache 2.0.</span><span>A <a href="Singulr%20Tech.html" style="text-decoration:underline">Singulr Tech</a> product.</span></div>
+</footer>
 
-            // Hover States
-            hoverTargets.forEach(target => {
-                target.addEventListener('mouseenter', () => {
-                    outlineSize = 75;
-                    cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
-                    const isDarkSection = target.closest('footer') || target.closest('.demo-container') || target.closest('.terminal-window');
-                    cursorOutline.style.backgroundColor = isDarkSection ? 'rgba(250, 249, 246, 0.15)' : 'rgba(26, 26, 26, 0.05)';
-                    cursorOutline.style.borderColor = 'transparent';
-                });
-                target.addEventListener('mouseleave', () => {
-                    outlineSize = 40;
-                    cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
-                    cursorOutline.style.backgroundColor = 'transparent';
-                    const isDarkSection = target.closest('footer') || target.closest('.demo-container') || target.closest('.terminal-window');
-                    cursorOutline.style.borderColor = isDarkSection ? 'var(--bg-color)' : 'var(--text-color)';
-                });
-            });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-            // Magnetic Buttons
-            magneticBtns.forEach(btn => {
-                btn.addEventListener('mousemove', (e) => {
-                    const position = btn.getBoundingClientRect();
-                    const x = e.clientX - position.left - position.width / 2;
-                    const y = e.clientY - position.top - position.height / 2;
-                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
-                });
-                btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px) scale(1)`);
-            });
+$("#copy").addEventListener("click",async e=>{
+  const b=e.currentTarget;let ok=true;
+  try{await navigator.clipboard.writeText("chrome://extensions");}catch(_){ok=false;}
+  b.textContent=ok?"Copied":"Type it in the address bar";b.classList.toggle("ok",ok);
+  setTimeout(()=>{b.textContent="Copy chrome://extensions";b.classList.remove("ok");},2000);
+});
 
-            // 3D Tilt for Bento Cards
-            const cards = document.querySelectorAll('.bento-card');
-            cards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    if (window.innerWidth < 900) return;
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;  
-                    const centerX = rect.width / 2; const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -3;
-                    const rotateY = ((x - centerX) / centerX) * 3;
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                    card.style.transition = 'transform 0.5s var(--spring), box-shadow 0.4s var(--spring)';
-                });
-                card.addEventListener('mouseenter', () => { card.style.transition = 'box-shadow 0.4s var(--spring)'; });
-            });
+/* slash command explorer */
+const C=[
+["/inject","UI Injection","Build a brand-new element, like a dark mode toggle or a sticky note. Wiggle writes the code and grafts it into the live page.","/inject add a sticky note","violet"],
+["/autofill","Ghost Auto-Fill","Wiggle checks your long-term memory profile and types into dozens of fields at once. Job applications and checkouts, done in seconds.","/autofill","lime"],
+["/run","Teach Mode","Record a sequence of clicks as a Skill, then replay it. Wiggle takes over your cursor and runs the steps for you.","/run Log Into Dashboard","coral"],
+["/research","Swarm Web Research","Background agents pull live DuckDuckGo results and synthesise a research document right in your chat panel.","/research solid-state batteries","amber"],
+["/chatvideo","YouTube Interceptor","Reads a video’s hidden subtitle data so you can chat with a three-hour video without leaving the page.","/chatvideo","cobalt"],
+["/history","Semantic Local Memory","Wiggle indexes the pages you visit on your own device. Search everything you’ve read by concept.","/history that article on prompt caching","mint"],
+["/code","Local Code Sandbox","Writes the algorithm, runs it in an isolated local sandbox, and hands you the results.","/code sum of primes under 10,000","ink"]];
+const pl=$("#plist"),panel=$("#panel");let cur=-1,typer=null;
+C.forEach((c,i)=>{const b=document.createElement("button");b.className="row";b.type="button";b.setAttribute("aria-pressed","false");
+  b.innerHTML="<span>"+c[0]+"</span><small>"+c[1]+"</small>";
+  b.addEventListener("click",()=>pick(i));b.addEventListener("focus",()=>pick(i));
+  b.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")pick(i);});pl.appendChild(b);});
+function pick(i){
+  if(i===cur)return;cur=i;const c=C[i];
+  $$(".row").forEach((r,k)=>{r.classList.toggle("on",k===i);r.setAttribute("aria-pressed",k===i);});
+  panel.dataset.c=c[4];$("#pt").textContent=c[1];$("#pd").textContent=c[2];
+  const pp=$("#pp");clearInterval(typer);
+  if(g&&!reduce){
+    pp.textContent="";let n=0;typer=setInterval(()=>{pp.textContent=c[3].slice(0,++n);if(n>=c[3].length)clearInterval(typer);},28);
+    g.fromTo("#pt,#pd",{y:20,autoAlpha:0},{y:0,autoAlpha:1,duration:.5,stagger:.07,ease:"power3.out"});
+  }else pp.textContent=c[3];
+}
+pick(0);
 
-            // --- 5. INTERACTIVE DEMO (AI SELECTION LOGIC) ---
-            const demoContainer = document.querySelector('.demo-container');
-            const aiTooltip = document.getElementById('aiTooltip');
-            const aiTooltipText = document.getElementById('aiTooltipText');
-            let tooltipTimeout;
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{
+  document.documentElement.classList.add("calm");
+  $("#fn .fv").textContent="Alex Rivera";$("#fe .fv").textContent="alex@example.com";$$(".fv").forEach(f=>f.classList.remove("ph"));
+  $$(".new").forEach(n=>n.innerHTML=n.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" "));
+  g.set(".cur",{autoAlpha:0});
+  return()=>document.documentElement.classList.remove("calm");
+});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  /* load sequence */
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".disc",{scale:0,duration:1.2,ease:"expo.out"},.2)
+    .from(".mk",{scale:0,duration:.6,stagger:.15,ease:"back.out(3)"},.9)
+    .from(".aim",{autoAlpha:0,y:16,duration:.8},1.2)
+    .from(".strip div",{autoAlpha:0,y:14,duration:.9,stagger:.1},1);
 
-            // Dummy responses for the simulation
-            const aiResponses = [
-                "✨ Wiggle rewrote this to be 40% more persuasive.",
-                "🔍 Swarm agents found 3 related scholarly articles.",
-                "🪄 Injected a new Dark Mode toggle button here.",
-                "🧠 Added this concept to your Local Semantic Memory.",
-                "👻 Identified as a form field. Ready to ghost auto-fill.",
-                "⚡ Set-of-Mark vision badge generated. Ready to click."
-            ];
+  /* the hero cursor follows you and wiggles with your speed */
+  const hero=$(".hero"),cur=$(".cur"),svg=cur.querySelector("svg");
+  const home=()=>{const h=hero.getBoundingClientRect(),a=$(".art").getBoundingClientRect();return{x:a.left-h.left+a.width*.5,y:a.top-h.top+a.height*.38};};
+  g.set(cur,{...home(),autoAlpha:0});g.to(cur,{autoAlpha:1,duration:.6,delay:1.4});
+  const qx=g.quickTo(cur,"x",{duration:.55,ease:"power3"}),qy=g.quickTo(cur,"y",{duration:.55,ease:"power3"}),qr=g.quickTo(svg,"rotation",{duration:.3,ease:"power2"});
+  let rest;
+  hero.addEventListener("pointermove",e=>{
+    const h=hero.getBoundingClientRect();qx(e.clientX-h.left);qy(e.clientY-h.top);
+    qr(g.utils.clamp(-28,28,e.movementX*1.4));clearTimeout(rest);rest=setTimeout(()=>qr(0),110);
+  });
+  hero.addEventListener("pointerleave",()=>{const p=home();qx(p.x);qy(p.y);qr(0);});
+  g.to(svg,{keyframes:[{rotation:-14},{rotation:14},{rotation:-10},{rotation:10},{rotation:0}],duration:.6,repeat:-1,repeatDelay:2.4,ease:"sine.inOut",delay:2.4});
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  hero.addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
 
-            // Listen for mouseup inside the demo container to catch text selection
-            demoContainer.addEventListener('mouseup', (e) => {
-                // Small delay to allow the browser to register the selection natively
-                setTimeout(() => {
-                    const selection = window.getSelection().toString().trim();
-                    
-                    if (selection.length > 0) {
-                        // Position the tooltip near the mouse cursor
-                        const tooltipX = e.clientX + 20;
-                        const tooltipY = e.clientY + 20;
-                        
-                        aiTooltip.style.left = `${tooltipX}px`;
-                        aiTooltip.style.top = `${tooltipY}px`;
-                        
-                        // Show loading state
-                        aiTooltipText.innerHTML = `Analyzing: "<i style="opacity:0.7">${selection.substring(0, 15)}${selection.length > 15 ? '...' : ''}</i>"`;
-                        aiTooltip.classList.add('active');
-                        
-                        clearTimeout(tooltipTimeout);
-                        
-                        // Simulate API latency then show result
-                        tooltipTimeout = setTimeout(() => {
-                            const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
-                            aiTooltipText.innerHTML = `<strong>Action Complete:</strong><br><br>${randomResponse}`;
-                        }, 1200);
+  /* problem statement */
+  const p=$(".big");p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+  g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
 
-                    } else {
-                        // Hide if they just clicked without selecting
-                        aiTooltip.classList.remove('active');
-                    }
-                }, 10);
-            });
+  /* pinned demo: rewrite, snipe, fill, inject */
+  const words=el=>{el.innerHTML=el.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");};
+  words($(".old"));words($(".new"));
+  const INK="#0B1033",PAPER="#F2F4FF",mb=$("#mb"),c2=$("#cur2");
+  const at=(sel,fx,fy)=>({x:()=>{const m=mb.getBoundingClientRect(),r=$(sel).getBoundingClientRect();return r.left-m.left+r.width*fx-(m.width*.68);},
+                          y:()=>{const m=mb.getBoundingClientRect(),r=$(sel).getBoundingClientRect();return r.top-m.top+r.height*fy-(m.height*.82);}});
+  const tl=g.timeline({defaults:{ease:"power2.inOut"},scrollTrigger:{trigger:".demo",start:"top top",end:"+=3800",pin:true,scrub:.8,anticipatePin:1}});
+  const T=[0,1.15,2.35,3.45],END=4.7;
+  tl.to(".rail i",{scaleY:1,ease:"none",duration:END},0);
+  $$(".cap").forEach((c,i,all)=>{
+    if(i)tl.fromTo(c,{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.3},T[i]-.1);
+    if(i<all.length-1)tl.to(c,{autoAlpha:0,y:-26,duration:.3},T[i+1]-.3);
+  });
+  // 1 rewrite
+  tl.to(c2,{...at("#pbox",.3,.5),duration:.5},.05)
+    .to("#pbox",{borderColor:INK,duration:.15},.55)
+    .to(".old span",{opacity:0,stagger:.035,duration:.2},.7)
+    .fromTo(".new span",{opacity:0,y:10},{opacity:1,y:0,stagger:.035,duration:.25},.75)
+    .to("#pbox",{borderColor:"rgba(11,16,51,0)",duration:.2},1.1);
+  // 2 sniper vision
+  tl.to(".bd",{scale:1,stagger:.08,duration:.3,ease:"back.out(3)"},1.25)
+    .to(c2,{...at("#sb",.5,.5),duration:.5},1.75)
+    .to("#sb",{scale:.92,yoyo:true,repeat:1,duration:.1},2.3);
+  // 3 ghost auto-fill
+  tl.to(".bd",{scale:0,stagger:.04,duration:.2},2.4)
+    .to(c2,{...at("#fn",.2,.5),duration:.4},2.45);
+  const type=(el,text,t)=>{const o={n:0};tl.to(o,{n:text.length,duration:.4,ease:"none",onUpdate(){const s=text.slice(0,Math.round(o.n));el.textContent=s||el.dataset.ph;el.classList.toggle("ph",!s);}},t);};
+  type($("#fn .fv"),"Alex Rivera",2.8);type($("#fe .fv"),"alex@example.com",2.8);
+  tl.to(c2,{...at("#fs",.5,.5),duration:.3},3.15).to("#fs",{scale:.92,yoyo:true,repeat:1,duration:.1},3.4);
+  // 4 inject UI
+  tl.to("#tog",{opacity:1,scale:1,duration:.4,ease:"back.out(3)"},3.55)
+    .to(c2,{...at("#tog",.5,.5),duration:.4},3.95)
+    .to("#tog",{scale:.9,yoyo:true,repeat:1,duration:.1},4.35)
+    .to(mb,{backgroundColor:INK,color:PAPER,duration:.3},4.4)
+    .to(c2,{attr:{fill:PAPER},duration:.01},4.4)
+    .to({},{duration:.2},END-.2);
 
-            // Hide tooltip if clicking outside the demo container
-            document.addEventListener('mousedown', (e) => {
-                if (!demoContainer.contains(e.target) && !aiTooltip.contains(e.target)) {
-                    aiTooltip.classList.remove('active');
-                }
-            });
+  const dots=$$(".jump button"),sc=tl.scrollTrigger;
+  const mark=b=>dots.forEach((d,i)=>{d.classList.toggle("on",i===b);d.setAttribute("aria-current",i===b?"step":"false");});
+  const band=t=>t<T[1]?0:t<T[2]?1:t<T[3]?2:3;
+  tl.eventCallback("onUpdate",()=>mark(band(tl.time())));mark(0);
+  dots.forEach((d,i)=>d.addEventListener("click",()=>window.scrollTo({top:sc.start+([.6,1.8,3,4.2][i]/END)*(sc.end-sc.start),behavior:"smooth"})));
 
-            // Scroll Reveal
-            const observer = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
-                });
-            }, { threshold: 0.15 });
-            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-        });
-    </script>
+  g.from(".steps3 li",{"--ln":0,duration:1.1,stagger:.15,ease:"power3.out",scrollTrigger:{trigger:".steps3",start:"top 85%"}});
+  g.from(".panel",{yPercent:6,autoAlpha:0,duration:.9,ease:"power3.out",scrollTrigger:{trigger:".cmds",start:"top 70%"}});
+});
+}
+</script>
 </body>
 </html>

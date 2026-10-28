@@ -1,606 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Singulr - Careers</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #faf9f6;
-            --text-color: #1a1a1a;
-            --accent-1: #ff90e8;
-            --accent-2: #ffc900;
-            --accent-3: #90e8ff;
-            --accent-4: #c9ff90;
-            
-            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Careers — Singulr Tech</title>
+<meta name="description" content="No openings. Apply anyway. Singulr Tech takes open applications from people who get irritated by small, repeated tasks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--cobalt:#2336F0;--ink:#0B1033;--amber:#FFB400;--mint:#19D49B;--coral:#FF5A4E;--paper:#F2F4FF;
+--sky:#3CC8FF;--lime:#C8F03C;--violet:#6C47FF;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;
+--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,190px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--lime);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--cobalt);transform:scaleX(0);transform-origin:left}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--amber);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:var(--ink);color:var(--amber);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        html { overflow-x: hidden; scroll-behavior: smooth; }
+/* nav */
+.top{display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a{display:inline-flex;align-items:center;font-size:.95rem;line-height:1}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover,.nav a[aria-current]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav .btn.sm{padding:10px 18px;font-size:.95rem;line-height:1;margin:0;align-self:center}
+@media (max-width:560px){.nav .hide-s{display:none}.nav{gap:16px}.brand svg{width:26px;height:26px}}
 
-        /* Custom Cursor */
-        .cursor-dot, .cursor-outline {
-            position: fixed; top: 0; left: 0; border-radius: 50%;
-            z-index: 9999; pointer-events: none; opacity: 0;
-            will-change: transform, width, height;
-        }
-        .cursor-dot { width: 8px; height: 8px; background-color: var(--text-color); }
-        .cursor-outline {
-            width: 40px; height: 40px; border: 2px solid var(--text-color);
-            transition: width 0.3s var(--spring), height 0.3s var(--spring), background-color 0.3s ease;
-        }
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;padding:0 var(--gutter);overflow:hidden;background:var(--lime);color:var(--ink)}
+.hero-main{margin-top:auto;padding:6vh 0 clamp(40px,8vh,88px)}
+h1{font-size:clamp(3.1rem,10.5vw,10rem);line-height:.92;letter-spacing:-.04em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:34em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
 
-        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -1px; }
-        .highlight {
-            background: linear-gradient(120deg, var(--accent-4), var(--accent-3));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block; padding: 0 0.2rem;
-        }
-        section { padding: 8rem 5%; }
+/* shared blocks */
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650;margin-bottom:clamp(56px,10vh,110px)}
+.big span{transition:color .2s}.big span:hover{color:var(--cobalt)}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.cells article{padding:clamp(22px,3vw,40px);transition:background .25s,color .25s}
+.cells article+article{border-left:var(--line) solid var(--fg)}
+.cells article:hover{background:var(--amber);color:var(--ink)}
+.cells i{display:block;width:30px;height:30px;border-radius:8px;margin-bottom:clamp(40px,8vh,90px)}
+.cells h3{font-size:1.6rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cells p{line-height:1.55;font-size:1.05rem}
+.list{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.list h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+.rows{border-bottom:var(--line) solid rgba(242,244,255,.28)}
+.rw{display:flex;align-items:baseline;justify-content:space-between;gap:12px 32px;padding:20px 0;border-top:var(--line) solid rgba(242,244,255,.28);opacity:.42;transition:opacity .25s,padding-left .4s cubic-bezier(.3,1.6,.5,1)}
+.rw span{font-size:clamp(1.8rem,4.2vw,3.75rem);font-weight:700;letter-spacing:-.035em;line-height:1.02;transition:color .25s}
+.rw small{font-size:1rem;font-weight:600;text-align:right;max-width:21em;line-height:1.45}
+.rw:hover,.rw:focus-visible{opacity:1;padding-left:20px}.rw:hover span,.rw:focus-visible span{color:var(--amber)}
+.rw:focus-visible{outline-color:var(--amber)}
+@media (max-width:760px){.rw{flex-direction:column;align-items:flex-start}.rw small{text-align:left}}
 
-        .fade-up {
-            opacity: 0; transform: translateY(40px);
-            transition: opacity 0.8s var(--smooth), transform 0.8s var(--smooth);
-        }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}
+.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--amber)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(25vw,28rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
 
-        /* Navigation */
-        .navbar {
-            display: flex; justify-content: space-between; padding: 2rem 5%;
-            align-items: center; position: fixed; top: 0; width: 100%;
-            background: rgba(250, 249, 246, 0.8); backdrop-filter: blur(10px); z-index: 1000;
-        }
-        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: var(--text-color); }
-        .logo span { color: var(--accent-1); }
-        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-        .nav-links a {
-            text-decoration: none; color: var(--text-color); font-weight: 600;
-            position: relative; padding: 0.5rem 0; display: inline-block;
-            transition: transform 0.3s var(--spring), color 0.3s ease;
-        }
-        .nav-links a:hover { transform: translateY(-3px); color: var(--accent-1); }
-        .nav-links a::after {
-            content: ''; position: absolute; bottom: 0px; left: 0;
-            width: 0%; height: 3px; background-color: var(--accent-1);
-            transition: width 0.3s var(--spring); border-radius: 2px;
-        }
-        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+@media (max-width:860px){.cells{grid-template-columns:1fr}.cells article+article{border-left:0;border-top:var(--line) solid var(--fg)}.cells i{margin-bottom:28px}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}}
+html.calm .prog{display:none}
 
-        /* Editorial Hero */
-        .hero { padding: 12rem 5% 4rem; min-height: 70vh; display: flex; align-items: center; }
-        .hero-grid { width: 100%; position: relative; max-width: 1400px; margin: 0 auto; }
-        .hero-meta {
-            display: flex; justify-content: space-between; align-items: flex-start;
-            border-bottom: 2px solid rgba(26, 26, 26, 0.1); padding-bottom: 2rem; margin-bottom: 4rem;
-        }
-        .hero-tag { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-size: 1rem; color: var(--text-color); }
-        .hero-sub { max-width: 450px; font-size: 1.25rem; line-height: 1.6; opacity: 0.8; font-weight: 400; }
-        .hero-title {
-            font-size: clamp(3.5rem, 9vw, 11rem); line-height: 0.85;
-            letter-spacing: -3px; text-transform: uppercase; position: relative; z-index: 2;
-        }
-        .hero-title .line {
-            display: block; opacity: 0; transform: translateY(50px) rotate(3deg);
-            transform-origin: left; animation: heroReveal 0.8s var(--spring) forwards;
-        }
-        .hero-title .indent-1 { padding-left: 15vw; animation-delay: 0.1s; }
-        
-        .hero-italic {
-            font-family: Georgia, serif; font-style: italic; text-transform: lowercase;
-            color: var(--accent-3); font-weight: 400; padding: 0 0.5rem;
-            display: inline-block; transition: color 0.3s ease, transform 0.4s var(--spring);
-        }
-        .hero-italic:hover { color: var(--text-color); transform: scale(1.05) rotate(-2deg); }
+html{--hero-top:var(--lime)}
+.hero .ticker{margin:0 calc(var(--gutter) * -1);border-top:var(--line) solid var(--ink);overflow:hidden}
+.track{display:flex;align-items:center;width:max-content;animation:tick 34s linear infinite}
+.ticker:hover .track{animation-play-state:paused}
+.track span{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;padding:18px 0}
+.track i{width:12px;height:12px;border-radius:50%;background:var(--ink);margin:0 30px;flex:none}
+@keyframes tick{to{transform:translateX(-50%)}}
+.hero-main{padding-bottom:clamp(32px,6vh,64px)}
 
-        @keyframes heroReveal { to { opacity: 1; transform: translateY(0) rotate(0deg); } }
+.look{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.steps .rw span{display:flex;align-items:baseline;gap:.5em}
+.steps .rw span em{font-style:normal;color:var(--amber);font-size:.5em;letter-spacing:0;min-width:1.2em}
 
-        /* Open Roles Interactive List */
-        .roles-section { max-width: 1200px; margin: 0 auto; padding: 4rem 5% 4rem; width: 100%; }
-        
-        .roles-header-flex {
-            display: flex; justify-content: space-between; align-items: flex-end; 
-            margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem;
-        }
-        .roles-header { font-size: clamp(2.5rem, 4vw, 3.5rem); margin: 0; }
-        
-        /* New Ritual Button */
-        .ritual-btn {
-            font-weight: 800; text-transform: uppercase; text-decoration: none;
-            color: var(--bg-color); background: var(--text-color);
-            padding: 1rem 2rem; border: 3px solid var(--text-color);
-            box-shadow: 6px 6px 0px var(--accent-1);
-            transition: transform 0.2s var(--spring), box-shadow 0.2s var(--spring);
-        }
-        .ritual-btn:hover {
-            transform: translate(4px, 4px);
-            box-shadow: 2px 2px 0px var(--accent-1);
-        }
-        
-        .intern-badge {
-            background: var(--bg-color);
-            color: var(--text-color);
-            border: 2px solid var(--text-color);
-            box-shadow: 4px 4px 0px var(--accent-4);
-        }
+.apply{background:var(--cobalt);color:var(--paper);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,6vw,96px);align-items:start}
+.apply h2{font-size:clamp(2.6rem,6vw,5.5rem);line-height:.96;letter-spacing:-.04em;font-weight:700;margin-bottom:1.5rem}
+.apply .lead{max-width:24em;font-size:1.2rem;line-height:1.5;color:#D3D9FF}
+form{display:grid;gap:22px}
+label{display:grid;gap:8px;font-weight:650;font-size:1.05rem}
+label small{font-weight:500;color:#D3D9FF;font-size:.95rem}
+input,textarea{width:100%;font:inherit;font-weight:500;font-size:1.05rem;color:var(--paper);background:rgba(11,16,51,.28);border:var(--line) solid var(--paper);border-radius:var(--r);padding:14px 16px}
+textarea{min-height:150px;resize:vertical;line-height:1.5}
+input::placeholder,textarea::placeholder{color:#AEB8F5}
+input:focus-visible,textarea:focus-visible{outline:3px solid var(--amber);outline-offset:2px;background:rgba(11,16,51,.5)}
+.apply .btn{background:var(--amber);color:var(--ink);justify-self:start}.apply .btn:hover{background:var(--paper)}
+.fstat{min-height:3em;line-height:1.5;color:#D3D9FF;max-width:30em}
+.fstat a{color:var(--amber);font-weight:650}
+@media (max-width:860px){.apply{grid-template-columns:1fr}}
 
-        .role-list { display: flex; flex-direction: column; }
-        .role-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 3rem 2rem; border-top: 2px solid rgba(0,0,0,0.1);
-            text-decoration: none; color: var(--text-color);
-            transition: background 0.4s ease, padding 0.4s var(--spring);
-            position: relative; overflow: hidden;
-        }
-        .role-row:last-child { border-bottom: 2px solid rgba(0,0,0,0.1); }
-        
-        .role-row::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--text-color); transform: scaleY(0); transform-origin: bottom;
-            transition: transform 0.4s var(--spring); z-index: 0;
-        }
-        .role-row:hover::before { transform: scaleY(1); transform-origin: top; }
-        .role-row:hover { padding: 3rem 3rem; color: var(--bg-color); }
-
-        .role-info, .role-meta { position: relative; z-index: 2; }
-        .role-info h3 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 0.5rem; transition: color 0.3s; }
-        .role-info p { opacity: 0.7; font-size: 1.1rem; }
-        
-        .role-meta { display: flex; align-items: center; gap: 2rem; }
-        .role-type { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
-        .role-arrow {
-            width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--text-color);
-            display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
-            transition: transform 0.4s var(--spring), background 0.3s, border-color 0.3s;
-        }
-        .role-row:hover .role-arrow {
-            background: var(--accent-4); color: var(--text-color); border-color: var(--accent-4);
-            transform: rotate(45deg) scale(1.1);
-        }
-
-        /* Fun Wobble Click Animation */
-        @keyframes wobble {
-            0%, 100% { transform: translateX(0); }
-            15% { transform: translateX(-15px) rotate(-1.5deg); }
-            30% { transform: translateX(12px) rotate(1.2deg); }
-            45% { transform: translateX(-8px) rotate(-0.8deg); }
-            60% { transform: translateX(5px) rotate(0.5deg); }
-            75% { transform: translateX(-3px) rotate(-0.3deg); }
-        }
-        .wobble-active {
-            animation: wobble 0.6s var(--spring);
-        }
-
-        /* Neo-Brutalist Perks Section */
-        .perks-section { 
-            background: var(--bg-color); 
-            padding: 8rem 5%; 
-            border-top: 4px solid var(--text-color);
-            border-bottom: 4px solid var(--text-color);
-            margin: 4rem 0;
-        }
-        .perks-header { margin-bottom: 4rem; text-align: center; }
-        .perks-header h2 { font-size: clamp(3rem, 6vw, 5rem); color: var(--text-color); text-transform: uppercase; }
-        
-        .perks-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 3rem; max-width: 1400px; margin: 0 auto;
-        }
-        
-        .perk-card {
-            background: var(--bg-color);
-            padding: 3rem 2rem;
-            border: 4px solid var(--text-color);
-            box-shadow: 12px 12px 0px var(--text-color);
-            transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-            position: relative;
-        }
-        
-        .perk-card:hover {
-            transform: translate(8px, 8px);
-            box-shadow: 0px 0px 0px var(--text-color);
-        }
-        
-        .perk-card:nth-child(1):hover { background: var(--accent-1); }
-        .perk-card:nth-child(2):hover { background: var(--accent-2); }
-        .perk-card:nth-child(3):hover { background: var(--accent-3); }
-        .perk-card:nth-child(4):hover { background: var(--accent-4); }
-        
-        .perk-number { 
-            font-size: 4rem; 
-            font-weight: 800; 
-            -webkit-text-stroke: 2px var(--text-color); 
-            color: transparent; 
-            margin-bottom: 1rem; 
-            line-height: 1;
-        }
-        
-        .perk-card:hover .perk-number { color: var(--text-color); -webkit-text-stroke: 0; }
-        
-        .perk-card h3 { font-size: 2rem; margin-bottom: 1rem; color: var(--text-color); text-transform: uppercase; letter-spacing: -1px; }
-        .perk-card p { font-size: 1.1rem; color: var(--text-color); font-weight: 500; line-height: 1.5; }
-
-        /* Footer */
-        footer {
-            padding: 8rem 5% 4rem; text-align: center; background-color: var(--text-color);
-            color: var(--bg-color); margin-top: 4rem;
-        }
-        footer h2 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 3rem; color: var(--bg-color); }
-        .footer-btn {
-            font-size: 2rem;
-            padding: 1.5rem 4rem;
-            background: var(--bg-color);
-            color: var(--text-color);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            display: inline-block;
-            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s;
-            border: 2px solid var(--bg-color);
-        }
-        .footer-btn:hover {
-            background: var(--accent-2);
-            border-color: var(--accent-2);
-            transform: translateY(-5px) scale(1.05);
-        }
-        .footer-btn-outline {
-            font-size: 2rem;
-            padding: 1.5rem 4rem;
-            background: transparent;
-            color: var(--bg-color);
-            border: 2px solid var(--bg-color);
-            border-radius: 50px;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.3s var(--spring), background 0.3s, border-color 0.3s, color 0.3s;
-        }
-        .footer-btn-outline:hover {
-            background: rgba(250, 249, 246, 0.1);
-            border-color: var(--accent-2);
-            color: var(--accent-2);
-            transform: translateY(-5px) scale(1.05);
-        }
-        .footer-bottom {
-            margin-top: 8rem; display: flex; justify-content: space-between; align-items: center;
-            padding-top: 2rem; border-top: 1px solid rgba(250, 249, 246, 0.2); opacity: 0.7; font-weight: 300;
-        }
-        .social-links { display: flex; gap: 1.5rem; }
-        .social-links a { color: var(--bg-color); text-decoration: none; font-weight: 600; }
-
-        @media (max-width: 900px) {
-            .nav-links { display: none; }
-            .hero-meta { flex-direction: column; gap: 1.5rem; border-bottom: none; margin-bottom: 2rem; padding-bottom: 0; }
-            .hero-title .indent-1 { padding-left: 0; }
-            .roles-header-flex { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .role-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; padding: 2rem 1rem; }
-            .role-row:hover { padding: 2rem 1rem; }
-            .role-meta { width: 100%; justify-content: space-between; }
-            .perks-section { border-left: none; border-right: none; }
-            .footer-bottom { flex-direction: column; gap: 1rem; }
-        }
-        @media (hover: none) and (pointer: coarse) {
-            * { cursor: auto !important; }
-            .cursor-dot, .cursor-outline { display: none !important; }
-            .role-row::before { display: none; }
-            .role-row:hover { background: rgba(0,0,0,0.05); color: var(--text-color); }
-            .role-row:hover .role-arrow { background: transparent; color: var(--text-color); border-color: var(--text-color); transform: none; }
-        }
-    </style>
+</style>
 </head>
 <body>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
-    <nav class="navbar">
-        <a href="index.html" class="logo hover-target" aria-label="Singulr Home">
-            <svg class="logo-svg" viewBox="0 0 200 45" width="220" height="50" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 220px; height: 50px;">
-                <line x1="15" y1="12" x2="27" y2="28" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" />
-                <circle cx="10" cy="27" r="6" fill="#ff2d93" />
-                <rect x="11.5" y="32" width="7" height="11" rx="3.5" fill="#1b75ff" transform="rotate(-25 15 37)" />
-                <text x="38" y="31" font-family="'Outfit', sans-serif" font-weight="800" font-size="25" fill="currentColor">Singulr<tspan fill="#ff2d93">.</tspan></text>
-            </svg>
-        </a>
-        <ul class="nav-links">
-            <li><a href="index.html#services" class="hover-target">Services</a></li>
-            <li><a href="work.html" class="hover-target">Work</a></li>
-            <li><a href="about.html" class="hover-target">Agency</a></li>
-            <li><a href="blogs.html" class="hover-target">Blogs</a></li>
-        </ul>
+<div class="prog" aria-hidden="true"><i></i></div>
+<header class="hero">
+  <div class="top">
+    <a class="brand" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+      <span>Singulr</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a class="hide-s" href="index.html#products">Products</a><a href="about.html">About</a><a href="careers.html" aria-current="page">Careers</a>
+      <a class="btn sm hide-s" href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
     </nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>No openings.</span></span><span class="ln"><span>Apply anyway.</span></span></h1>
+    <p class="sub">We don’t post roles. We’d rather meet you first and work out the job afterwards. This is either the best or the worst thing you’ll read today.</p>
+    <div class="cta"><a class="btn" href="#apply">Write your application</a><a class="btn ghost" href="about.html">Read the about page</a></div>
+  </div>
+  <div class="ticker" aria-label="Things we like"><div class="track"><span>Automation</span><i></i><span>Rust</span><i></i><span>Browser extensions</span><i></i><span>Agents</span><i></i><span>Taste</span><i></i><span>Local-first</span><i></i><span>Writing things down</span><i></i><span>Noticing small annoyances</span><i></i><span>Automation</span><i></i><span>Rust</span><i></i><span>Browser extensions</span><i></i><span>Agents</span><i></i><span>Taste</span><i></i><span>Local-first</span><i></i><span>Writing things down</span><i></i><span>Noticing small annoyances</span><i></i></div></div>
+</header>
 
-    <main>
-        <header class="hero">
-            <div class="hero-grid">
-                <div class="hero-meta fade-up">
-                    <span class="hero-tag hover-target">004 // Join Us</span>
-                    <p class="hero-sub fade-up" style="transition-delay: 0.1s;">We are actively looking for talented creatives and engineers who reject the boring web and want to build tactile, physics-based digital experiences.</p>
-                </div>
-                <h1 class="hero-title">
-                    <span class="line">Shape The</span>
-                    <span class="line indent-1"><span class="hero-italic hover-target">Future.</span></span>
-                </h1>
-            </div>
-        </header>
+<section class="look">
+  <p class="big">We look for people who get irritated by small, repeated tasks, and then actually do something about it.</p>
+  <div class="cells">
+    <article><i style="background:var(--cobalt)"></i><h3>You’ve built something</h3><p>A script, an extension, a tiny tool your friends use. Finished beats impressive.</p></article>
+    <article><i style="background:var(--coral)"></i><h3>You notice small annoyances</h3><p>The extra click. The login page. The form that asks twice. You can’t unsee them.</p></article>
+    <article><i style="background:var(--mint)"></i><h3>You can explain it</h3><p>Short messages, clear commits, honest READMEs. Writing it down counts as work.</p></article>
+  </div>
+</section>
 
-        <section class="roles-section">
-            <div class="roles-header-flex">
-                <h2 class="roles-header fade-up">Open Positions</h2>
-                <a href="hiring-process.html" class="ritual-btn fade-up hover-target">View The Hiring Ritual</a>
-            </div>
-            
-            <div class="role-list">
-                <a href="#" class="role-row hover-target fade-up">
-                    <div class="role-info">
-                        <h3>Creative Developer</h3>
-                        <p>Focus on WebGL, Three.js, and advanced spring physics.</p>
-                    </div>
-                    <div class="role-meta">
-                        <span class="role-type" style="transition: color 0.3s ease;">Not Hiring Yet 🍿 (Out of Pixels)</span>
-                        <div class="role-arrow">↗</div>
-                    </div>
-                </a>
+<section class="list steps">
+  <h2>How this goes.</h2>
+  <div class="rows">
+    <div class="rw" tabindex="0"><span><em>1</em>You write to us.</span><small>Below. Four fields, one real question.</small></div>
+    <div class="rw" tabindex="0"><span><em>2</em>A person reads it.</span><small>Not a filter, and not a scoring rubric.</small></div>
+    <div class="rw" tabindex="0"><span><em>3</em>We reply.</span><small>Yes, no, or let’s talk. Either way, you hear back.</small></div>
+  </div>
+</section>
 
-                <a href="#" class="role-row hover-target fade-up">
-                    <div class="role-info">
-                        <h3>Senior UI/UX Designer</h3>
-                        <p>Obsess over micro-interactions and tactile layouts.</p>
-                    </div>
-                    <div class="role-meta">
-                        <span class="role-type" style="transition: color 0.3s ease;">Not Hiring Yet 🎨 (Canvas Full)</span>
-                        <div class="role-arrow">↗</div>
-                    </div>
-                </a>
+<section class="apply" id="apply">
+  <div>
+    <h2>Open application.</h2>
+    <p class="lead">Tell us what you’d remove from the world. We’ll take it from there.</p>
+  </div>
+  <form id="appform" novalidate>
+    <label>Name<input name="name" type="text" autocomplete="name" required></label>
+    <label>Email<input name="email" type="email" autocomplete="email" required></label>
+    <label>Something you’ve made <small>Optional. GitHub, a site, a file, anything.</small><input name="link" type="url" placeholder="https://"></label>
+    <label>Which annoying task would you delete?<textarea name="task" required placeholder="Be specific. The more irritating, the better."></textarea></label>
+    <button class="btn" type="submit">Send application</button>
+    <p class="fstat" id="fstat" aria-live="polite"></p>
+  </form>
+</section>
 
-                <a href="#" class="role-row hover-target fade-up">
-                    <div class="role-info">
-                        <h3>Growth Engineer</h3>
-                        <p>Data-driven scaling for experimental digital products.</p>
-                    </div>
-                    <div class="role-meta">
-                        <span class="role-type" style="transition: color 0.3s ease;">Not Hiring Yet 🔥 (Servers Melting)</span>
-                        <div class="role-arrow">↗</div>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <!-- NEW INTERNSHIP SECTION -->
-        <section class="roles-section" style="padding-top: 0;">
-            <div class="roles-header-flex">
-                <h2 class="roles-header fade-up">The Apprentice Protocol</h2>
-                <div class="ritual-btn intern-badge fade-up">2 to 6 Months / Unpaid</div>
-            </div>
-            <p class="fade-up" style="max-width: 700px; margin-bottom: 3rem; font-size: 1.1rem; line-height: 1.6; opacity: 0.8;">Why work for free? Because you'll leave with a portfolio of shipped production products, hands-on experience building complex logic, and the kind of high-velocity learning you won't get sitting in a lecture hall.</p>
-            
-            <div class="role-list">
-                <a href="#" class="role-row hover-target fade-up">
-                    <div class="role-info">
-                        <h3>AI Agent Engineer (Intern)</h3>
-                        <p>Dive into LLM orchestration, build security layers, and prototype agentic workflows.</p>
-                    </div>
-                    <div class="role-meta">
-                        <span class="role-type" style="transition: color 0.3s ease;">Apply Now 🤖</span>
-                        <div class="role-arrow">↗</div>
-                    </div>
-                </a>
-
-                <a href="#" class="role-row hover-target fade-up">
-                    <div class="role-info">
-                        <h3>UI/UX Design Intern</h3>
-                        <p>Craft expressive layouts exploring Neo-Brutalism, glassmorphism, and Material 3 mechanics.</p>
-                    </div>
-                    <div class="role-meta">
-                        <span class="role-type" style="transition: color 0.3s ease;">Apply Now 👁️</span>
-                        <div class="role-arrow">↗</div>
-                    </div>
-                </a>
-
-                <a href="#" class="role-row hover-target fade-up">
-                    <div class="role-info">
-                        <h3>Mobile Dev Intern</h3>
-                        <p>Architect robust, privacy-first mobile apps focusing on mental wellbeing and daily utility.</p>
-                    </div>
-                    <div class="role-meta">
-                        <span class="role-type" style="transition: color 0.3s ease;">Apply Now 📱</span>
-                        <div class="role-arrow">↗</div>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <section class="perks-section fade-up">
-            <div class="perks-header">
-                <h2>The Baseline.</h2>
-            </div>
-            <div class="perks-grid">
-                <div class="perk-card hover-target">
-                    <div class="perk-number">01</div>
-                    <h3>Radical Ownership</h3>
-                    <p>No corporate bureaucracy or endless permission chains. You build it, you own it. Your code and designs hit production fast.</p>
-                </div>
-        
-                <div class="perk-card hover-target">
-                    <div class="perk-number">02</div>
-                    <h3>Asynchronous & Flexible</h3>
-                    <p>We care about your output, not your hours. We measure the impact of your commits, not when you log into a Slack channel.</p>
-                </div>
-        
-                <div class="perk-card hover-target">
-                    <div class="perk-number">03</div>
-                    <h3>Direct Mentorship</h3>
-                    <p>Learn directly from founders who are in the trenches building and scaling products. Expect blunt feedback and accelerated growth.</p>
-                </div>
-        
-                <div class="perk-card hover-target">
-                    <div class="perk-number">04</div>
-                    <h3>Creative Autonomy</h3>
-                    <p>Want to experiment with a bleeding-edge framework or an unconventional visual style? We actively encourage breaking the mold.</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer id="contact">
-        <div class="fade-up">
-            <h2 class="hover-target">Don't see your <span class="highlight">role?</span></h2>
-            <div class="btn-group" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem;">
-                <a href="mailto:careers@singulr.agency" class="footer-btn-outline hover-target magnetic-btn">Pitch Yourself</a>
-                <a href="contact.html" class="footer-btn hover-target magnetic-btn">Start a Project</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Singulr Agency. All rights reserved.</p>
-            <div class="social-links">
-                <a href="#" class="hover-target">Twitter</a>
-                <a href="#" class="hover-target">Dribbble</a>
-                <a href="#" class="hover-target">LinkedIn</a>
-                <a href="careers.html" class="hover-target">Careers</a>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cursorDot = document.querySelector('.cursor-dot');
-            const cursorOutline = document.querySelector('.cursor-outline');
-            const hoverTargets = document.querySelectorAll('.hover-target');
-            const magneticBtns = document.querySelectorAll('.magnetic-btn');
-            
-            // Cursor Logic
-            let mouseX = window.innerWidth / 2; let mouseY = window.innerHeight / 2;
-            let outlineX = mouseX; let outlineY = mouseY;
-            let outlineSize = 40; let hasMoved = false;
-
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX; mouseY = e.clientY;
-                if (!hasMoved) { cursorDot.style.opacity = 1; cursorOutline.style.opacity = 1; outlineX = mouseX; outlineY = mouseY; hasMoved = true; }
-                cursorDot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
-            });
-
-            function animateCursor() {
-                const easing = 0.15;
-                outlineX += (mouseX - outlineX) * easing; outlineY += (mouseY - outlineY) * easing;
-                cursorOutline.style.transform = `translate(${outlineX - (outlineSize / 2)}px, ${outlineY - (outlineSize / 2)}px)`;
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
-
-            // Hover States
-            hoverTargets.forEach(target => {
-                target.addEventListener('mouseenter', () => {
-                    outlineSize = 75;
-                    cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
-                    
-                    const isFooter = target.closest('footer');
-                    
-                    if (isFooter) {
-                        cursorOutline.style.backgroundColor = 'rgba(250, 249, 246, 0.15)';
-                        cursorOutline.style.borderColor = 'transparent';
-                    } else {
-                        cursorOutline.style.backgroundColor = 'rgba(26, 26, 26, 0.05)';
-                        cursorOutline.style.borderColor = 'transparent';
-                    }
-                });
-                target.addEventListener('mouseleave', () => {
-                    outlineSize = 40;
-                    cursorOutline.style.width = `${outlineSize}px`; cursorOutline.style.height = `${outlineSize}px`;
-                    cursorOutline.style.backgroundColor = 'transparent';
-                    
-                    const isFooter = target.closest('footer');
-                    cursorOutline.style.borderColor = isFooter ? 'var(--bg-color)' : 'var(--text-color)';
-                });
-            });
-
-            // Magnetic Buttons
-            magneticBtns.forEach(btn => {
-                btn.addEventListener('mousemove', (e) => {
-                    const position = btn.getBoundingClientRect();
-                    const x = e.clientX - position.left - position.width / 2;
-                    const y = e.clientY - position.top - position.height / 2;
-                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
-                });
-                btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px) scale(1)`);
-            });
-
-            // Scroll Reveal
-            const observer = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
-                });
-            }, { threshold: 0.15 });
-            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-            // --- Bouncy Interactive Click for Roles ---
-            const roleRows = document.querySelectorAll('.role-row');
-            const funMessages = {
-                "Creative Developer": [
-                    "NOT HIRING YET! 🍿 (We're fully pixelated)",
-                    "GRAVITY ERROR! 🚫 (No open seats in orbit)",
-                    "NOT YET! 🧪 (Our physics engine is full)"
-                ],
-                "Senior UI/UX Designer": [
-                    "NOT HIRING YET! 🎨 (Our color wheel is full)",
-                    "CANVAS FULL! 🚫 (No blank screens left)",
-                    "NOT YET! 🤫 (We're busy aligning elements)"
-                ],
-                "Growth Engineer": [
-                    "NOT HIRING YET! 🚀 (Servers currently melting)",
-                    "PAUSED! 🍿 (VOLATILITY LIMIT REACHED)",
-                    "NOT YET! 🔥 (Managing extreme bouncy-loop chaos)"
-                ],
-                "AI Agent Engineer (Intern)": [
-                    "APPLICATION RECEIVED! 🤖 (Evaluating neural pathways...)",
-                    "PROMPT ACCEPTED! ⚡ (Sending to founders...)"
-                ],
-                "UI/UX Design Intern": [
-                    "APPLICATION RECEIVED! 🎨 (Checking border-radius...)",
-                    "NICE PIXELS! 👁️ (We'll be in touch...)"
-                ],
-                "Mobile Dev Intern": [
-                    "APPLICATION RECEIVED! 📱 (Compiling your credentials...)",
-                    "BUILD SUCCESS! 🚀 (Routing to founders...)"
-                ]
-            };
-
-            roleRows.forEach(row => {
-                row.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    
-                    row.classList.remove('wobble-active');
-                    void row.offsetWidth; 
-                    row.classList.add('wobble-active');
-                    
-                    const roleTitle = row.querySelector('h3').textContent.trim();
-                    const typeSpan = row.querySelector('.role-type');
-                    const arrowDiv = row.querySelector('.role-arrow');
-                    
-                    const messages = funMessages[roleTitle] || ["Incoming... 📡"];
-                    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-                    
-                    typeSpan.textContent = randomMsg;
-                    typeSpan.style.color = 'var(--accent-1)';
-                    
-                    arrowDiv.style.transform = 'rotate(360deg) scale(0.9)';
-                    setTimeout(() => {
-                        arrowDiv.style.transform = '';
-                    }, 400);
-                });
-            });
-        });
-    </script>
+<footer class="foot">
+  <div class="foot-top">
+    <div>
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+        <span>Singulr Tech</span>
+      </div>
+      <p class="foot-tag">Automation that gets out of your way.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="index.html#products">All Products</a>
+      <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
+      <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
+      <a href="LinkUp.html">LinkUp</a>
+      <a href="Wiggle.html">Wiggle</a>
+      <a href="XRisk.html">XRisk</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>S</span><span>i</span><span>n</span><span>g</span><span>u</span><span>l</span><span>r</span></p>
+  <div class="foot-bottom"><span>© 2026 Singulr Tech. All rights reserved.</span><span>Automation and AI products.</span></div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{document.documentElement.classList.add("calm");return()=>document.documentElement.classList.remove("calm");});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.hero .cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".ticker",{yPercent:100,duration:1,ease:"power3.out"},.9);
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+  const p=$(".big");
+  if(p){
+    p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+    g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+  }
+  if($(".cells i"))g.from(".cells i",{scale:0,duration:.7,stagger:.14,ease:"back.out(3)",scrollTrigger:{trigger:".cells",start:"top 85%"}});
+});
+}
+</script>
+<script>
+(function(){
+  const APPLY_EMAIL="careers@singulr.tech";
+  const form=$("#appform"),stat=$("#fstat");
+  form.addEventListener("submit",e=>{
+    e.preventDefault();
+    const f=new FormData(form),name=(f.get("name")||"").trim(),email=(f.get("email")||"").trim(),link=(f.get("link")||"").trim(),task=(f.get("task")||"").trim();
+    if(!name||!email||!task||!form.email.checkValidity()||(link&&!form.link.checkValidity())){
+      stat.textContent="Name, a valid email and your answer are required. A link is optional, but it has to be a full address if you add one.";
+      return;
+    }
+    const body="Name: "+name+"\nEmail: "+email+"\nSomething I’ve made: "+(link||"—")+"\n\nThe annoying task I’d delete:\n"+task;
+    location.href="mailto:"+APPLY_EMAIL+"?subject="+encodeURIComponent("Open application: "+name)+"&body="+encodeURIComponent(body);
+    stat.textContent="Your mail app should open with the application filled in. If nothing happens, send the same details to ";
+    const a=document.createElement("a");a.href="mailto:"+APPLY_EMAIL;a.textContent=APPLY_EMAIL;stat.appendChild(a);stat.appendChild(document.createTextNode("."));
+  });
+})();
+</script>
 </body>
 </html>
