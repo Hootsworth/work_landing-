@@ -72,9 +72,11 @@ h1{font-size:clamp(3.1rem,10.5vw,10rem);line-height:.92;letter-spacing:-.04em;fo
 .foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
 .foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
 .foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
-.foot-links{display:grid;grid-auto-flow:column;grid-template-rows:repeat(8,auto);gap:12px clamp(32px,6vw,72px);font-weight:600}
-@media (max-width:560px){.foot-links{grid-auto-flow:row;grid-template-rows:none}}
-.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--amber)}
+.foot-nav{display:flex;gap:clamp(28px,4.5vw,64px);flex-wrap:wrap}
+.foot-col{display:flex;flex-direction:column;gap:10px}
+.foot-col-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#8C96D4;margin-bottom:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+.foot-col a{text-decoration:none;font-weight:600;font-size:.98rem;color:var(--paper);transition:color .2s}
+.foot-col a:hover{color:var(--amber)}
 .giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(25vw,28rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
 .giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
 .foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
@@ -214,25 +216,26 @@ input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px soli
       </div>
       <p class="foot-tag">Automation that gets out of your way.</p>
     </div>
-    <nav class="foot-links" aria-label="Footer">
-      <a href="index.html">Home</a>
-      <a href="projects.html">Projects</a>
-      <a href="open-source.html">Open source</a>
-      <a href="about.html">About</a>
-      <a href="careers.html">Careers</a>
-      <a href="blog.html">Blog</a>
-      <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
-      <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
-      <a href="LinkUp.html">LinkUp</a>
-      <a href="Wiggle.html">Wiggle</a>
-      <a href="XRisk.html">XRisk</a>
-      <a href="Firefly.html">Firefly</a>
-      <a href="Intents.html">Intents</a>
-      <a href="RexScript.html">RexScript</a>
-      <a href="security.html">Security</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
-      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <div class="foot-col">
+        <span class="foot-col-title">Navigation</span>
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="open-source.html">Open source</a>
+        <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+      <div class="foot-col">
+        <span class="foot-col-title">Company</span>
+        <a href="about.html">About</a>
+        <a href="careers.html">Careers</a>
+        <a href="blog.html">Blog</a>
+      </div>
+      <div class="foot-col">
+        <span class="foot-col-title">Legal &amp; Trust</span>
+        <a href="security.html">Security</a>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms</a>
+      </div>
     </nav>
   </div>
   <p class="giant" aria-hidden="true"><span>S</span><span>i</span><span>n</span><span>g</span><span>u</span><span>l</span><span>r</span></p>
