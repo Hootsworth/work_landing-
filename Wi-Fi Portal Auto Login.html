@@ -9,7 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
 <style>
 :root{--cobalt:#2336F0;--deep:#0E1766;--paper:#F2F4FF;--ink:#0B1033;--amber:#FFB400;--mint:#19D49B;
---bg:#F2F4FF;--fg:#0B1033;--mute:#5560A0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+--bg:#F2F4FF;--fg:#0B1033;--mute:#5560A0;--line:2px;--r:14px;--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,200px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#080D2E;--fg:#E9ECFF;--mute:#8F9AD6}}
 :root[data-theme="dark"]{--bg:#080D2E;--fg:#E9ECFF;--mute:#8F9AD6}
 html{background:var(--cobalt);scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -19,19 +20,23 @@ a{color:inherit}
 :focus-visible{outline:3px solid var(--amber);outline-offset:3px}
 
 /* hero */
-.hero{position:relative;min-height:100svh;background:var(--cobalt);color:var(--paper);display:grid;grid-template-columns:1.15fr .85fr;align-items:end;gap:2vw;padding:clamp(20px,4vw,48px) 5vw 7vh;overflow:hidden}
-.brand{position:absolute;top:clamp(20px,3vw,36px);left:5vw;font-weight:650;font-size:1rem;letter-spacing:-.01em}
-.gh-btn{position:absolute;top:clamp(20px,3vw,36px);right:5vw;z-index:10;white-space:nowrap;flex-shrink:0;padding:10px 18px;font-size:.95rem;text-decoration:none;border-radius:99px;background:var(--amber);color:var(--ink);font-weight:650;transition:box-shadow .25s,transform .15s}
-.gh-btn:hover{box-shadow:0 8px 20px -6px rgba(255,180,0,.7)}
-.gh-btn:active{transform:translateY(2px)}
-@media (max-width:480px){.gh-btn{padding:8px 14px;font-size:.88rem}}
+.hero{min-height:100svh;background:var(--cobalt);color:var(--paper);display:grid;grid-template-columns:1.15fr .85fr;grid-template-rows:auto 1fr;column-gap:clamp(24px,4vw,64px);padding:0 var(--gutter) clamp(56px,10vh,120px);overflow:hidden}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;box-sizing:border-box;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a{display:inline-flex;align-items:center;font-size:.95rem;line-height:1}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav .btn.sm{padding:10px 18px;font-size:.95rem;line-height:1;margin:0;align-self:center;background:var(--ink);color:var(--amber);border:var(--line) solid var(--ink);border-radius:var(--r);text-decoration:none;font-weight:650;transition:background .2s,color .2s,transform .15s}
+.nav .btn.sm:hover{background:var(--paper);color:var(--ink)}
+.hero-main{align-self:center;padding:5vh 0}
 h1{margin:0;font-size:clamp(3rem,8.4vw,8rem);line-height:.94;letter-spacing:-.035em;font-weight:700;font-stretch:84%}
 .ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
 .sub{max-width:34em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.5;color:#D3D9FF;margin:1.6rem 0 2rem}
 .cta{display:flex;gap:12px;flex-wrap:wrap}
-.btn{display:inline-block;padding:15px 26px;border-radius:99px;background:var(--amber);color:var(--ink);font-weight:650;text-decoration:none;font-size:1.02rem}
+.btn{display:inline-block;padding:15px 26px;border-radius:var(--r);background:var(--amber);color:var(--ink);font-weight:650;text-decoration:none;font-size:1.02rem}
 .ghost{background:transparent;color:var(--paper);border:1.5px solid rgba(255,255,255,.5)}
-.hero svg{width:100%;max-width:560px;justify-self:end;align-self:center;overflow:visible}
+.hero svg.art{width:100%;max-width:560px;justify-self:end;align-self:center;overflow:visible}
 .arc{fill:none;stroke:#fff;stroke-width:22;stroke-linecap:round}.dotc{fill:var(--amber)}
 
 /* scene */
@@ -93,9 +98,13 @@ h1{margin:0;font-size:clamp(3rem,8.4vw,8rem);line-height:.94;letter-spacing:-.03
 .copy{margin-top:1rem;font:inherit;font-size:.92rem;font-weight:650;padding:10px 16px;border-radius:99px;border:1.5px solid rgba(255,255,255,.55);background:transparent;color:inherit;cursor:pointer}
 .fine{margin:5rem 0 0;max-width:46em;color:#C9D0FF;font-size:.95rem;line-height:1.5}
 
+@media (max-width:1040px){.nav a:not(.btn){display:none}}
 @media (max-width:860px){
-  .hero{grid-template-columns:1fr;align-items:end;padding-top:84px}
-  .hero svg{order:-1;max-width:260px;justify-self:start;align-self:start}
+  .hero{grid-template-columns:1fr;grid-template-rows:none;padding-top:0}
+  .hero>*{grid-column:1/-1}
+  .top{order:1}
+  .hero svg.art{order:2;max-width:260px;justify-self:start;align-self:start}
+  .hero-main{order:3;padding:24px 0 40px}
   .scene-in{grid-template-columns:1fr;grid-template-rows:auto auto;align-content:center;gap:20px;padding:0 5vw}
   .stage{order:-1;height:50svh}
   .steps h2{display:none}
@@ -103,12 +112,14 @@ h1{margin:0;font-size:clamp(3rem,8.4vw,8rem);line-height:.94;letter-spacing:-.03
   .node{font-size:.68rem;padding:7px 8px}.probe{gap:8px;margin-top:44px}.tab.bg{display:none}.pill{width:120px}
   .get ol{grid-template-columns:1fr}
 }
+@media (max-width:480px){
+  .top{gap:8px}
+  .brand svg{width:26px;height:26px}
+  .btn.sm{padding:8px 14px;font-size:.88rem}
+}
 /* spacing system + micro-interactions */
-:root{--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,200px)}
 [hidden]{display:none!important}
 h1{--w:84;font-stretch:calc(var(--w) * 1%)}
-.hero{padding:clamp(24px,4vw,56px) var(--gutter) clamp(56px,10vh,120px);gap:clamp(24px,4vw,64px)}
-.brand{left:var(--gutter)}
 .sub{margin:2rem 0 2.5rem;line-height:1.55}
 .cta{gap:14px}
 .btn{transition:box-shadow .25s,background .25s,filter .2s}
@@ -186,14 +197,22 @@ html.calm .state p span{opacity:1}
 <div class="prog" aria-hidden="true"><i></i></div>
 
 <header class="hero">
-  <div class="brand"><a href="Singulr%20Tech.html" style="text-decoration:none;color:inherit;display:inline-flex;align-items:center;gap:8px;">← Singulr Tech <span style="opacity:0.65">/ Wavvy</span></a></div>
-  <a class="btn sm gh-btn" href="https://github.com/Hootsworth/Wavvy" target="_blank" rel="noopener noreferrer">GitHub</a>
-  <div>
+  <div class="top">
+    <a class="brand" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="15" cy="15" r="13"/><path d="M10 16a6 6 0 0 1 10 0M7 12a11 11 0 0 1 16 0"/><circle cx="15" cy="20" r="2" fill="currentColor" stroke="none"/></svg>
+      <span>Wavvy</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">← Singulr</a><a href="#how">How it works</a><a href="#try">Try it</a><a href="#get">Installation</a>
+      <a class="btn sm" href="https://github.com/Hootsworth/Wavvy" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <div class="hero-main">
     <h1><span class="ln"><span>Join the Wi-Fi.</span></span><span class="ln"><span>The login page</span></span><span class="ln"><span>is handled.</span></span></h1>
     <p class="sub">A Chrome extension that spots the login portal on campus, hotel and airport Wi-Fi, fills in your details, and gets you online before you’ve opened a tab.</p>
     <div class="cta"><a class="btn" href="#how">See how it works</a><a class="btn ghost" href="#get">Set it up</a></div>
   </div>
-  <svg viewBox="-20 0 440 400" aria-hidden="true">
+  <svg class="art" viewBox="-20 0 440 400" aria-hidden="true">
     <path class="arc" d="M 150.5 250.5 A 70 70 0 0 1 249.5 250.5"/>
     <path class="arc" d="M 101 201 A 140 140 0 0 1 299 201"/>
     <path class="arc" d="M 51.5 151.5 A 210 210 0 0 1 348.5 151.5"/>
@@ -339,7 +358,7 @@ mm.add("(prefers-reduced-motion: no-preference)",()=>{
   $$(".arc").forEach(a=>{const L=a.getTotalLength();gsap.set(a,{strokeDasharray:L,strokeDashoffset:L});});
   const intro=gsap.timeline({defaults:{ease:"expo.out"}});
   intro.from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
-    .from(".sub,.cta,.brand",{autoAlpha:0,y:18,duration:1,stagger:.1},.7)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
     .to(".arc",{strokeDashoffset:0,duration:1.3,stagger:.15,ease:"power3.out"},.2)
     .from(".dotc",{scale:0,transformOrigin:"200px 300px",duration:.7,ease:"back.out(3)"},.9)
     .to(".arc",{opacity:.3,duration:.6,stagger:.18,repeat:-1,yoyo:true,repeatDelay:.8,ease:"sine.inOut"},2.4);
