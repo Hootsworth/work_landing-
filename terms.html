@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Terms and conditions — Singulr Tech</title>
+<meta name="description" content="The terms for using the Singulr Tech website and software.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--cobalt:#2336F0;--ink:#0B1033;--amber:#FFB400;--mint:#19D49B;--coral:#FF5A4E;--paper:#F2F4FF;
+--sky:#3CC8FF;--lime:#C8F03C;--violet:#6C47FF;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;
+--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,190px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--vl);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--cobalt);transform:scaleX(0);transform-origin:left}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--amber);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:var(--ink);color:var(--amber);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+
+/* nav */
+.top{display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover,.nav a[aria-current]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+@media (max-width:560px){.nav .hide-s{display:none}.nav{gap:16px}.brand svg{width:26px;height:26px}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;padding:0 var(--gutter);overflow:hidden;background:var(--vl);color:var(--ink)}
+.hero-main{margin-top:auto;padding:6vh 0 clamp(40px,8vh,88px)}
+h1{font-size:clamp(3.1rem,10.5vw,10rem);line-height:.92;letter-spacing:-.04em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:34em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
+
+/* shared blocks */
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650;margin-bottom:clamp(56px,10vh,110px)}
+.big span{transition:color .2s}.big span:hover{color:var(--cobalt)}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.cells article{padding:clamp(22px,3vw,40px);transition:background .25s,color .25s}
+.cells article+article{border-left:var(--line) solid var(--fg)}
+.cells article:hover{background:var(--amber);color:var(--ink)}
+.cells i{display:block;width:30px;height:30px;border-radius:8px;margin-bottom:clamp(40px,8vh,90px)}
+.cells h3{font-size:1.6rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cells p{line-height:1.55;font-size:1.05rem}
+.list{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.list h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+.rows{border-bottom:var(--line) solid rgba(242,244,255,.28)}
+.rw{display:flex;align-items:baseline;justify-content:space-between;gap:12px 32px;padding:20px 0;border-top:var(--line) solid rgba(242,244,255,.28);opacity:.42;transition:opacity .25s,padding-left .4s cubic-bezier(.3,1.6,.5,1)}
+.rw span{font-size:clamp(1.8rem,4.2vw,3.75rem);font-weight:700;letter-spacing:-.035em;line-height:1.02;transition:color .25s}
+.rw small{font-size:1rem;font-weight:600;text-align:right;max-width:21em;line-height:1.45}
+.rw:hover,.rw:focus-visible{opacity:1;padding-left:20px}.rw:hover span,.rw:focus-visible span{color:var(--amber)}
+.rw:focus-visible{outline-color:var(--amber)}
+@media (max-width:760px){.rw{flex-direction:column;align-items:flex-start}.rw small{text-align:left}}
+
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;grid-auto-flow:column;grid-template-rows:repeat(8,auto);gap:12px clamp(32px,6vw,72px);font-weight:600}
+@media (max-width:560px){.foot-links{grid-auto-flow:row;grid-template-rows:none}}
+.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--amber)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(25vw,28rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
+
+@media (max-width:860px){.cells{grid-template-columns:1fr}.cells article+article{border-left:0;border-top:var(--line) solid var(--fg)}.cells i{margin-bottom:28px}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}}
+html.calm .prog{display:none}
+
+.hero{min-height:46svh}
+h1{font-size:clamp(2.8rem,8vw,7rem)}
+.hero .sub{margin-bottom:0}
+.doc{background:var(--bg);color:var(--fg);padding:clamp(40px,7vh,80px) var(--gutter) var(--sec);display:grid;grid-template-columns:minmax(220px,300px) minmax(0,1fr);gap:clamp(32px,6vw,96px);align-items:start}
+.toc{position:sticky;top:calc(24px + env(safe-area-inset-top,0px));border:var(--line) solid var(--fg);border-radius:var(--r);padding:20px 22px}
+.toc h2{font-size:1.1rem;letter-spacing:-.01em;font-weight:700;margin-bottom:12px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:t}
+.toc a{display:flex;gap:10px;padding:7px 8px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.98rem;line-height:1.3;transition:background .2s,color .2s}
+.toc a::before{counter-increment:t;content:counter(t) ".";min-width:1.6em;color:var(--mute);font-variant-numeric:tabular-nums}
+.toc a:hover{background:var(--amber);color:var(--ink)}.toc a:hover::before{color:var(--ink)}
+.toc a[aria-current="true"]{background:var(--fg);color:var(--bg)}.toc a[aria-current="true"]::before{color:var(--bg)}
+.prose{max-width:46em;counter-reset:s}
+.prose section{padding-top:clamp(28px,5vh,48px);scroll-margin-top:24px}
+.prose section:first-child{padding-top:0}
+.prose h2{font-size:clamp(1.7rem,3.2vw,2.5rem);letter-spacing:-.03em;line-height:1.05;font-weight:700;margin-bottom:1rem}
+.prose section h2::before{counter-increment:s;content:counter(s) ".";margin-right:.45em;color:var(--mute)}
+.prose h3{font-size:1.3rem;letter-spacing:-.02em;margin:1.6rem 0 .5rem;font-weight:700}
+.prose p,.prose li{font-size:1.1rem;line-height:1.65}
+.prose p{margin:0 0 1rem}
+.prose ul{padding-left:1.2rem;margin:0 0 1rem}.prose li{margin-bottom:.45rem}
+.prose a{text-underline-offset:4px;text-decoration-thickness:2px;font-weight:600}
+.prose code{background:rgba(75,85,144,.16);border-radius:6px;padding:2px 6px;font-size:.92em}
+.short{border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--vl);color:var(--ink);padding:clamp(20px,3vw,32px);margin-bottom:clamp(28px,5vh,48px)}
+.short h3{margin:0 0 .75rem;font-size:1.5rem}.short ul{margin:0}.short li{font-size:1.05rem}.short a{color:inherit}
+@media (max-width:860px){.doc{grid-template-columns:1fr}.toc{position:static}}
+
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+<header class="hero">
+  <div class="top">
+    <a class="brand" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+      <span>Singulr</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="projects.html">Projects</a><a href="open-source.html" class="hide-s">Open source</a><a href="blog.html" class="hide-s">Blog</a><a href="about.html">About</a><a href="careers.html">Careers</a>
+    </nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Terms and conditions.</span></span></h1>
+    <p class="sub">Last updated 29 October 2026. The rules for using this website and our software, in plain English.</p>
+  </div>
+</header>
+
+<div class="doc"><aside class="toc" aria-label="On this page"><h2>On this page</h2><ol><li><a href="#agree">Agreeing to these terms</a></li><li><a href="#site">This website</a></li><li><a href="#license">Our software and licenses</a></li><li><a href="#contributing">Contributing</a></li><li><a href="#responsible">Using our tools responsibly</a></li><li><a href="#thirdparty">Third-party services</a></li><li><a href="#warranty">No warranty</a></li><li><a href="#liability">Limits on liability</a></li><li><a href="#names">Names and logos</a></li><li><a href="#changes">Changes</a></li><li><a href="#contact">Contact</a></li></ol></aside><div class="prose"><div class="short"><h3>The short version</h3><ul>
+<li>Our open source code is yours to use under Apache 2.0.</li>
+<li>Use our tools on networks, devices and accounts you’re allowed to use.</li>
+<li>It’s provided as is, so check what an agent does before you rely on it.</li></ul></div><section id="agree"><h2>Agreeing to these terms</h2><p>By using this website or our software, you agree to these terms. If you don’t, please don’t use them. Our open source projects are also covered by their own licenses, which come first for the code itself.</p></section><section id="site"><h2>This website</h2><p>You’re welcome to browse, link to and share it. Please don’t break it, scrape it aggressively, or pretend to be us. Unless a page says otherwise, the text and design of this site are © 2026 Singulr Tech.</p></section><section id="license"><h2>Our software and licenses</h2><p>Our open source projects are released under the Apache License 2.0. The <code>LICENSE</code> file in each repository is the legal text. In short, you may use, modify and distribute the code, including commercially, as long as you follow the license’s conditions.</p><p>Projects that aren’t open source come with their own terms, shown with the project.</p></section><section id="contributing"><h2>Contributing</h2><p>If you send us a contribution to an open source project, it is licensed under that project’s license unless you clearly say otherwise, as Apache 2.0 section 5 describes. Only contribute work you have the right to share.</p></section><section id="responsible"><h2>Using our tools responsibly</h2><ul>
+<li><strong>Wavvy:</strong> only use networks and accounts you’re authorised to use.</li>
+<li><strong>LinkUp:</strong> only connect to and control devices you own or have permission to access.</li>
+<li><strong>Wiggle and other agents:</strong> you’re responsible for what an agent does on your behalf, including on sites with their own rules. Check its work before relying on it.</li>
+<li><strong>XRisk:</strong> it’s a safety layer, not a substitute for hardening your infrastructure. Your policies and deployments remain your responsibility.</li>
+<li>Don’t use our software to break the law, attack others, or get around security you don’t have permission to test.</li></ul></section><section id="thirdparty"><h2>Third-party services</h2><p>Some of our tools rely on services we don’t run. Wiggle needs your own Google Gemini API key, so Google’s terms and any charges apply to that usage. Our code is hosted on GitHub, and extensions may be installed through a browser store. Those services’ terms apply too.</p></section><section id="warranty"><h2>No warranty</h2><p>Our software and this site are provided “as is”, without warranties of any kind, express or implied, including merchantability and fitness for a particular purpose. We don’t promise they’ll be uninterrupted or error-free. Take extra care with anything that connects to networks, controls devices or automates actions on the web.</p></section><section id="liability"><h2>Limits on liability</h2><p>To the extent the law allows, we aren’t liable for indirect or consequential loss, lost data or lost profits arising from the site or our software. Nothing here limits liability that can’t be limited by law.</p></section><section id="names"><h2>Names and logos</h2><p>The Singulr, Wavvy, Shiny Fishstick, LinkUp, Wiggle and XRisk names and logos aren’t licensed under Apache 2.0, as section 6 of that license explains. Please don’t use them in a way that suggests we endorse you.</p></section><section id="changes"><h2>Changes</h2><p>We may update these terms. The date at the top shows the latest version, and using the site or software after a change means you accept it.</p></section><section id="contact"><h2>Contact</h2><p>Questions about these terms: <a href="mailto:hello@singulr.tech">hello@singulr.tech</a>.</p></section></div></div>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div>
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+        <span>Singulr Tech</span>
+      </div>
+      <p class="foot-tag">Automation that gets out of your way.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="open-source.html">Open source</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="blog.html">Blog</a>
+      <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
+      <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
+      <a href="LinkUp.html">LinkUp</a>
+      <a href="Wiggle.html">Wiggle</a>
+      <a href="XRisk.html">XRisk</a>
+      <a href="Firefly.html">Firefly</a>
+      <a href="Intents.html">Intents</a>
+      <a href="RexScript.html">RexScript</a>
+      <a href="security.html">Security</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>S</span><span>i</span><span>n</span><span>g</span><span>u</span><span>l</span><span>r</span></p>
+  <div class="foot-bottom"><span>© 2026 Singulr Tech. All rights reserved.</span><span>Automation and AI products.</span></div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{document.documentElement.classList.add("calm");return()=>document.documentElement.classList.remove("calm");});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.hero .cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".ticker",{yPercent:100,duration:1,ease:"power3.out"},.9);
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+  const p=$(".big");
+  if(p){
+    p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+    g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+  }
+  if($(".cells i"))g.from(".cells i",{scale:0,duration:.7,stagger:.14,ease:"back.out(3)",scrollTrigger:{trigger:".cells",start:"top 85%"}});
+});
+}
+</script>
+<script>
+(function(){
+  const links=$$(".toc a"),secs=links.map(a=>document.querySelector(a.getAttribute("href")));
+  if(!("IntersectionObserver" in window))return;
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(e.isIntersecting){links.forEach(l=>l.removeAttribute("aria-current"));const l=links[secs.indexOf(e.target)];if(l)l.setAttribute("aria-current","true");}
+  });},{rootMargin:"-15% 0px -75% 0px"});
+  secs.forEach(s=>s&&io.observe(s));
+})();
+</script>
+</body>
+</html>

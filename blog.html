@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blog — Singulr Tech</title>
+<meta name="description" content="Release notes, how things work, and the occasional change of mind from Singulr Tech.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--cobalt:#2336F0;--ink:#0B1033;--amber:#FFB400;--mint:#19D49B;--coral:#FF5A4E;--paper:#F2F4FF;
+--sky:#3CC8FF;--lime:#C8F03C;--violet:#6C47FF;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;
+--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,190px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--sky);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--cobalt);transform:scaleX(0);transform-origin:left}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--amber);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:var(--ink);color:var(--amber);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+
+/* nav */
+.top{display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover,.nav a[aria-current]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+@media (max-width:560px){.nav .hide-s{display:none}.nav{gap:16px}.brand svg{width:26px;height:26px}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;padding:0 var(--gutter);overflow:hidden;background:var(--sky);color:var(--ink)}
+.hero-main{margin-top:auto;padding:6vh 0 clamp(40px,8vh,88px)}
+h1{font-size:clamp(3.1rem,10.5vw,10rem);line-height:.92;letter-spacing:-.04em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:34em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
+
+/* shared blocks */
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650;margin-bottom:clamp(56px,10vh,110px)}
+.big span{transition:color .2s}.big span:hover{color:var(--cobalt)}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.cells article{padding:clamp(22px,3vw,40px);transition:background .25s,color .25s}
+.cells article+article{border-left:var(--line) solid var(--fg)}
+.cells article:hover{background:var(--amber);color:var(--ink)}
+.cells i{display:block;width:30px;height:30px;border-radius:8px;margin-bottom:clamp(40px,8vh,90px)}
+.cells h3{font-size:1.6rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cells p{line-height:1.55;font-size:1.05rem}
+.list{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.list h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+.rows{border-bottom:var(--line) solid rgba(242,244,255,.28)}
+.rw{display:flex;align-items:baseline;justify-content:space-between;gap:12px 32px;padding:20px 0;border-top:var(--line) solid rgba(242,244,255,.28);opacity:.42;transition:opacity .25s,padding-left .4s cubic-bezier(.3,1.6,.5,1)}
+.rw span{font-size:clamp(1.8rem,4.2vw,3.75rem);font-weight:700;letter-spacing:-.035em;line-height:1.02;transition:color .25s}
+.rw small{font-size:1rem;font-weight:600;text-align:right;max-width:21em;line-height:1.45}
+.rw:hover,.rw:focus-visible{opacity:1;padding-left:20px}.rw:hover span,.rw:focus-visible span{color:var(--amber)}
+.rw:focus-visible{outline-color:var(--amber)}
+@media (max-width:760px){.rw{flex-direction:column;align-items:flex-start}.rw small{text-align:left}}
+
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;grid-auto-flow:column;grid-template-rows:repeat(8,auto);gap:12px clamp(32px,6vw,72px);font-weight:600}
+@media (max-width:560px){.foot-links{grid-auto-flow:row;grid-template-rows:none}}
+.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--amber)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(25vw,28rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
+
+@media (max-width:860px){.cells{grid-template-columns:1fr}.cells article+article{border-left:0;border-top:var(--line) solid var(--fg)}.cells i{margin-bottom:28px}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}}
+html.calm .prog{display:none}
+
+.hero{min-height:52svh}
+body.is-post .hero{min-height:0}body.is-post .hero-main{display:none}body.is-post .top{padding-bottom:clamp(16px,2vw,24px)}
+.blog{background:var(--bg);color:var(--fg);padding:clamp(40px,7vh,80px) var(--gutter) var(--sec);min-height:50svh;overflow:hidden}
+.plist2{border-bottom:var(--line) solid var(--fg)}
+.post{display:grid;grid-template-columns:9.5em minmax(0,1fr) auto;gap:12px clamp(20px,3vw,48px);align-items:baseline;padding:clamp(22px,3vw,34px) var(--gutter);margin:0 calc(var(--gutter) * -1);border-top:var(--line) solid var(--fg);text-decoration:none;color:inherit;transition:background .25s,color .25s}
+.post:hover,.post:focus-visible{background:var(--amber);color:var(--ink)}
+.post time{font:700 .9rem var(--mono)}
+.post h2{font-size:clamp(1.7rem,3.6vw,3rem);letter-spacing:-.035em;line-height:1.02;font-weight:700;margin-bottom:.5rem}
+.post p{line-height:1.5;max-width:38em}
+.meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-weight:650;font-size:.95rem;white-space:nowrap}
+.tag{font:700 .78rem var(--mono);border:var(--line) solid currentColor;border-radius:8px;padding:3px 9px}
+.back{display:inline-block;margin-bottom:2rem;font-weight:650;text-underline-offset:5px;text-decoration-thickness:2px}
+.full{max-width:46em;margin:0 auto}
+.full .meta{flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;margin-bottom:1.2rem;white-space:normal;flex-wrap:wrap}
+.full h1{font-size:clamp(2.4rem,5.6vw,4.6rem);line-height:.98;letter-spacing:-.04em;font-weight:700;margin-bottom:2rem;font-stretch:100%}
+.prose{max-width:none}
+.prose h2{font-size:clamp(1.5rem,2.6vw,2rem);margin:2.2rem 0 .8rem}
+.prose p,.prose li{font-size:1.18rem}
+.adj{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:clamp(40px,7vh,72px)}
+.adj a{display:block;border:var(--line) solid var(--fg);border-radius:var(--r);padding:18px 22px;text-decoration:none;font-weight:700;font-size:1.15rem;line-height:1.25;transition:background .2s,color .2s}
+.adj a small{display:block;font-weight:600;color:var(--mute);margin-bottom:6px;font-size:.9rem}
+.adj a:hover{background:var(--amber);color:var(--ink)}.adj a:hover small{color:var(--ink)}
+.adj a:last-child{text-align:right}
+@media (max-width:860px){.post{grid-template-columns:1fr}.meta{flex-direction:row;align-items:center;justify-content:flex-start}.adj{grid-template-columns:1fr}.adj a:last-child{text-align:left}}
+
+
+.prose{counter-reset:none}
+.prose p,.prose li{line-height:1.65}.prose p{margin:0 0 1rem}.prose ul{padding-left:1.2rem;margin:0 0 1rem}.prose li{margin-bottom:.45rem}
+.prose a{text-underline-offset:4px;text-decoration-thickness:2px;font-weight:600}
+.prose code{background:rgba(75,85,144,.16);border-radius:6px;padding:2px 6px;font-size:.92em;word-break:break-word}
+.prose h2{letter-spacing:-.03em;line-height:1.1;font-weight:700}
+
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+<header class="hero">
+  <div class="top">
+    <a class="brand" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+      <span>Singulr</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="projects.html">Projects</a><a href="open-source.html" class="hide-s">Open source</a><a href="blog.html" class="hide-s" aria-current="page">Blog</a><a href="about.html">About</a><a href="careers.html">Careers</a>
+    </nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Notes from</span></span><span class="ln"><span>the lab.</span></span></h1>
+    <p class="sub">Release notes, how things work, and the occasional change of mind.</p>
+    <div class="cta"><a class="btn" href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">Follow on GitHub</a><a class="btn ghost" href="projects.html">See the projects</a></div>
+  </div>
+</header>
+
+<main class="blog" id="blog"></main>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div>
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+        <span>Singulr Tech</span>
+      </div>
+      <p class="foot-tag">Automation that gets out of your way.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="open-source.html">Open source</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="blog.html">Blog</a>
+      <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
+      <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
+      <a href="LinkUp.html">LinkUp</a>
+      <a href="Wiggle.html">Wiggle</a>
+      <a href="XRisk.html">XRisk</a>
+      <a href="Firefly.html">Firefly</a>
+      <a href="Intents.html">Intents</a>
+      <a href="RexScript.html">RexScript</a>
+      <a href="security.html">Security</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>S</span><span>i</span><span>n</span><span>g</span><span>u</span><span>l</span><span>r</span></p>
+  <div class="foot-bottom"><span>© 2026 Singulr Tech. All rights reserved.</span><span>Automation and AI products.</span></div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{document.documentElement.classList.add("calm");return()=>document.documentElement.classList.remove("calm");});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.hero .cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".ticker",{yPercent:100,duration:1,ease:"power3.out"},.9);
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+  const p=$(".big");
+  if(p){
+    p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+    g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+  }
+  if($(".cells i"))g.from(".cells i",{scale:0,duration:.7,stagger:.14,ease:"back.out(3)",scrollTrigger:{trigger:".cells",start:"top 85%"}});
+});
+}
+</script>
+<script>
+(function(){
+  /* Add new posts to the top of this list. body is HTML. */
+  const POSTS=[
+  {slug:"why-we-open-source",title:"Why most of what we build is open source",date:"2026-10-29",tag:"Open source",
+   summary:"Software you rely on should be software you can read. Here is how that shapes what we release, and what we keep closed.",
+   body:`<p>Most of what we build is open source under the Apache License 2.0. The reasoning is simple: software you rely on should be software you can read.</p>
+<p>If a tool touches your network, your files or your agents, you should be able to check what it does. And if we ever vanish, or you disagree with where we take something, the code is still yours to carry on.</p>
+<h2>Some things stay closed</h2>
+<p>Not everything we build is open source, and we’d rather say so than blur it. Our rule of thumb is that open is the default, closing something needs a reason we’re willing to stand behind, and every project is labelled honestly. Nothing is quietly either.</p>
+<p>The full version lives on our <a href="open-source.html">open source page</a>, and you can browse everything on the <a href="projects.html">projects page</a>.</p>`},
+  {slug:"xrisk-allow-confirm-block",title:"XRisk: allow, confirm or block",date:"2026-10-28",tag:"Release",
+   summary:"An open source safety layer that sits between an agent’s intended action and the thing that executes it.",
+   body:`<p>Agents fail in predictable ways. Tools get more power than they need, prompts get hijacked, secrets leak, and requests head somewhere they shouldn’t. XRisk is our answer: an open source safety and control layer that sits between an agent’s intended action and the thing that executes it.</p>
+<h2>How it decides</h2>
+<p>Given an action, XRisk matches it against layered policy rules (global, project and user, with the most restrictive match winning). It inspects the prompt for injection, looks for secrets and personal data, enforces role boundaries and capability tokens, and evaluates network egress. Then it answers one of three ways: allow, confirm or block, with its reasons attached.</p>
+<p>Every decision is written to a tamper-evident audit trail, so you can replay it later and check it still holds.</p>
+<h2>Try it</h2>
+<p>The quickest way is <code>npx xrisk-engine assess --action-file examples/action.json</code>. It also installs through curl, Homebrew and npm.</p>
+<h2>What it isn’t</h2>
+<p>XRisk is a safety layer, not a substitute for hardening your infrastructure. Treat its decisions as one control among several.</p>
+<p>It’s released under Apache 2.0. Read more on the <a href="XRisk.html">XRisk page</a>.</p>`},
+  {slug:"what-wavvy-stores",title:"What Wavvy stores, and where",date:"2026-10-27",tag:"Privacy",
+   summary:"Wavvy logs you into Wi-Fi portals, so it needs your details. Here is exactly what it does with them.",
+   body:`<p>Wavvy fills in Wi-Fi login portals for you, which means it needs your login details. Here is exactly what it does with them.</p>
+<h2>Where your details live</h2>
+<p>You enter your username and password in the extension’s settings. They are stored in your browser profile, unencrypted, and are never synced to other devices. They stay in your browser.</p>
+<h2>What it checks, and when</h2>
+<p>Wavvy checks your connection every minute, and again when your laptop wakes. When a network redirects you to a login page instead of letting you through, that’s how a portal gives itself away. Wavvy never guesses: after three failed logins it pauses for five minutes, so a wrong password can’t lock you out.</p>
+<h2>The catch</h2>
+<p>Unencrypted storage means anyone with access to your browser profile can read those details. Only use accounts you’re authorised to use, and ideally ones you wouldn’t mind changing. We list this on our <a href="security.html">security page</a> as a known limit.</p>`}
+  ];
+  const root=$("#blog");
+  const fmt=d=>new Date(d+"T00:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  const mins=h=>Math.max(1,Math.round(h.replace(/<[^>]+>/g," ").split(/\s+/).filter(Boolean).length/220));
+  const base=document.title;
+  function index(){
+    document.body.classList.remove("is-post");document.title=base;
+    root.innerHTML='<div class="plist2">'+POSTS.map(p=>
+      '<a class="post" href="#'+p.slug+'"><time datetime="'+p.date+'">'+fmt(p.date)+'</time><div><h2>'+p.title+'</h2><p>'+p.summary+'</p></div><div class="meta"><span class="tag">'+p.tag+'</span><span>'+mins(p.body)+' min read</span></div></a>'
+    ).join("")+'</div>';
+  }
+  function post(i){
+    const p=POSTS[i],newer=POSTS[i-1],older=POSTS[i+1];
+    document.body.classList.add("is-post");document.title=p.title+" — Singulr Tech";
+    root.innerHTML='<article class="full"><a class="back" href="#all">← All posts</a><div class="meta"><span class="tag">'+p.tag+'</span><time datetime="'+p.date+'">'+fmt(p.date)+'</time><span>'+mins(p.body)+' min read</span></div><h1>'+p.title+'</h1><div class="prose">'+p.body+'</div>'
+      +'<nav class="adj" aria-label="More posts">'+(older?'<a href="#'+older.slug+'"><small>Older</small>'+older.title+'</a>':'<span></span>')+(newer?'<a href="#'+newer.slug+'"><small>Newer</small>'+newer.title+'</a>':'')+'</nav></article>';
+  }
+  function route(first){
+    const slug=location.hash.slice(1),i=POSTS.findIndex(p=>p.slug===slug);
+    if(i>=0)post(i);else index();
+    if(!first)scrollTo(0,0);
+    if(window.ScrollTrigger)ScrollTrigger.refresh();
+  }
+  addEventListener("hashchange",()=>route(false));
+  route(true);
+})();
+</script>
+</body>
+</html>

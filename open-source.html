@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Open source — Singulr Tech</title>
+<meta name="description" content="Most of what Singulr Tech builds is open source under Apache 2.0. Some of it is not. Here is how we decide, and what we promise either way.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--cobalt:#2336F0;--ink:#0B1033;--amber:#FFB400;--mint:#19D49B;--coral:#FF5A4E;--paper:#F2F4FF;
+--sky:#3CC8FF;--lime:#C8F03C;--violet:#6C47FF;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;
+--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,190px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--mint);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--cobalt);transform:scaleX(0);transform-origin:left}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--amber);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:var(--ink);color:var(--amber);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+
+/* nav */
+.top{display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover,.nav a[aria-current]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+@media (max-width:560px){.nav .hide-s{display:none}.nav{gap:16px}.brand svg{width:26px;height:26px}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;padding:0 var(--gutter);overflow:hidden;background:var(--mint);color:var(--ink)}
+.hero-main{margin-top:auto;padding:6vh 0 clamp(40px,8vh,88px)}
+h1{font-size:clamp(3.1rem,10.5vw,10rem);line-height:.92;letter-spacing:-.04em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:34em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
+
+/* shared blocks */
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650;margin-bottom:clamp(56px,10vh,110px)}
+.big span{transition:color .2s}.big span:hover{color:var(--cobalt)}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.cells article{padding:clamp(22px,3vw,40px);transition:background .25s,color .25s}
+.cells article+article{border-left:var(--line) solid var(--fg)}
+.cells article:hover{background:var(--amber);color:var(--ink)}
+.cells i{display:block;width:30px;height:30px;border-radius:8px;margin-bottom:clamp(40px,8vh,90px)}
+.cells h3{font-size:1.6rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cells p{line-height:1.55;font-size:1.05rem}
+.list{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.list h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+.rows{border-bottom:var(--line) solid rgba(242,244,255,.28)}
+.rw{display:flex;align-items:baseline;justify-content:space-between;gap:12px 32px;padding:20px 0;border-top:var(--line) solid rgba(242,244,255,.28);opacity:.42;transition:opacity .25s,padding-left .4s cubic-bezier(.3,1.6,.5,1)}
+.rw span{font-size:clamp(1.8rem,4.2vw,3.75rem);font-weight:700;letter-spacing:-.035em;line-height:1.02;transition:color .25s}
+.rw small{font-size:1rem;font-weight:600;text-align:right;max-width:21em;line-height:1.45}
+.rw:hover,.rw:focus-visible{opacity:1;padding-left:20px}.rw:hover span,.rw:focus-visible span{color:var(--amber)}
+.rw:focus-visible{outline-color:var(--amber)}
+@media (max-width:760px){.rw{flex-direction:column;align-items:flex-start}.rw small{text-align:left}}
+
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}
+.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--amber)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(25vw,28rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
+
+@media (max-width:860px){.cells{grid-template-columns:1fr}.cells article+article{border-left:0;border-top:var(--line) solid var(--fg)}.cells i{margin-bottom:28px}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}}
+html.calm .prog{display:none}
+
+.cta2{background:var(--amber);color:var(--ink);padding:var(--sec) var(--gutter)}
+.cta2 h2{font-size:clamp(2.6rem,7vw,6.5rem);line-height:.96;letter-spacing:-.04em;font-weight:700;max-width:11em;margin-bottom:1.5rem}
+.cta2 p{max-width:30em;font-size:1.2rem;line-height:1.5;margin-bottom:2.5rem}
+.cta2 .btn{margin:0 12px 12px 0}.cta2 .btn.ghost:hover{background:var(--ink);color:var(--amber)}
+
+.hero{min-height:88svh}
+.mis{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.sbs{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.sbs h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+.duo{display:grid;grid-template-columns:1fr 1fr;border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.duo>div{padding:clamp(22px,3.4vw,48px)}
+.duo h3{font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.03em;font-weight:700;margin-bottom:.5rem}
+.duo p{line-height:1.5;margin-bottom:1.5rem}
+.op{background:var(--lime);color:var(--ink)}
+.op ul{list-style:none;margin:0;padding:0;border-bottom:var(--line) solid var(--ink)}
+.op li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 0;border-top:var(--line) solid var(--ink);font-size:1.3rem;font-weight:700}
+.op li a{text-underline-offset:5px;text-decoration-thickness:2px}.op li a:hover{background:var(--ink);color:var(--lime);text-decoration:none}
+.op li span{font:700 .8rem var(--mono);border:var(--line) solid var(--ink);border-radius:8px;padding:3px 9px;white-space:nowrap}
+.cl{background:var(--ink);color:var(--paper)}
+.rb{display:block;width:var(--w,60%);max-width:100%;font:inherit;font-weight:700;font-size:clamp(1.3rem,2.4vw,1.9rem);text-align:left;border:0;border-radius:8px;background:var(--paper);color:transparent;padding:8px 14px;margin:0 0 12px;cursor:pointer;transition:background .2s,color .2s;white-space:nowrap;overflow:hidden}
+.rb:hover{background:var(--amber)}
+.rb.show{background:var(--coral);color:var(--ink)}
+.cl .fine{margin:1.25rem 0 0;font-size:.95rem;color:#B8C0F0}
+.join{--fg:var(--ink);background:var(--sky);color:var(--ink);padding:var(--sec) var(--gutter)}
+.join h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+@media (max-width:860px){.duo{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+<header class="hero">
+  <div class="top">
+    <a class="brand" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+      <span>Singulr</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="projects.html">Projects</a><a href="open-source.html" class="hide-s" aria-current="page">Open source</a><a href="blog.html" class="hide-s">Blog</a><a href="about.html">About</a><a href="careers.html">Careers</a>
+    </nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Open by default.</span></span><span class="ln"><span>Closed on purpose.</span></span></h1>
+    <p class="sub">Most of what we build is open source under the Apache License 2.0. Some of it isn’t. Here’s how we think about that, and what we promise either way.</p>
+    <div class="cta"><a class="btn" href="#mission">Read the mission</a><a class="btn ghost" href="projects.html">See the projects</a></div>
+  </div>
+</header>
+
+<section class="mis" id="mission">
+  <p class="big">Software you rely on should be software you can read. So most of ours is open source, with the code on GitHub for anyone to read, run, change and ship.</p>
+  <div class="cells">
+    <article><i style="background:var(--cobalt)"></i><h3>Use it</h3><p>Apache 2.0 lets you use, change and distribute our code, commercially or not, and it carries an explicit patent grant.</p></article>
+    <article><i style="background:var(--coral)"></i><h3>Read it</h3><p>Check what a tool does before you let it near your network, your files or your agents. The code is right there.</p></article>
+    <article><i style="background:var(--mint)"></i><h3>Fork it</h3><p>If we vanish, or you disagree with us, the code is still yours to carry on.</p></article>
+  </div>
+</section>
+
+<section class="list" id="how">
+  <h2>How we decide.</h2>
+  <div class="rows">
+    <div class="rw" tabindex="0"><span>Open by default.</span><small>If there’s no good reason to close something, it ships open.</small></div>
+    <div class="rw" tabindex="0"><span>Closed needs a reason.</span><small>One we’re willing to stand behind, not just a preference.</small></div>
+    <div class="rw" tabindex="0"><span>Honest labels.</span><small>Every project says which it is. Nothing is quietly either.</small></div>
+    <div class="rw" tabindex="0"><span>Same standards.</span><small>Closed or open: one job each, quiet by default, local-first where we can.</small></div>
+  </div>
+</section>
+
+<section class="sbs" id="sidebyside">
+  <h2>Side by side.</h2>
+  <div class="duo">
+    <div class="op">
+      <h3>Open source</h3>
+      <p>Apache License 2.0, with the code on GitHub.</p>
+      <ul>
+        <li><a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a><span>Apache 2.0</span></li>
+        <li><a href="Shiny%20Fishstick.html">Shiny Fishstick</a><span>Apache 2.0</span></li>
+        <li><a href="LinkUp.html">LinkUp</a><span>Apache 2.0</span></li>
+        <li><a href="Wiggle.html">Wiggle</a><span>Apache 2.0</span></li>
+        <li><a href="XRisk.html">XRisk</a><span>Apache 2.0</span></li>
+        <li><a href="Firefly.html">Firefly</a><span>Apache 2.0</span></li>
+        <li><a href="Intents.html">Intents</a><span>Open source</span></li>
+      </ul>
+    </div>
+    <div class="cl">
+      <h3>Closed</h3>
+      <p>Not public. Names withheld.</p>
+      <button class="rb" type="button" style="--w:72%" aria-label="Closed project, name withheld">Classified</button>
+      <button class="rb" type="button" style="--w:48%" aria-label="Closed project, name withheld">Classified</button>
+      <button class="rb" type="button" style="--w:60%" aria-label="Closed project, name withheld">Classified</button>
+      <p class="fine">Some projects stay closed, and we won’t pretend otherwise. The number of bars is decorative.</p>
+    </div>
+  </div>
+</section>
+
+<section class="join" id="join">
+  <h2>Take part.</h2>
+  <div class="cells">
+    <article><i style="background:var(--ink)"></i><h3>Open an issue</h3><p>Found a bug or want a feature? Say what you did, what you expected and what happened. Each open repo has an issue tracker.</p></article>
+    <article><i style="background:var(--coral)"></i><h3>Send a pull request</h3><p>Fork, branch, add tests when behaviour changes, and explain your reasoning in the description. Check each repo for its contributing notes.</p></article>
+    <article><i style="background:var(--amber)"></i><h3>Just use it</h3><p>Real use is the best contribution. Tell us what broke and what felt slow.</p></article>
+  </div>
+</section>
+
+<section class="cta2">
+  <h2>Read the code.</h2>
+  <p>Everything open lives on GitHub. If you’re not sure whether a project is open, its page says so.</p>
+  <a class="btn" href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">Browse GitHub</a><a class="btn ghost" href="projects.html">See the projects</a>
+</section>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div>
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+        <span>Singulr Tech</span>
+      </div>
+      <p class="foot-tag">Automation that gets out of your way.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="open-source.html">Open source</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="blog.html">Blog</a>
+      <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
+      <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
+      <a href="LinkUp.html">LinkUp</a>
+      <a href="Wiggle.html">Wiggle</a>
+      <a href="XRisk.html">XRisk</a>
+      <a href="Firefly.html">Firefly</a>
+      <a href="Intents.html">Intents</a>
+      <a href="RexScript.html">RexScript</a>
+      <a href="security.html">Security</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>S</span><span>i</span><span>n</span><span>g</span><span>u</span><span>l</span><span>r</span></p>
+  <div class="foot-bottom"><span>© 2026 Singulr Tech. All rights reserved.</span><span>Automation and AI products.</span></div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{document.documentElement.classList.add("calm");return()=>document.documentElement.classList.remove("calm");});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.hero .cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".ticker",{yPercent:100,duration:1,ease:"power3.out"},.9);
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+  const p=$(".big");
+  if(p){
+    p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+    g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+  }
+  if($(".cells i"))g.from(".cells i",{scale:0,duration:.7,stagger:.14,ease:"back.out(3)",scrollTrigger:{trigger:".cells",start:"top 85%"}});
+});
+}
+</script>
+<script>
+(function(){
+  const lines=["Nice try.","Still closed.","We did say some.","No.","Not today."];
+  let n=0;
+  $$(".rb").forEach(b=>{
+    const orig=b.textContent;let t=null;
+    b.addEventListener("click",()=>{
+      clearTimeout(t);b.textContent=lines[n++%lines.length];b.classList.add("show");
+      t=setTimeout(()=>{b.classList.remove("show");b.textContent=orig;},1500);
+    });
+  });
+})();
+</script>
+</body>
+</html>

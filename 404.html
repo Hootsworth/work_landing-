@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Page not found — Singulr Tech</title>
+<meta name="description" content="This page is not here. We checked twice.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--cobalt:#2336F0;--ink:#0B1033;--amber:#FFB400;--mint:#19D49B;--coral:#FF5A4E;--paper:#F2F4FF;
+--sky:#3CC8FF;--lime:#C8F03C;--violet:#6C47FF;
+--bg:#F2F4FF;--fg:#0B1033;--mute:#4B5590;--line:2px;--r:14px;
+--gutter:clamp(24px,6vw,96px);--sec:clamp(96px,16vh,190px);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}}
+:root[data-theme="dark"]{--bg:#141C5E;--fg:#E9ECFF;--mute:#9AA5E0}
+html{background:var(--amber);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--cobalt);transform:scaleX(0);transform-origin:left}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--amber);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .2s,color .2s,transform .15s}
+.btn:hover:not(:disabled){background:var(--paper);color:var(--ink)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:var(--ink);color:var(--amber);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+
+/* nav */
+.top{display:flex;align-items:center;justify-content:space-between;gap:clamp(12px,2vw,24px);padding:clamp(20px,3vw,36px) 0;width:100%}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.1rem,2.5vw,1.35rem);letter-spacing:-.02em;text-decoration:none;min-width:0}
+.nav{display:flex;align-items:center;gap:clamp(14px,2.5vw,36px);font-weight:650;flex-shrink:0}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover,.nav a[aria-current]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+@media (max-width:560px){.nav .hide-s{display:none}.nav{gap:16px}.brand svg{width:26px;height:26px}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;padding:0 var(--gutter);overflow:hidden;background:var(--amber);color:var(--ink)}
+.hero-main{margin-top:auto;padding:6vh 0 clamp(40px,8vh,88px)}
+h1{font-size:clamp(3.1rem,10.5vw,10rem);line-height:.92;letter-spacing:-.04em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:34em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;margin:2rem 0 2.5rem}
+
+/* shared blocks */
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650;margin-bottom:clamp(56px,10vh,110px)}
+.big span{transition:color .2s}.big span:hover{color:var(--cobalt)}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.cells article{padding:clamp(22px,3vw,40px);transition:background .25s,color .25s}
+.cells article+article{border-left:var(--line) solid var(--fg)}
+.cells article:hover{background:var(--amber);color:var(--ink)}
+.cells i{display:block;width:30px;height:30px;border-radius:8px;margin-bottom:clamp(40px,8vh,90px)}
+.cells h3{font-size:1.6rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cells p{line-height:1.55;font-size:1.05rem}
+.list{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.list h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700;margin-bottom:2.5rem}
+.rows{border-bottom:var(--line) solid rgba(242,244,255,.28)}
+.rw{display:flex;align-items:baseline;justify-content:space-between;gap:12px 32px;padding:20px 0;border-top:var(--line) solid rgba(242,244,255,.28);opacity:.42;transition:opacity .25s,padding-left .4s cubic-bezier(.3,1.6,.5,1)}
+.rw span{font-size:clamp(1.8rem,4.2vw,3.75rem);font-weight:700;letter-spacing:-.035em;line-height:1.02;transition:color .25s}
+.rw small{font-size:1rem;font-weight:600;text-align:right;max-width:21em;line-height:1.45}
+.rw:hover,.rw:focus-visible{opacity:1;padding-left:20px}.rw:hover span,.rw:focus-visible span{color:var(--amber)}
+.rw:focus-visible{outline-color:var(--amber)}
+@media (max-width:760px){.rw{flex-direction:column;align-items:flex-start}.rw small{text-align:left}}
+
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B8C0F0;line-height:1.5}
+.foot-links{display:grid;grid-auto-flow:column;grid-template-rows:repeat(8,auto);gap:12px clamp(32px,6vw,72px);font-weight:600}
+@media (max-width:560px){.foot-links{grid-auto-flow:row;grid-template-rows:none}}
+.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--amber)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(25vw,28rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(242,244,255,.25);padding-top:20px;font-size:.9rem;color:#B8C0F0}
+
+@media (max-width:860px){.cells{grid-template-columns:1fr}.cells article+article{border-left:0;border-top:var(--line) solid var(--fg)}.cells i{margin-bottom:28px}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}}
+html.calm .prog{display:none}
+
+.hero{min-height:100svh}
+.hero-main{margin:auto 0;padding:4vh 0 clamp(40px,8vh,80px)}
+.n404{display:flex;align-items:center;font-size:clamp(7.5rem,31vw,27rem);font-weight:700;letter-spacing:-.06em;line-height:.8;margin-bottom:.12em;user-select:none}
+.n404 svg{width:.74em;height:.74em;flex:none;margin:0 .02em;overflow:visible}
+#eye{transition:transform .12s ease-out}
+.n404.seek #eye{animation:seek 2.6s ease-in-out infinite alternate;transition:none}
+@keyframes seek{from{transform:translate(-17px,4px)}to{transform:translate(17px,-4px)}}
+h1.nf{font-size:clamp(2rem,5vw,4.2rem);letter-spacing:-.035em;line-height:1}
+.path{margin-top:1.2rem;font:600 1rem var(--mono);word-break:break-all;max-width:40em}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:2rem}
+.quick a{font-weight:650;text-decoration:none;border:var(--line) solid var(--ink);border-radius:var(--r);padding:8px 16px;transition:background .2s,color .2s}
+.quick a:hover{background:var(--ink);color:var(--amber)}
+@media (prefers-reduced-motion:reduce){.n404.seek #eye{animation:none}}
+
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+<script>if(/^https?:$/.test(location.protocol)){var b=document.createElement("base");b.href="/";document.head.prepend(b);}</script>
+<header class="hero">
+  <div class="top">
+    <a class="brand" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+      <span>Singulr</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="projects.html">Projects</a><a href="open-source.html" class="hide-s">Open source</a><a href="blog.html" class="hide-s">Blog</a><a href="about.html">About</a><a href="careers.html">Careers</a>
+    </nav>
+  </div>
+  <div class="hero-main">
+    <div class="n404 seek" id="n404" aria-hidden="true"><span>4</span><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="10"/><circle id="eye" cx="50" cy="50" r="19" fill="currentColor"/></svg><span>4</span></div>
+    <h1 class="nf"><span class="ln"><span>Page not found.</span></span><span class="ln"><span>We checked twice.</span></span></h1>
+    <p class="sub">Either the link is old, or it was typed from memory, which is brave. Here is where you probably meant to go.</p>
+    <p class="path" id="path" hidden></p>
+    <div class="cta"><a class="btn" href="index.html">Back home</a><a class="btn ghost" href="projects.html">See the projects</a></div>
+    <nav class="quick" aria-label="Pages"><a href="open-source.html">Open source</a><a href="blog.html">Blog</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="security.html">Security</a></nav>
+  </div>
+</header>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div>
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6" fill="currentColor"/></svg>
+        <span>Singulr Tech</span>
+      </div>
+      <p class="foot-tag">Automation that gets out of your way.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="open-source.html">Open source</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="blog.html">Blog</a>
+      <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
+      <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
+      <a href="LinkUp.html">LinkUp</a>
+      <a href="Wiggle.html">Wiggle</a>
+      <a href="XRisk.html">XRisk</a>
+      <a href="Firefly.html">Firefly</a>
+      <a href="Intents.html">Intents</a>
+      <a href="RexScript.html">RexScript</a>
+      <a href="security.html">Security</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>S</span><span>i</span><span>n</span><span>g</span><span>u</span><span>l</span><span>r</span></p>
+  <div class="foot-bottom"><span>© 2026 Singulr Tech. All rights reserved.</span><span>Automation and AI products.</span></div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{document.documentElement.classList.add("calm");return()=>document.documentElement.classList.remove("calm");});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.hero .cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".ticker",{yPercent:100,duration:1,ease:"power3.out"},.9);
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+  const p=$(".big");
+  if(p){
+    p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+    g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+  }
+  if($(".cells i"))g.from(".cells i",{scale:0,duration:.7,stagger:.14,ease:"back.out(3)",scrollTrigger:{trigger:".cells",start:"top 85%"}});
+});
+}
+</script>
+<script>
+(function(){
+  const p=$("#path"),path=location.pathname;
+  if(path&&path!=="/"&&path.indexOf("404")<0){p.textContent="You asked for "+path+". It isn’t here.";p.hidden=false;}
+  const box=$("#n404"),eye=$("#eye"),svg=box.querySelector("svg");
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){box.classList.remove("seek");return;}
+  function look(x,y){
+    const r=svg.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    let dx=x-cx,dy=y-cy;const d=Math.hypot(dx,dy)||1,m=Math.min(20,d/12);
+    eye.style.transform="translate("+(dx/d*m).toFixed(1)+"px,"+(dy/d*m).toFixed(1)+"px)";
+  }
+  function go(e){box.classList.remove("seek");look(e.clientX,e.clientY);}
+  addEventListener("pointermove",go,{passive:true});
+  addEventListener("touchmove",e=>{const t=e.touches[0];if(t)go(t);},{passive:true});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Firefly — Know how long it should take</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15110E;--paper:#F6EFE3;--orange:#FF5B14;--lamp:#FFD43B;--coral:#FF5A4E;--sky:#3CC8FF;--amber:#FFB400;--mint:#19D49B;--cobalt:#2336F0;
+--bg:#F6EFE3;--fg:#15110E;--mute:#6B5E50;--line:2px;--r:14px;--gutter:clamp(24px,6vw,96px);--sec:clamp(88px,15vh,180px);
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2B2018;--fg:#F6EFE3;--mute:#BFAE98}}
+:root[data-theme="dark"]{--bg:#2B2018;--fg:#F6EFE3;--mute:#BFAE98}
+html{background:var(--ink);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--lamp);transform:scaleX(0);transform-origin:left}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--lamp);border-radius:var(--r);background:var(--lamp);color:var(--ink);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .15s}
+.btn:hover{background:var(--paper);border-color:var(--paper)}.btn:active{transform:translateY(2px)}
+.btn.ghost{background:transparent;color:var(--paper);border-color:var(--paper)}.btn.ghost:hover{background:var(--paper);color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}.btn.ok{background:var(--mint);border-color:var(--mint)}
+h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700}
+code{font-family:var(--mono)}
+
+/* hero */
+.hero{position:relative;min-height:100svh;background:var(--ink);color:var(--paper);display:grid;grid-template-columns:1.1fr .9fr;grid-template-rows:auto 1fr auto;column-gap:clamp(24px,4vw,64px);padding:0 var(--gutter);overflow:hidden}
+.hero>*{position:relative;z-index:1}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(20px,3vw,36px) 0}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.35rem;letter-spacing:-.02em;text-decoration:none}
+.nav{display:flex;align-items:center;gap:clamp(18px,3vw,36px);font-weight:650}
+.nav a:not(.btn){text-decoration:none}.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.hero-main{align-self:center;padding:5vh 0}
+h1{font-size:clamp(3rem,7.2vw,6.9rem);line-height:.94;letter-spacing:-.035em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:34em;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;color:#D9CDBA;margin:2rem 0 2.5rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.ff{position:absolute;left:0;top:0;border-radius:50%;background:var(--lamp);pointer-events:none;z-index:0}
+.eq{align-self:center;justify-self:end;width:100%;max-width:480px;display:grid;gap:22px}
+.er>span{display:block;font-weight:650;margin-bottom:8px}.er b{font-family:var(--mono);color:var(--lamp)}
+.eb{display:flex;height:46px;border:var(--line) solid var(--paper);border-radius:10px;overflow:hidden}
+.eb i{display:block;height:100%;transform-origin:left}.e1,.e2{background:var(--paper);flex:0 0 58%}.e1{flex-basis:100%}.e3{background:var(--orange);flex:0 0 42%}
+.eq .e1{flex:0 0 100%}.er:first-child .eb{width:58%}
+.eqt{font-weight:650;color:var(--orange);font-size:1.1rem}
+.strip{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);border-top:var(--line) solid var(--paper)}
+.strip div{padding:22px 0 30px;font-weight:650}.strip div+div{padding-left:clamp(16px,3vw,40px);border-left:var(--line) solid var(--paper)}
+
+/* statement */
+.state{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650}
+.big span{transition:color .2s}.big span:hover{color:var(--orange)}
+
+/* pinned */
+.why{height:100svh;background:var(--orange);color:var(--ink);overflow:hidden}
+.w-in{height:100%;display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,5vw,80px);align-items:center;padding:0 var(--gutter)}
+.steps h2{font-size:clamp(1.9rem,3.4vw,3.1rem);line-height:1.02;max-width:11em;margin-bottom:2.75rem}
+.cap-wrap{position:relative;min-height:13rem;padding-left:2.25rem}
+.rail{position:absolute;left:0;top:0;bottom:0;width:4px;background:rgba(21,17,14,.25)}
+.rail i{display:block;height:100%;background:var(--ink);transform:scaleY(0);transform-origin:top}
+.cap{position:absolute;inset:0 0 auto 2.25rem;opacity:0;visibility:hidden}.cap.on{opacity:1;visibility:visible}
+.cap h3{font-size:1.7rem;letter-spacing:-.02em;font-weight:700;margin-bottom:.6rem}
+.cap p{max-width:34ch;font-size:1.1rem;line-height:1.55}
+.stage{height:min(76svh,610px)}
+.rep{height:100%;background:var(--paper);color:var(--ink);border:var(--line) solid var(--ink);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.rbar{padding:12px 18px;border-bottom:var(--line) solid var(--ink);font:600 .78rem var(--mono)}
+.rbody{flex:1;padding:18px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--ink);border-radius:10px;overflow:hidden}
+.kpis div{padding:8px 12px}.kpis div+div{border-left:var(--line) solid var(--ink)}
+.kpis small{display:block;font:700 .7rem var(--mono)}.kpis b{display:block;font-size:clamp(1.4rem,2.4vw,2rem);letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums}
+.plot{position:relative;display:grid;gap:7px}
+.sr{display:grid;grid-template-columns:38% 1fr;align-items:center;gap:10px;font-size:.78rem;font-weight:650;line-height:1.15}
+.sr em{display:block;font:500 .68rem var(--mono);font-style:normal;color:#6B5E50}
+.bar{height:16px;background:#E7DDCB;border-radius:5px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%;background:var(--ink);transform-origin:left;border-radius:0 5px 5px 0}
+.sr.bn .bar i{background:var(--orange)}
+.mkw{position:absolute;top:-4px;bottom:-4px;left:calc(38% + 10px);right:0;pointer-events:none}
+.mkl{position:absolute;left:53.3%;top:0;bottom:0;width:3px;background:var(--ink);transform-origin:top}
+.mkt{position:absolute;left:53.3%;top:-22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);font:700 .68rem var(--mono);padding:2px 7px;border-radius:5px;white-space:nowrap;opacity:0;visibility:hidden}
+.obs .bar{height:22px;background:transparent;border-radius:0}
+.obs .bar i{border-radius:0;flex:0 0 auto}
+.sa{width:53.3%;background:var(--ink)}.sb{width:17.8%;background:#CFC6B8}.sc{width:11.1%;background:#CFC6B8}.sd{width:8.9%;background:#CFC6B8}
+.lg{display:flex;flex-wrap:wrap;gap:6px 14px;font:700 .72rem var(--mono);opacity:0;visibility:hidden}
+.lg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:var(--c)}
+.dx{border:var(--line) solid var(--ink);border-left:10px solid var(--orange);border-radius:10px;padding:10px 14px;font-weight:650;line-height:1.35;opacity:0;visibility:hidden}
+
+/* modes */
+.modes-s{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.modes-s h2{max-width:11em;margin-bottom:clamp(36px,6vh,64px)}
+.modes{display:flex;gap:14px;min-height:min(66svh,520px)}
+.mode{flex:1;border-radius:var(--r);padding:clamp(20px,2.6vw,34px);display:flex;flex-direction:column;justify-content:space-between;gap:20px;color:var(--ink);overflow:hidden;transition:flex .6s cubic-bezier(.2,.8,.2,1)}
+.mode h3{font-size:clamp(2.2rem,4.4vw,4rem);letter-spacing:-.04em;line-height:.95;font-weight:700;margin-bottom:.6rem}
+.mode .q{font-size:1.2rem;font-weight:650}
+.mode .more{max-height:0;opacity:0;transition:max-height .6s cubic-bezier(.2,.8,.2,1),opacity .4s;font-size:1.05rem;line-height:1.5;min-width:260px}
+.modes:hover .mode{flex:.75}
+.modes:not(:hover):not(:focus-within) .mode:first-child,.modes .mode:hover,.modes .mode:focus-visible{flex:2.4}
+.modes:not(:hover):not(:focus-within) .mode:first-child .more,.modes .mode:hover .more,.modes .mode:focus-visible .more{max-height:260px;opacity:1}
+.m1{background:var(--orange)}.m2{background:var(--lamp)}.m3{background:var(--mint)}
+
+/* calc */
+.calc{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);align-items:center}
+.calc h2{margin-bottom:1.1rem}.calc .lead{max-width:30em;font-size:1.15rem;line-height:1.55;color:#D9CDBA;margin-bottom:2rem}
+.ctrls{display:grid;gap:18px}
+.ctrls label{display:grid;gap:8px;font-weight:650}.ctrls label b{font-family:var(--mono);color:var(--lamp);margin-left:8px}
+input[type=range]{width:100%;accent-color:var(--orange)}
+select{font:inherit;font-weight:600;padding:12px 14px;border:var(--line) solid var(--paper);border-radius:10px;background:var(--ink);color:var(--paper)}
+.tg{display:flex;flex-wrap:wrap;gap:10px}
+.tg label{display:inline-flex;grid-auto-flow:column;align-items:center;gap:8px;border:var(--line) solid var(--paper);border-radius:10px;padding:9px 14px;cursor:pointer;font-weight:600;transition:background .2s,color .2s}
+.tg label:has(input:checked){background:var(--lamp);color:var(--ink);border-color:var(--lamp)}
+.tg input{accent-color:var(--orange)}
+.out{background:var(--paper);color:var(--ink);border-radius:var(--r);padding:clamp(22px,3vw,36px)}
+.out small{font:700 .8rem var(--mono)}
+.out .ot{display:block;font-size:clamp(3.4rem,8vw,6.4rem);font-weight:700;letter-spacing:-.045em;line-height:1;margin:6px 0 10px;font-variant-numeric:tabular-nums}
+.bnt{font-weight:650;margin-bottom:20px}.bnt span{background:var(--orange);padding:2px 8px;border-radius:6px}
+.cb{display:grid;gap:12px}.cb .sr{grid-template-columns:40% 1fr}
+.led{margin-top:18px;border-top:var(--line) solid var(--ink);padding-top:12px;display:grid;gap:6px;font:600 .85rem var(--mono)}
+.led div{display:flex;justify-content:space-between}
+.fine{margin-top:16px;font-size:.82rem;color:#6B5E50}
+.reqs{display:flex;flex-wrap:wrap;gap:8px;margin-top:2rem}.reqs span{border:var(--line) solid #6B5E50;border-radius:8px;padding:5px 11px;font-size:.85rem;font-weight:600}
+
+/* toolkit */
+.kit{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.kit h2{max-width:11em;margin-bottom:clamp(36px,6vh,64px)}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cell{border-radius:var(--r);padding:clamp(20px,2.4vw,32px);min-height:270px;display:flex;flex-direction:column;justify-content:space-between;gap:24px;color:var(--ink);transition:background .25s,color .25s}
+.cell:hover{background:var(--ink)!important;color:var(--paper)}
+.cell h3{font-size:clamp(1.5rem,2.2vw,2rem);letter-spacing:-.025em;line-height:1.05;font-weight:700;margin-bottom:.6rem}
+.cell p{line-height:1.5}.cell code{font-weight:700;font-size:.85rem}
+
+/* start */
+.start{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:6fr 5fr;gap:clamp(32px,6vw,96px);align-items:start}
+.start h2{margin-bottom:1.1rem}.start .lead{max-width:30em;font-size:1.15rem;line-height:1.55;color:#D9CDBA;margin-bottom:1.6rem}
+.win{border:var(--line) solid var(--paper);border-radius:var(--r);overflow:hidden;margin-top:1.6rem}
+.wbar{height:44px;display:flex;align-items:center;padding:0 18px;border-bottom:var(--line) solid rgba(246,239,227,.3);font:600 .82rem var(--mono)}
+.term{padding:18px 20px;font:clamp(.74rem,1.1vw,.95rem)/1.9 var(--mono);white-space:pre;overflow-x:auto}.cm{color:#A89983}
+.cpb{margin:0 18px 18px}
+.order{list-style:none;margin:0;padding:0;border:var(--line) solid var(--paper);border-radius:var(--r);overflow:hidden}
+.order li{display:grid;grid-template-columns:56px 1fr;align-items:center;gap:14px;padding:16px 20px;font-weight:600;line-height:1.35;transition:background .2s,color .2s}
+.order li+li{border-top:var(--line) solid var(--paper)}.order li:hover{background:var(--lamp);color:var(--ink)}
+.order b{font-size:2rem;letter-spacing:-.04em;color:var(--lamp)}.order li:hover b{color:var(--ink)}
+
+/* cta */
+.cta2{background:var(--orange);color:var(--ink);padding:var(--sec) var(--gutter)}
+.cta2 h2{font-size:clamp(2.6rem,7vw,6.4rem);letter-spacing:-.04em;max-width:11em;margin-bottom:1.5rem}
+.cta2 p{max-width:36em;font-size:1.2rem;line-height:1.55;margin-bottom:2.5rem}
+.cta2 .btn{background:var(--ink);color:var(--lamp);border-color:var(--ink);margin:0 12px 12px 0}.cta2 .btn:hover{background:var(--paper);color:var(--ink)}
+.cta2 .btn.ghost{background:transparent;color:var(--ink)}.cta2 .btn.ghost:hover{background:var(--ink);color:var(--lamp)}
+
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#BFAE98;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--lamp)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(26vw,30rem);font-weight:700;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--lamp);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(246,239,227,.25);padding-top:20px;font-size:.9rem;color:#BFAE98}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;grid-template-rows:none}.hero>*{grid-column:1/-1}
+  .top{order:1}.hero-main{order:2;padding:20px 0 28px}.eq{order:3;justify-self:start;margin-bottom:28px}.strip{order:4;grid-template-columns:1fr}
+  .strip div+div{padding-left:0;border-left:0;border-top:var(--line) solid var(--paper)}.nav a:not(.btn){display:none}
+  .w-in{grid-template-columns:1fr;align-content:center;gap:18px}.stage{order:-1;height:58svh}.steps h2{display:none}
+  .cap-wrap{min-height:9.5rem}.cap h3{font-size:1.3rem}.cap p{font-size:1rem}.rbody{padding:12px;gap:8px}.plot{gap:5px}.sr{font-size:.7rem}.sr em{display:none}.opt,.dx{display:none}
+  .modes{flex-direction:column;min-height:0}.mode,.modes:hover .mode{flex:none}.mode .more{max-height:none;opacity:1}
+  .calc,.start{grid-template-columns:1fr}.bento{grid-template-columns:1fr 1fr}.cell{min-height:230px}
+}
+@media (max-width:560px){.bento{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+html.calm .why{height:auto;padding:12vh 0}html.calm .cap{position:static;opacity:1;visibility:visible;margin-bottom:1.4rem}html.calm .cap-wrap{min-height:0}
+html.calm .prog,html.calm .ff{display:none}html.calm .big span{opacity:1}
+html.calm .mkt,html.calm .lg,html.calm .dx{opacity:1;visibility:visible}
+html.calm .sb{background:var(--coral)}html.calm .sc{background:var(--sky)}html.calm .sd{background:var(--amber)}
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+
+<header class="hero" id="top">
+  <div class="top">
+    <a class="brand" href="#top">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6.5" fill="#FFD43B"/></svg>
+      <span>Firefly</span>
+    </a>
+    <nav class="nav" aria-label="Main"><a href="index.html">← Singulr</a><a href="#how">How it works</a><a href="#modes">Modes</a><a href="#model">Try the model</a></nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Know how long</span></span><span class="ln"><span>it should take.</span></span></h1>
+    <p class="sub">Firefly is a deterministic performance diagnostics app. It models how a computer should behave, compares that with what actually happened, and explains where the missing time went.</p>
+    <div class="cta"><a class="btn" href="#how">See how it works</a><a class="btn ghost" href="#start">Run it locally</a></div>
+  </div>
+  <div class="eq" aria-label="Expected time t compared with observed time t prime. The difference is the missing time.">
+    <div class="er"><span>Expected <b>t</b></span><div class="eb"><i class="e1"></i></div></div>
+    <div class="er"><span>Observed <b>t′</b></span><div class="eb"><i class="e2"></i><i class="e3"></i></div></div>
+    <p class="eqt">Δ is the missing time. Where did it go?</p>
+  </div>
+  <div class="strip"><div>Local-first, no account needed</div><div>Deterministic, explainable model</div><div>Web app and Tauri desktop app</div></div>
+</header>
+
+<section class="state" id="why">
+  <p class="big">Most performance tools measure one component in isolation. Real machines do not fail in isolation. Firefly models the whole path, from source storage through the buses, memory and CPU to the destination, before it judges the result.</p>
+</section>
+
+<section class="why" id="how" aria-label="Expected versus observed">
+  <div class="w-in">
+    <div class="steps">
+      <h2>From a question to an answer.</h2>
+      <div class="cap-wrap">
+        <div class="rail"><i></i></div>
+        <article class="cap on"><h3>Model the path</h3><p>Every stage of the data path gets a service-rate ceiling. The slowest one is the primary bottleneck.</p></article>
+        <article class="cap"><h3>Predict the time</h3><p>From those ceilings and the workload, Firefly computes the expected time, t.</p></article>
+        <article class="cap"><h3>Compare with reality</h3><p>You enter the observed time, t′. The gap between the two is the delta.</p></article>
+        <article class="cap"><h3>Explain the delta</h3><p>The gap is broken into causes, and a plain-language diagnosis comes first, with the full ledger below it.</p></article>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="rep" id="rep">
+        <div class="rbar">Example: copy 20 GB, internal NVMe to external SSD</div>
+        <div class="rbody">
+          <div class="kpis"><div><small>Expected t</small><b id="k1">0 s</b></div><div><small>Observed t′</small><b id="k2">0 s</b></div><div><small>Delta</small><b id="k3">0 s</b></div></div>
+          <div class="plot">
+            <div class="sr"><span>Source NVMe read<em>3,200 MB/s</em></span><div class="bar"><i style="width:14%"></i></div></div>
+            <div class="sr opt"><span>PCIe 4.0 x4 link<em>7,000 MB/s</em></span><div class="bar"><i style="width:6.4%"></i></div></div>
+            <div class="sr"><span>Chipset bridge<em>3,900 MB/s</em></span><div class="bar"><i style="width:11.4%"></i></div></div>
+            <div class="sr opt"><span>Memory copy<em>20,000 MB/s</em></span><div class="bar"><i style="width:2.2%"></i></div></div>
+            <div class="sr"><span>USB 3.2 link<em>1,000 MB/s</em></span><div class="bar"><i style="width:44.4%"></i></div></div>
+            <div class="sr bn" id="bnr"><span>External SSD write<em>850 MB/s</em></span><div class="bar"><i style="width:52.2%"></i></div></div>
+            <div class="mkw"><div class="mkl"></div><span class="mkt">t = 24 s</span></div>
+          </div>
+          <div class="sr obs"><span>Observed t′</span><div class="bar"><i class="sa"></i><i class="sb"></i><i class="sc"></i><i class="sd"></i></div></div>
+          <div class="lg"><span style="--c:var(--coral)">Thermal throttling 8 s</span><span style="--c:var(--sky)">Link below max 5 s</span><span style="--c:var(--amber)">OS overhead 4 s</span></div>
+          <div class="dx">Thermal conditions explain most of the delta.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="modes-s" id="modes">
+  <h2>Three jobs. One model.</h2>
+  <div class="modes">
+    <article class="mode m1" tabindex="0"><div><h3>Diagnose</h3><p class="q">Why is this slow?</p></div><p class="more">Plain-language cards first: the negotiated PCIe link is below its maximum, the bridge is saturated, thermals explain the delta. The detailed ledger sits right behind them.</p></article>
+    <article class="mode m2" tabindex="0"><div><h3>Compare</h3><p class="q">Did this change help?</p></div><p class="more">Capture a before, make a change, capture an after. Firefly shows whether the real ceiling moved, or only the noise, and whether a new bottleneck appeared downstream.</p></article>
+    <article class="mode m3" tabindex="0"><div><h3>Design</h3><p class="q">What should this machine do?</p></div><p class="more">Build a theoretical machine from named CPUs, GPUs, memory, storage, networks and topologies, and estimate its expected transfer rate before benchmarking anything.</p></article>
+  </div>
+</section>
+
+<section class="calc" id="model">
+  <div>
+    <h2>Play with the model.</h2>
+    <p class="lead">A toy version of Firefly’s idea. Pick a path and see the expected time, the bottleneck, and where each penalty adds time.</p>
+    <div class="ctrls">
+      <label>File size<b id="szv">20 GB</b><input type="range" id="sz" min="1" max="100" value="20"></label>
+      <label>Source<select id="src"></select></label>
+      <label>Destination<select id="dst"></select></label>
+      <div class="tg"><label><input type="checkbox" id="th">Thermal throttling</label><label><input type="checkbox" id="os">OS overhead</label><label><input type="checkbox" id="pl">Packet loss</label></div>
+    </div>
+    <div class="reqs" aria-label="Inputs in the real model"><span>compression ratio</span><span>PCIe lanes</span><span>bridge bandwidth</span><span>CPU transform rate</span><span>queue depth</span><span>concurrent jobs</span><span>+ 11 more inputs</span></div>
+  </div>
+  <div class="out">
+    <small>Expected time</small><b class="ot" id="ot">0 s</b>
+    <p class="bnt" id="bnt"></p>
+    <div class="cb" id="cb"></div>
+    <div class="led" id="led"></div>
+    <p class="fine">Illustrative constants only. They are not Firefly’s catalog values.</p>
+  </div>
+</section>
+
+<section class="kit">
+  <h2>What ships with it.</h2>
+  <div class="bento">
+    <article class="cell" style="background:var(--lamp)"><div><h3>Benchmark engine</h3><p>Six bounded probes: RAM copy, burst write, read, sustained write, tiny-file queue pressure and a guided DMI/PCH test. Temporary files only.</p></div></article>
+    <article class="cell" style="background:var(--sky)"><div><h3>Hardware probe</h3><p>Best-effort adapters for macOS, Linux and Windows. Serial numbers, UUIDs, MAC and IP addresses are redacted.</p></div><code>npm run probe</code></article>
+    <article class="cell" style="background:var(--mint)"><div><h3>Sourced hardware catalog</h3><p>PCIe, Ethernet, USB and bridge ceilings, plus PCI and USB ID matches and Wikidata links, with provenance labels.</p></div><code>npm run catalog:update</code></article>
+    <article class="cell" style="background:var(--coral)"><div><h3>PDF reports</h3><p>Expected time, observed time, delta, bottleneck, warnings and confidence notes, generated locally in the browser.</p></div></article>
+    <article class="cell" style="background:#C9B8FF"><div><h3>Native helper layer</h3><p>A Rust command surface in the Tauri app. Deeper counters are gated behind a signed-helper manifest and your consent.</p></div></article>
+    <article class="cell" style="background:var(--amber)"><div><h3>Local-first by default</h3><p>No account, no cloud service for modeling, no kernel driver or root helper installed silently.</p></div></article>
+  </div>
+</section>
+
+<section class="start" id="start">
+  <div>
+    <h2>Run it locally.</h2>
+    <p class="lead">Firefly needs Node.js 22 or newer. The desktop app also needs the Rust stable toolchain and the Tauri prerequisites for your OS.</p>
+    <div class="win"><div class="wbar">terminal</div>
+<div class="term" id="cmds">npm install
+npm start            <span class="cm"># then open http://127.0.0.1:4173/app.html</span>
+npm test
+npm run desktop:dev  <span class="cm"># Tauri desktop app</span></div>
+      <button class="btn sm cpb" id="copy" type="button">Copy commands</button></div>
+  </div>
+  <ol class="order" aria-label="Clearest first run">
+    <li><b>1</b>Open Design and choose a machine profile</li>
+    <li><b>2</b>Run a safe benchmark probe</li>
+    <li><b>3</b>Apply the result to the model</li>
+    <li><b>4</b>Enter the observed runtime</li>
+    <li><b>5</b>Read the diagnosis, export a PDF</li>
+    <li><b>6</b>Capture before and after to compare</li>
+  </ol>
+</section>
+
+<section class="cta2">
+  <h2>A reasoning engine, not an oracle.</h2>
+  <p>Firefly shows which inputs were measured, probed, sourced, derived or assumed, so you can judge how far to trust each answer. It is open source under Apache-2.0.</p>
+  <a class="btn" href="https://github.com/Hootsworth/Firefly" target="_blank" rel="noopener noreferrer">View on GitHub</a><a class="btn ghost" href="#start">Run it locally</a>
+</section>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div><div class="brand"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="6.5" fill="#FFD43B"/></svg><span>Firefly</span></div><p class="foot-tag">Know how long it should take, and where the missing time went.</p></div>
+    <nav class="foot-links" aria-label="Footer"><a href="index.html">← Singulr Tech</a><a href="projects.html">All projects</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="#how">How it works</a><a href="#modes">Modes</a><a href="#start">Run it locally</a><a href="https://github.com/Hootsworth/Firefly" target="_blank" rel="noopener noreferrer">GitHub</a></nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>F</span><span>i</span><span>r</span><span>e</span><span>f</span><span>l</span><span>y</span></p>
+  <div class="foot-bottom"><span>© 2026 Firefly. Apache-2.0.</span><span>A <a href="index.html" style="text-decoration:underline">Singulr Tech</a> product.</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+$("#copy").addEventListener("click",async e=>{
+  const b=e.currentTarget;let ok=true;
+  try{await navigator.clipboard.writeText($("#cmds").textContent.replace(/\s+#.*$/gm,""));}catch(_){ok=false;}
+  b.textContent=ok?"Copied":"Select and copy instead";b.classList.toggle("ok",ok);
+  setTimeout(()=>{b.textContent="Copy commands";b.classList.remove("ok");},2000);
+});
+
+/* toy model: expected time = slowest stage x (1 + penalties) */
+const SRC=[["NVMe Gen4 SSD",5000],["SATA SSD",550],["External USB 3.2 SSD",850],["Hard drive",160]];
+const DST=[["External USB 3.2 SSD",850],["NVMe Gen4 SSD",4500],["SATA SSD",500],["1 GbE network share",118],["10 GbE network share",1180]];
+const fill=(el,a)=>{el.innerHTML=a.map((x,i)=>"<option value='"+i+"'>"+x[0]+"</option>").join("");};
+fill($("#src"),SRC);fill($("#dst"),DST);
+const fmt=n=>Math.round(n).toLocaleString();
+const val={t:0};
+function calc(){
+  const gb=+$("#sz").value,mb=gb*1000,s=SRC[$("#src").value],d=DST[$("#dst").value];
+  $("#szv").textContent=gb+" GB";
+  const st=[["Source read",s],["Memory copy",["",20000]],["Destination write",d]].map(x=>({n:x[0],c:x[1][1],l:x[1][0],t:mb/x[1][1]}));
+  const base=Math.max(...st.map(x=>x.t)),bn=st.find(x=>x.t===base);
+  const net=/network/.test(d[0]);
+  const pen=[["Thermal throttling",$("#th").checked?.25:0],["OS overhead",$("#os").checked?.06:0],["Packet loss",$("#pl").checked&&net?.12:0]].filter(p=>p[1]);
+  const total=base*(1+pen.reduce((a,p)=>a+p[1],0));
+  $("#bnt").innerHTML="Primary bottleneck: <span>"+bn.n+(bn.l?" ("+bn.l+")":"")+"</span> at "+fmt(bn.c)+" MB/s";
+  $("#cb").innerHTML=st.map(x=>"<div class='sr"+(x===bn?" bn":"")+"'><span>"+x.n+"<em>"+fmt(x.c)+" MB/s</em></span><div class='bar'><i style='width:"+Math.max(2,x.t/base*100)+"%'></i></div></div>").join("");
+  $("#led").innerHTML="<div><span>Modeled path</span><span>"+base.toFixed(1)+" s</span></div>"+pen.map(p=>"<div><span>+ "+p[0]+"</span><span>"+(base*p[1]).toFixed(1)+" s</span></div>").join("")+(!pen.length&&$("#pl").checked?"<div><span>Packet loss needs a network path</span><span>0 s</span></div>":"");
+  const show=v=>{$("#ot").textContent=(v>=100?Math.round(v):v.toFixed(1))+" s";};
+  if(g&&!reduce)g.to(val,{t:total,duration:.5,ease:"power3.out",onUpdate:()=>show(val.t)});else{val.t=total;show(total);}
+}
+["sz","src","dst","th","os","pl"].forEach(id=>$("#"+id).addEventListener("input",calc));
+calc();
+
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{
+  document.documentElement.classList.add("calm");
+  $("#k1").textContent="24 s";$("#k2").textContent="41 s";$("#k3").textContent="17 s";
+  return()=>document.documentElement.classList.remove("calm");
+});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  /* load sequence */
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".er",{autoAlpha:0,y:16,duration:.8,stagger:.15},.7)
+    .from(".eb i",{scaleX:0,duration:1.1,stagger:.15,ease:"power3.out"},.9)
+    .from(".eqt,.strip div",{autoAlpha:0,y:14,duration:.9,stagger:.08},1.5);
+  g.to(".e3",{opacity:.35,duration:.5,repeat:-1,yoyo:true,repeatDelay:.7,ease:"steps(1)",delay:2.4});
+
+  /* a swarm of fireflies that follows the pointer */
+  const hero=$(".hero"),N=14,ffs=[];
+  for(let i=0;i<N;i++){const d=document.createElement("i");d.className="ff";const s=6+Math.random()*9;d.style.width=d.style.height=s+"px";hero.appendChild(d);ffs.push(d);}
+  const W=()=>hero.clientWidth,H=()=>hero.clientHeight;
+  const sw=ffs.map(d=>({qx:g.quickTo(d,"x",{duration:.7+Math.random()*1.8,ease:"power2"}),qy:g.quickTo(d,"y",{duration:.7+Math.random()*1.8,ease:"power2"}),ox:(Math.random()-.5)*300,oy:(Math.random()-.5)*220}));
+  ffs.forEach(d=>{g.set(d,{x:Math.random()*W(),y:Math.random()*H()});g.to(d,{opacity:.15,duration:.4+Math.random()*.9,repeat:-1,yoyo:true,repeatDelay:Math.random()*1.6,ease:"steps(1)"});});
+  let last=0;
+  const roam=()=>{if(performance.now()-last>2200){const cx=Math.random()*W(),cy=Math.random()*H();sw.forEach(s=>{s.qx(cx+s.ox);s.qy(cy+s.oy);});}};
+  setInterval(roam,2600);roam();
+  hero.addEventListener("pointermove",e=>{last=performance.now();const r=hero.getBoundingClientRect();sw.forEach(s=>{s.qx(e.clientX-r.left+s.ox*.5);s.qy(e.clientY-r.top+s.oy*.5);});});
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  hero.addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+
+  const p=$(".big");p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+  g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+
+  /* pinned: model, predict, compare, explain */
+  const T=[0,1.2,2.4,3.5],END=4.9,INK="#15110E";
+  const tl=g.timeline({defaults:{ease:"power2.inOut"},scrollTrigger:{trigger:".why",start:"top top",end:"+=3800",pin:true,scrub:.8,anticipatePin:1}});
+  tl.to(".rail i",{scaleY:1,ease:"none",duration:END},0);
+  $$(".cap").forEach((c,i,all)=>{
+    if(i)tl.fromTo(c,{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.3},T[i]-.1);
+    if(i<all.length-1)tl.to(c,{autoAlpha:0,y:-26,duration:.3},T[i+1]-.3);
+  });
+  const count=(sel,to,t,d)=>{const o={v:0};tl.to(o,{v:to,duration:d,ease:"none",onUpdate(){$(sel).textContent=Math.round(o.v)+" s";}},t);};
+  tl.fromTo(".plot .bar i",{scaleX:0},{scaleX:1,stagger:.12,duration:.4},.1)
+    .fromTo("#bnr .bar i",{backgroundColor:INK},{backgroundColor:"#FF5B14",duration:.2},1.0)
+    .fromTo(".mkl",{scaleY:0},{scaleY:1,duration:.3},1.3).to(".mkt",{autoAlpha:1,duration:.2},1.5);
+  count("#k1",24,1.3,.9);
+  tl.fromTo(".obs .bar i",{scaleX:0},{scaleX:1,stagger:.18,duration:.35},2.5);
+  count("#k2",41,2.5,.9);count("#k3",17,2.8,.6);
+  tl.to(".sb",{backgroundColor:"#FF5A4E",duration:.25},3.55).to(".sc",{backgroundColor:"#3CC8FF",duration:.25},3.65).to(".sd",{backgroundColor:"#FFB400",duration:.25},3.75)
+    .to(".lg",{autoAlpha:1,duration:.3},3.8).fromTo(".dx",{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.35},4.2)
+    .to({},{duration:.2},END-.2);
+
+  g.from(".cell",{yPercent:8,autoAlpha:0,duration:.8,stagger:.08,ease:"power3.out",scrollTrigger:{trigger:".bento",start:"top 82%"}});
+  g.from(".order li",{xPercent:-6,autoAlpha:0,duration:.7,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:".order",start:"top 85%"}});
+});
+}
+</script>
+</body>
+</html>

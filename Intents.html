@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Intents — Return to what you meant to do</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--sage:#CFE0D2;--cream:#F4F0E6;--deep:#173229;--peach:#F2B48A;--butter:#F3E3A4;--moss:#4F7A63;
+--bg:#F4F0E6;--fg:#173229;--mute:#587066;--line:2px;--r:14px;--gutter:clamp(28px,6vw,96px);--sec:clamp(96px,16vh,190px);
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1C2B26;--fg:#F4F0E6;--mute:#A9BDB2}}
+:root[data-theme="dark"]{--bg:#1C2B26;--fg:#F4F0E6;--mute:#A9BDB2}
+html{background:var(--sage);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--moss);outline-offset:3px}
+.thread{position:fixed;left:calc(var(--gutter) / 2 - 1px);top:0;bottom:0;width:3px;z-index:40;pointer-events:none}
+.thread i{display:block;width:100%;height:100%;background:var(--peach);transform:scaleY(0);transform-origin:top}
+.thread b{position:absolute;left:-5px;top:0;width:13px;height:13px;border-radius:50%;background:var(--peach);border:var(--line) solid var(--deep)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--deep);border-radius:var(--r);background:var(--deep);color:var(--cream);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;transition:background .3s,color .3s,transform .15s}
+.btn:hover{background:var(--peach);color:var(--deep)}.btn:active{transform:translateY(2px)}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}.btn.ghost:hover{background:var(--deep);color:var(--cream);border-color:var(--deep)}
+.btn.sm{padding:10px 18px;font-size:.95rem}
+h2{font-size:clamp(2.3rem,5vw,4.5rem);line-height:1;letter-spacing:-.03em;font-weight:650}
+
+/* hero */
+.hero{min-height:100svh;background:var(--sage);color:var(--deep);display:grid;grid-template-columns:1.05fr .95fr;grid-template-rows:auto 1fr;column-gap:clamp(24px,4vw,64px);padding:0 var(--gutter);overflow:hidden}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(20px,3vw,36px) 0}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.35rem;letter-spacing:-.02em;text-decoration:none}
+.nav{display:flex;align-items:center;gap:clamp(18px,3vw,36px);font-weight:650}
+.nav a:not(.btn){text-decoration:none}.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.hero-main{align-self:center;padding:3vh 0 8vh}
+h1{font-size:clamp(3rem,7.4vw,7rem);line-height:.95;letter-spacing:-.035em;font-weight:650;--w:88;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:31em;font-size:clamp(1.1rem,1.6vw,1.32rem);line-height:1.6;margin:2rem 0 2.5rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.art{align-self:center;justify-self:end;width:100%;max-width:500px}
+.nt{background:var(--cream);border:var(--line) solid var(--deep);border-radius:var(--r);overflow:hidden;cursor:pointer}
+.ntb{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:var(--line) solid var(--deep)}
+.ntb span{font-size:.78rem;font-weight:650;padding:5px 12px;border:var(--line) solid var(--deep);border-radius:8px}
+.nts{position:relative;height:340px}
+.nts svg{position:absolute;inset:0;width:100%;height:100%}
+.nts p{position:absolute;left:0;right:0;top:62%;text-align:center;font-size:clamp(1.3rem,2.2vw,1.7rem);font-weight:600;letter-spacing:-.02em}
+.nts small{position:absolute;left:0;right:0;bottom:14px;text-align:center;color:var(--mute);font-size:.82rem;font-weight:600}
+.tl{stroke:var(--deep);stroke-width:2.5;stroke-dasharray:2 7;stroke-linecap:round}.dt{fill:var(--peach);stroke:var(--deep);stroke-width:3}
+
+/* statement */
+.state{background:var(--deep);color:var(--cream);padding:var(--sec) var(--gutter)}
+.big{max-width:1080px;font-size:clamp(1.9rem,4.4vw,3.9rem);line-height:1.14;letter-spacing:-.025em;font-weight:600}
+.big span{transition:color .3s}.big span:hover{color:var(--peach)}
+
+/* demo (pinned) */
+.demo{height:100svh;background:var(--peach);color:var(--deep);overflow:hidden}
+.d-in{height:100%;display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:center;padding:0 var(--gutter) 0 calc(var(--gutter) + 12px)}
+.steps h2{font-size:clamp(1.9rem,3.4vw,3.1rem);max-width:10em;margin-bottom:2.6rem}
+.cap-wrap{position:relative;min-height:13rem;padding-left:2.25rem}
+.rail{position:absolute;left:0;top:0;bottom:0;width:4px;background:rgba(23,50,41,.22)}
+.rail i{display:block;height:100%;background:var(--deep);transform:scaleY(0);transform-origin:top}
+.cap{position:absolute;inset:0 0 auto 2.25rem;opacity:0;visibility:hidden}.cap.on{opacity:1;visibility:visible}
+.cap h3{font-size:1.7rem;letter-spacing:-.02em;font-weight:650;margin-bottom:.6rem}
+.cap p{max-width:34ch;font-size:1.1rem;line-height:1.6}
+.stage{height:min(74svh,600px)}
+.bw{position:relative;height:100%;background:var(--cream);border:var(--line) solid var(--deep);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.bbar{padding:12px 16px;border-bottom:var(--line) solid var(--deep);font:600 .78rem var(--mono)}
+.trail{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:0 16px;height:0;overflow:hidden;border-bottom:0 solid var(--deep);font-size:.82rem;font-weight:650;background:var(--butter)}
+.trail b{padding:4px 10px;border:var(--line) solid var(--deep);border-radius:8px;background:var(--cream);white-space:nowrap}.trail b.now{background:var(--peach)}.trail i{font-style:normal}
+.ret{margin-left:auto;font:inherit;font-weight:700;background:var(--deep);color:var(--cream);border:0;border-radius:8px;padding:6px 12px}
+.bbody{position:relative;flex:1;padding:20px 24px;overflow:hidden}
+.nav2{display:flex;gap:18px;font-weight:650;font-size:.9rem;margin-bottom:18px;padding-bottom:12px;border-bottom:var(--line) solid var(--deep)}
+.cols{display:flex;gap:26px;align-items:flex-start}
+#art{flex:1;margin:0 auto;font-size:clamp(.92rem,1.3vw,1.08rem);line-height:1.7}
+#art h4{font-size:1.5em;letter-spacing:-.02em;margin:0 0 .5em;line-height:1.1}#art p{margin:0 0 .8em}
+.hl,.tm{border-radius:3px}.lk{text-decoration:underline;text-decoration-thickness:2px;color:var(--moss);font-weight:650}
+.side{width:30%;display:grid;gap:8px;font-size:.84rem;font-weight:600}.side small{font-weight:700;color:var(--mute)}.side u{color:var(--moss)}
+.chip,.note,.panel{position:absolute;opacity:0;visibility:hidden}
+.chip{left:0;top:0;background:var(--deep);color:var(--cream);font-weight:700;font-size:.8rem;padding:7px 12px;border-radius:8px;white-space:nowrap}
+.note{right:18px;bottom:18px;width:min(250px,60%);background:var(--butter);border:var(--line) solid var(--deep);border-radius:12px;padding:12px 14px;display:grid;gap:4px;font-size:.86rem;line-height:1.35}
+.note small{font-weight:700;color:var(--mute)}.note em{font-style:normal;color:var(--mute)}
+.panel{right:0;top:0;bottom:0;width:44%;background:var(--sage);border-left:var(--line) solid var(--deep);padding:20px;display:grid;align-content:start;gap:8px;font-size:.92rem;line-height:1.5}
+.panel small{font-weight:700;color:var(--mute)}.panel b{font-size:1.3rem;letter-spacing:-.02em}.panel u{color:var(--moss);font-weight:700}
+
+/* keyboard */
+.keys{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:5fr 6fr;gap:var(--gutter);align-items:center}
+.keys h2{margin-bottom:1.2rem}.keys p{max-width:28em;font-size:1.18rem;line-height:1.6;color:var(--mute)}
+.pal{border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.pal input{width:100%;border:0;border-bottom:var(--line) solid var(--fg);background:transparent;color:inherit;font:inherit;font-size:1.1rem;font-weight:600;padding:18px 20px}
+.pal input:focus{outline:3px solid var(--moss);outline-offset:-3px}
+.pal ul{list-style:none;margin:0;padding:0}
+.pal li{padding:16px 20px;font-weight:650;display:flex;justify-content:space-between;gap:12px;transition:background .25s,padding-left .35s cubic-bezier(.3,1.4,.5,1)}
+.pal li+li{border-top:var(--line) solid var(--fg)}.pal li:hover{background:var(--butter);color:var(--deep);padding-left:30px}
+.pal li span{color:var(--mute);font-weight:600;font-size:.9rem}.pal li:hover span{color:var(--deep)}
+.pal mark{background:var(--peach);color:var(--deep);border-radius:3px}
+.pal .none{padding:20px;color:var(--mute);font-weight:600}
+
+/* core idea */
+.core{background:var(--butter);color:var(--deep);padding:var(--sec) var(--gutter)}
+.core p{max-width:12em;font-size:clamp(2.6rem,7vw,6.2rem);line-height:.98;letter-spacing:-.04em;font-weight:650}
+.core em{font-style:normal;background:var(--deep);color:var(--butter);padding:0 .14em;border-radius:.12em}
+
+/* principles */
+.prin{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.prin h2{max-width:11em;margin-bottom:clamp(36px,6vh,64px)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.col{border-radius:var(--r);padding:clamp(22px,3vw,40px)}
+.col h3{font-size:1.5rem;letter-spacing:-.02em;font-weight:650;margin-bottom:1.4rem}
+.col ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.col li{position:relative;width:fit-content;font-size:clamp(1.15rem,1.7vw,1.5rem);font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.yes{background:var(--sage);color:var(--deep)}.no{border:var(--line) solid var(--fg)}
+.no li{--ln:1;color:var(--mute)}.no li::after{content:"";position:absolute;left:-3px;right:-3px;top:54%;height:3px;background:var(--fg);transform:scaleX(var(--ln));transform-origin:left}
+.say{margin-top:clamp(28px,5vh,48px);font-size:clamp(1.3rem,2.2vw,1.9rem);font-weight:600;letter-spacing:-.02em;max-width:26em;line-height:1.3}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:clamp(28px,5vh,48px)}
+.chips span{border:var(--line) solid var(--fg);border-radius:999px;padding:8px 16px;font-weight:600;transition:background .25s,color .25s}.chips span:hover{background:var(--peach);color:var(--deep);border-color:var(--peach)}
+
+/* privacy */
+.priv{background:var(--deep);color:var(--cream);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:6fr 5fr;gap:var(--gutter);align-items:end}
+.priv h2{margin-bottom:clamp(28px,5vh,48px)}
+.no5{list-style:none;margin:0;padding:0}
+.no5 li{font-size:clamp(1.8rem,4vw,3.4rem);font-weight:650;letter-spacing:-.035em;line-height:1.15;border-top:var(--line) solid rgba(244,240,230,.3);padding:8px 0;transition:padding-left .4s cubic-bezier(.3,1.4,.5,1),color .3s}
+.no5 li:last-child{border-bottom:var(--line) solid rgba(244,240,230,.3)}.no5 li:hover{padding-left:22px;color:var(--peach)}
+.priv p{max-width:26em;font-size:1.15rem;line-height:1.6;color:#C7D6CC;margin-bottom:1.8rem}
+.priv .btn{background:var(--peach);color:var(--deep);border-color:var(--peach)}.priv .btn:hover{background:var(--cream);border-color:var(--cream)}
+
+/* final */
+.fin{background:var(--sage);color:var(--deep);padding:var(--sec) var(--gutter)}
+.fin q{display:block;quotes:none;max-width:17em;font-size:clamp(2rem,4.8vw,4.2rem);line-height:1.1;letter-spacing:-.03em;font-weight:650;margin-bottom:2rem}
+.fin p{max-width:32em;font-size:1.18rem;line-height:1.6;margin-bottom:2.2rem}
+
+/* footer */
+.foot{background:var(--deep);color:var(--cream);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#C7D6CC;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}.foot-links a{text-decoration:none;transition:color .3s}.foot-links a:hover{color:var(--peach)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(24vw,28rem);font-weight:650;letter-spacing:-.045em;line-height:.8;padding-bottom:.12em;color:var(--peach);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}.giant span:hover{transform:translateY(-.06em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(244,240,230,.25);padding-top:20px;font-size:.9rem;color:#C7D6CC}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;grid-template-rows:none}.hero>*{grid-column:1/-1}
+  .top{order:1}.hero-main{order:2;padding:12px 0 28px}.art{order:3;justify-self:start;margin-bottom:40px}.nav a:not(.btn){display:none}.nts{height:280px}
+  .d-in{grid-template-columns:1fr;align-content:center;gap:18px;padding:0 var(--gutter)}.stage{order:-1;height:52svh}.steps h2{display:none}
+  .cap-wrap{min-height:9.5rem}.cap h3{font-size:1.3rem}.cap p{font-size:1rem}.side{display:none}.bbody{padding:14px 16px}
+  .keys,.priv{grid-template-columns:1fr}.two{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+html.calm .thread{display:none}html.calm .demo{height:auto;padding:12vh 0}html.calm .cap{position:static;opacity:1;visibility:visible;margin-bottom:1.4rem}html.calm .cap-wrap{min-height:0}html.calm .big span{opacity:1}
+</style>
+</head>
+<body>
+<div class="thread" aria-hidden="true"><i></i><b></b></div>
+
+<header class="hero" id="top">
+  <div class="top">
+    <a class="brand" href="#top">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="5.5" fill="#F2B48A" stroke="currentColor" stroke-width="2"/></svg>
+      <span>Intents</span>
+    </a>
+    <nav class="nav" aria-label="Main"><a href="index.html">← Singulr</a><a href="#how">How it works</a><a href="#principles">Principles</a><a href="#privacy">Privacy</a></nav>
+  </div>
+  <div class="hero-main">
+    <h1><span class="ln"><span>Return to</span></span><span class="ln"><span>what you</span></span><span class="ln"><span>meant to do.</span></span></h1>
+    <p class="sub">Intents is a calm browser layer for people who lose their train of thought. It won’t tell you what to do. It helps you remember why you were doing it.</p>
+    <div class="cta"><a class="btn" href="#how">See how it works</a><a class="btn ghost" href="#principles">What it isn’t</a></div>
+  </div>
+  <div class="art">
+    <div class="nt" id="nt">
+      <div class="ntb"><span>New Tab</span></div>
+      <div class="nts">
+        <svg viewBox="0 0 400 340" aria-hidden="true"><line class="tl" id="tl" x1="200" y1="130" x2="200" y2="130"/><circle class="dt" id="dt" cx="200" cy="130" r="13"/></svg>
+        <p>Begin, or begin again.</p>
+        <small>Click anywhere to let your mind wander</small>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="state">
+  <p class="big">The modern web is not built for continuity. You open a tab for one reason, get pulled toward another, and five minutes later you’re somewhere else entirely. Not because you’re careless, but because the web is optimised for discovery, not memory.</p>
+</section>
+
+<section class="demo" id="how" aria-label="How Intents works">
+  <div class="d-in">
+    <div class="steps">
+      <h2>Four small ways back.</h2>
+      <div class="cap-wrap">
+        <div class="rail"><i></i></div>
+        <article class="cap on"><h3>Hold that thought</h3><p>Select any text and save it, with your own note if you like. Later you return to the exact page and section, with the text highlighted.</p></article>
+        <article class="cap"><h3>Context ladder</h3><p>A light trail shows where you started and how you got here. One click takes you back to the original context.</p></article>
+        <article class="cap"><h3>Isolate mode</h3><p>Links are hidden, the noise is removed and the content is reflowed for reading. It’s temporary and reversible.</p></article>
+        <article class="cap"><h3>Contextualise</h3><p>Select a term and a short explanation appears in a side panel. No new tabs, no rabbit holes.</p></article>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="bw" id="bw">
+        <div class="bbar">reader.example/memory</div>
+        <div class="trail" id="trail"><b>Research notes</b><i>›</i><b>Article</b><i>›</i><b>Video</b><i>›</i><b class="now">Somewhere else</b><button class="ret" id="ret" type="button">Back to start</button></div>
+        <div class="bbody" id="bb">
+          <div class="nav2" id="nav2"><span>Home</span><span>Topics</span><span>About</span></div>
+          <div class="cols">
+            <article id="art"><h4>Why we forget what we came for</h4>
+              <p>Interruptions don’t erase intentions, they bury them. <span class="tm" id="tm">Working memory</span> holds only a handful of items, and <span class="hl" id="hl">a new tab pushes the old one out.</span></p>
+              <p>Every <span class="lk">attention-grabbing headline</span> is another small exit, and each exit makes the way back a little harder to find.</p></article>
+            <aside class="side" id="side"><small>Related</small><u>Ten tricks for focus</u><u>Why you open so many tabs</u><u>Top stories today</u></aside>
+          </div>
+          <div class="chip" id="chip">Hold that thought</div>
+          <div class="note" id="note"><small>Thought saved</small><b>“a new tab pushes the old one out.”</b><em>Check this against chapter 3</em></div>
+          <div class="panel" id="panel"><small>Contextualise</small><b>Working memory</b><p>The small amount of information your mind can hold and use at the same time.</p><u>Open the source</u></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="keys">
+  <div>
+    <h2>Almost everything is a shortcut.</h2>
+    <p>A built-in commands panel lists every shortcut, so nothing has to be memorised and nothing gets in your way. Try filtering it.</p>
+  </div>
+  <div class="pal">
+    <input id="q" type="text" placeholder="Type a command…" aria-label="Filter commands" autocomplete="off">
+    <ul id="cl"></ul>
+  </div>
+</section>
+
+<section class="core">
+  <p>Distraction is not a failure. <em>Losing context</em> is the real problem.</p>
+</section>
+
+<section class="prin" id="principles">
+  <h2>What it is, and what it isn’t.</h2>
+  <div class="two">
+    <div class="col yes"><h3>Intents is</h3><ul><li>Reactive, not intrusive</li><li>Context-first, not task-first</li><li>Minimal, opinionated and local-first</li><li>Built for short memory, attention volatility and cognitive overload</li></ul></div>
+    <div class="col no"><h3>Intents is not</h3><ul><li>A productivity tracker</li><li>A task manager</li><li>A site blocker</li><li>A search engine</li><li>A motivational tool</li></ul></div>
+  </div>
+  <p class="say">It won’t tell you what to do. It helps you remember why you were doing something.</p>
+  <div class="chips"><span>Reactive, never demanding</span><span>Minimal over feature-rich</span><span>Temporary over persistent</span><span>Calm over clever</span><span>User-initiated, always</span></div>
+</section>
+
+<section class="priv" id="privacy">
+  <div>
+    <h2>Nothing leaves your device.</h2>
+    <ul class="no5"><li>No accounts</li><li>No analytics</li><li>No tracking</li><li>No telemetry</li><li>No remote code execution</li></ul>
+  </div>
+  <div>
+    <p>All data stays on your device. Optional external services, such as AI providers, are configured by you and operate under their own policies.</p>
+    <p>The source is open, so all of this can be verified.</p>
+    <a class="btn" href="https://github.com/Hootsworth/Intents" target="_blank" rel="noopener noreferrer">Read the source</a>
+  </div>
+</section>
+
+<section class="fin">
+  <q>If Intents helps you feel a little less scattered, it’s doing its job.</q>
+  <p>It came from building things to solve my own attention problems, and realising how many people quietly struggle with the same friction. It’s actively developed, but intentionally restrained. Most of the work is deciding what not to add.</p>
+  <a class="btn" href="https://github.com/Hootsworth/Intents" target="_blank" rel="noopener noreferrer">Contribute or just look around</a>
+</section>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div><div class="brand"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="15" cy="15" r="5.5" fill="#F2B48A" stroke="currentColor" stroke-width="2"/></svg><span>Intents</span></div><p class="foot-tag">A calm browser layer for people who lose their train of thought.</p></div>
+    <nav class="foot-links" aria-label="Footer"><a href="index.html">← Singulr Tech</a><a href="projects.html">All projects</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="#how">How it works</a><a href="#principles">Principles</a><a href="#privacy">Privacy</a><a href="https://github.com/Hootsworth/Intents" target="_blank" rel="noopener noreferrer">Source</a></nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>I</span><span>n</span><span>t</span><span>e</span><span>n</span><span>t</span><span>s</span></p>
+  <div class="foot-bottom"><span>© 2026 Intents. Open source.</span><span>A <a href="index.html" style="text-decoration:underline">Singulr Tech</a> product.</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+
+/* filterable commands panel (names only; the real shortcuts live in the extension) */
+const CMDS=[["Hold that thought","Save the selected text"],["Contextualise selection","Explain it in a side panel"],["Isolate mode","Read without the noise"],["Return to start","Jump back up the context ladder"],["Show all commands","Open this panel"]];
+const q=$("#q"),cl=$("#cl");
+function draw(){
+  const v=q.value.trim().toLowerCase();
+  const hit=CMDS.filter(c=>c[0].toLowerCase().includes(v));
+  cl.innerHTML=hit.length?hit.map(c=>{
+    const i=c[0].toLowerCase().indexOf(v);
+    const name=v?c[0].slice(0,i)+"<mark>"+c[0].slice(i,i+v.length)+"</mark>"+c[0].slice(i+v.length):c[0];
+    return "<li>"+name+"<span>"+c[1]+"</span></li>";}).join(""):"<li class='none'>Nothing here. Calm is also an answer.</li>";
+}
+q.addEventListener("input",draw);draw();
+
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{document.documentElement.classList.add("calm");return()=>document.documentElement.classList.remove("calm");});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  /* load sequence, unhurried */
+  g.timeline({defaults:{ease:"power3.out"}})
+    .from(".ln span",{yPercent:110,duration:1.6,stagger:.15},.1)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:16,duration:1.2,stagger:.08},.7)
+    .from(".nt",{autoAlpha:0,y:30,duration:1.4},.5);
+  const qw=g.quickTo($("h1"),"--w",{duration:1,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(76+(e.clientX/innerWidth)*12));
+
+  /* the wandering dot: your mind drifts, the thread lets you come back */
+  const dt=$("#dt"),tl0=$("#tl"),H={x:200,y:130},P={x:200,y:130};let busy=false;
+  const paint=()=>{dt.setAttribute("cx",P.x);dt.setAttribute("cy",P.y);tl0.setAttribute("x2",P.x);tl0.setAttribute("y2",P.y);};
+  function wander(){
+    if(busy)return;busy=true;
+    const a=Math.random()*Math.PI*2,d=90+Math.random()*70;
+    const tx=Math.min(370,Math.max(30,H.x+Math.cos(a)*d*1.2)),ty=Math.min(250,Math.max(24,H.y+Math.sin(a)*d));
+    g.timeline({onComplete:()=>{busy=false;}})
+      .to(P,{x:tx,y:ty,duration:2,ease:"sine.inOut",onUpdate:paint})
+      .to(P,{x:H.x,y:H.y,duration:1.4,ease:"power2.inOut",onUpdate:paint},"+=.7");
+  }
+  $("#nt").addEventListener("click",wander);
+  setInterval(wander,6500);g.delayedCall(2,wander);
+
+  /* the thread down the page */
+  const head=$(".thread b");
+  ScrollTrigger.create({start:0,end:"max",onUpdate:s=>{g.set(".thread i",{scaleY:s.progress});head.style.top=(s.progress*(innerHeight-13))+"px";}});
+
+  const p=$(".big");p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+  g.fromTo(".big span",{opacity:.18},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+
+  /* pinned: hold, ladder, isolate, contextualise */
+  const T=[0,1.3,2.6,3.9],END=5.3,bb=$("#bb");
+  const tl=g.timeline({defaults:{ease:"power2.inOut"},scrollTrigger:{trigger:".demo",start:"top top",end:"+=3800",pin:true,scrub:.9,anticipatePin:1}});
+  tl.to(".rail i",{scaleY:1,ease:"none",duration:END},0);
+  $$(".cap").forEach((c,i,all)=>{
+    if(i)tl.fromTo(c,{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.3},T[i]-.1);
+    if(i<all.length-1)tl.to(c,{autoAlpha:0,y:-26,duration:.3},T[i+1]-.3);
+  });
+  const rel=(sel,dx,dy)=>({x:()=>{const m=bb.getBoundingClientRect(),r=$(sel).getBoundingClientRect();return r.left-m.left+dx;},y:()=>{const m=bb.getBoundingClientRect(),r=$(sel).getBoundingClientRect();return r.bottom-m.top+dy;}});
+  // 1 hold that thought
+  tl.to("#hl",{backgroundColor:"#F3E3A4",duration:.35},.2)
+    .fromTo("#chip",{autoAlpha:0,...rel("#hl",20,8)},{autoAlpha:1,duration:.3},.55)
+    .to("#chip",{scale:.92,yoyo:true,repeat:1,duration:.1},.9).to("#chip",{autoAlpha:0,duration:.2},1.05)
+    .fromTo("#note",{autoAlpha:0,y:24},{autoAlpha:1,y:0,duration:.4},.95);
+  // 2 context ladder
+  tl.to("#note",{autoAlpha:0,duration:.25},T[1]+.05)
+    .to("#trail",{height:46,borderBottomWidth:2,duration:.4},T[1]+.1).from(".trail b,.trail i",{autoAlpha:0,x:-10,stagger:.07,duration:.25},T[1]+.35)
+    .to("#ret",{scale:.92,yoyo:true,repeat:1,duration:.1},T[1]+.95)
+    .to(".trail b:not(:first-child),.trail i",{autoAlpha:0,duration:.3,stagger:{each:.05,from:"end"}},T[1]+1.1)
+    .to("#trail",{height:0,borderBottomWidth:0,duration:.3},T[1]+1.3);
+  // 3 isolate mode
+  tl.to("#nav2",{autoAlpha:0,height:0,marginBottom:0,paddingBottom:0,borderBottomWidth:0,duration:.5},T[2]+.1)
+    .to("#side",{autoAlpha:0,width:0,duration:.5},T[2]+.1)
+    .to(".lk",{color:"#173229",textDecorationColor:"rgba(23,50,41,0)",fontWeight:400,duration:.4},T[2]+.1)
+    .fromTo("#art",{maxWidth:"100%"},{maxWidth:"74%",duration:.7},T[2]+.3);
+  // 4 contextualise
+  tl.to("#tm",{backgroundColor:"#F3E3A4",duration:.3},T[3]+.1)
+    .fromTo("#panel",{autoAlpha:0,xPercent:100},{autoAlpha:1,xPercent:0,duration:.6},T[3]+.5)
+    .to({},{duration:.3},END-.3);
+
+  g.from(".yes li,.no li",{autoAlpha:0,y:14,duration:.8,stagger:.08,ease:"power3.out",scrollTrigger:{trigger:".two",start:"top 82%"}});
+  g.from(".no li",{"--ln":0,duration:1,stagger:.15,ease:"power3.inOut",scrollTrigger:{trigger:".no",start:"top 65%"}});
+  g.from(".no5 li",{autoAlpha:0,x:-30,duration:.8,stagger:.12,ease:"power3.out",scrollTrigger:{trigger:".no5",start:"top 85%"}});
+});
+}
+</script>
+</body>
+</html>

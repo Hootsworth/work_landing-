@@ -68,6 +68,9 @@ h1{font-size:clamp(3rem,7vw,6.75rem);line-height:.94;letter-spacing:-.035em;font
 .panel[data-p=linkup]{--pbg:var(--sky);--pfg:var(--ink)}
 .panel[data-p=wiggle]{--pbg:var(--lime);--pfg:var(--ink)}
 .panel[data-p=xrisk]{--pbg:var(--violet);--pfg:var(--paper)}
+.panel[data-p=firefly]{--pbg:#1A1F50;--pfg:#FFD43B}
+.panel[data-p=intents]{--pbg:#1E2340;--pfg:#F2B48A}
+.panel[data-p=rexscript]{--pbg:#D7261E;--pfg:#ECE6D6}
 .panel[data-p=next]{--pbg:var(--mint);--pfg:var(--ink)}
 .pp{display:none;flex-direction:column;justify-content:space-between;gap:28px;width:100%}.pp.on{display:flex}
 .glyph{width:clamp(120px,14vw,170px);height:auto}
@@ -140,8 +143,7 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
       <span>Singulr</span>
     </a>
     <nav class="nav" aria-label="Main">
-      <a href="#products">Products</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="#approach">Approach</a>
-      <a class="btn sm" href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="projects.html">Projects</a><a href="open-source.html" class="hide-s">Open source</a><a href="blog.html" class="hide-s">Blog</a><a href="about.html">About</a><a href="careers.html">Careers</a>
     </nav>
   </div>
   <div class="hero-main">
@@ -161,12 +163,18 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
       <a href="#products" data-jump="linkup">LinkUp</a><i></i>
       <a href="#products" data-jump="wiggle">Wiggle</a><i></i>
       <a href="#products" data-jump="xrisk">XRisk</a><i></i>
+      <a href="#products" data-jump="firefly">Firefly</a><i></i>
+      <a href="#products" data-jump="intents">Intents</a><i></i>
+      <a href="#products" data-jump="rexscript">RexScript</a><i></i>
       <a href="#products" data-jump="next">More on the way</a><i></i>
       <a href="#products" data-jump="wavvy">Wavvy</a><i></i>
       <a href="#products" data-jump="fish">Shiny Fishstick</a><i></i>
       <a href="#products" data-jump="linkup">LinkUp</a><i></i>
       <a href="#products" data-jump="wiggle">Wiggle</a><i></i>
       <a href="#products" data-jump="xrisk">XRisk</a><i></i>
+      <a href="#products" data-jump="firefly">Firefly</a><i></i>
+      <a href="#products" data-jump="intents">Intents</a><i></i>
+      <a href="#products" data-jump="rexscript">RexScript</a><i></i>
       <a href="#products" data-jump="next">More on the way</a><i></i>
     </div>
   </div>
@@ -181,6 +189,9 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
       <button class="row" type="button" data-p="linkup" aria-pressed="false"><span>LinkUp</span><small>Peer-to-peer remote desktop</small></button>
       <button class="row" type="button" data-p="wiggle" aria-pressed="false"><span>Wiggle</span><small>Cursor AI agent</small></button>
       <button class="row" type="button" data-p="xrisk" aria-pressed="false"><span>XRisk</span><small>AI agent safety layer</small></button>
+      <button class="row" type="button" data-p="firefly" aria-pressed="false"><span>Firefly</span><small>Performance diagnostics</small></button>
+      <button class="row" type="button" data-p="intents" aria-pressed="false"><span>Intents</span><small>Calm browser layer</small></button>
+      <button class="row" type="button" data-p="rexscript" aria-pressed="false"><span>RexScript</span><small>Agent programming language</small></button>
       <button class="row" type="button" data-p="next" aria-pressed="false"><span>Next up</span><small>In the lab</small></button>
     </div>
   </div>
@@ -273,6 +284,51 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
         </div>
       </div>
     </div>
+    <div class="pp" data-p="firefly">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round">
+        <circle cx="100" cy="100" r="76" stroke="currentColor"/>
+        <circle cx="100" cy="100" r="30" fill="#FFD43B" stroke="none"/>
+        <g transform="translate(150 48)"><path class="spark" fill="#FFD43B" d="M0-14L5-5 14 0 5 5 0 14-5 5-14 0-5-5z"/></g>
+      </svg>
+      <div>
+        <span class="chip">Performance diagnostics • Local-first</span>
+        <h3>Firefly</h3>
+        <p>Models how a computer should behave, compares that with what actually happened, and explains where the missing time went.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Firefly.html">Open Firefly</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/Firefly" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="intents">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round">
+        <circle cx="100" cy="100" r="76" stroke="currentColor"/>
+        <circle cx="100" cy="100" r="28" fill="#F2B48A" stroke="#111424" stroke-width="6"/>
+      </svg>
+      <div>
+        <span class="chip">Browser layer • Mindful focus</span>
+        <h3>Intents</h3>
+        <p>A calm browser layer for people who lose their train of thought. It won’t tell you what to do — it helps you remember why you were doing it.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Intents.html">Open Intents</a>
+          <a class="btn ghost" href="https://github.com/Hootsworth/Intents" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="pp" data-p="rexscript">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true">
+        <rect x="35" y="35" width="130" height="130" rx="24" fill="#D7261E"/>
+        <path d="M70 75l30 25-30 25M105 125h25" fill="none" stroke="#ECE6D6" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <span class="chip">Agent programming language • Research</span>
+        <h3>RexScript</h3>
+        <p>A programming language built specifically for autonomous agents. Agents don’t browse — they hunt. You write the goal, runtime handles the hunt.</p>
+        <div class="panel-acts">
+          <a class="btn" href="RexScript.html">Open RexScript</a>
+        </div>
+      </div>
+    </div>
     <div class="pp" data-p="next">
       <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="#0B1033" stroke-width="7" stroke-linecap="round">
         <circle class="spin" cx="100" cy="100" r="70" stroke-dasharray="1 17"/><path d="M100 78v44M78 100h44"/>
@@ -298,11 +354,11 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
 
 <section class="cta2">
   <h2>See what we’ve built.</h2>
-  <p>Five automation and AI tools, each built to solve a single annoying task and quietly step aside.</p>
+  <p>Eight automation and AI tools, each built to solve a single annoying task and quietly step aside.</p>
   <div class="cta">
-    <a class="btn" href="#products">Explore all products</a>
-    <a class="btn ghost" href="about.html">About Singulr</a>
-    <a class="btn ghost" href="careers.html">Work with us</a>
+    <a class="btn" href="projects.html">Browse all projects</a>
+    <a class="btn ghost" href="open-source.html">Open source mission</a>
+    <a class="btn ghost" href="blog.html">Read the blog</a>
   </div>
 </section>
 
@@ -316,15 +372,23 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
       <p class="foot-tag">Automation that gets out of your way.</p>
     </div>
     <nav class="foot-links" aria-label="Footer">
-      <a href="#products">All Products</a>
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="open-source.html">Open source</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="blog.html">Blog</a>
       <a href="Wi-Fi%20Portal%20Auto%20Login.html">Wavvy</a>
       <a href="Shiny%20Fishstick.html">Shiny Fishstick</a>
       <a href="LinkUp.html">LinkUp</a>
       <a href="Wiggle.html">Wiggle</a>
       <a href="XRisk.html">XRisk</a>
-      <a href="about.html">About</a>
-      <a href="careers.html">Careers</a>
-      <a href="#approach">Approach</a>
+      <a href="Firefly.html">Firefly</a>
+      <a href="Intents.html">Intents</a>
+      <a href="RexScript.html">RexScript</a>
+      <a href="security.html">Security</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
       <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
     </nav>
   </div>

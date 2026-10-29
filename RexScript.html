@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RexScript — Agents don’t browse. They hunt.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--bone:#ECE6D6;--ink:#111111;--hunt:#D7261E;--khaki:#CFC7A8;
+--bg:#ECE6D6;--fg:#111111;--mute:#5E584A;--line:2px;--r:14px;--gutter:clamp(24px,6vw,96px);--sec:clamp(88px,15vh,180px);
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1E1D19;--fg:#ECE6D6;--mute:#B5AE9B}}
+:root[data-theme="dark"]{--bg:#1E1D19;--fg:#ECE6D6;--mute:#B5AE9B}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--hunt);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50}
+.prog i{display:block;height:100%;background:var(--hunt);transform:scaleX(0);transform-origin:left}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--bone);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;transition:background .2s,color .2s,transform .15s}
+.btn:hover{background:var(--hunt);border-color:var(--hunt);color:#fff}.btn:active{transform:translateY(2px)}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}.btn.ghost:hover{background:var(--ink);color:var(--bone);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}
+h2{font-size:clamp(2.4rem,5.4vw,4.75rem);line-height:.98;letter-spacing:-.035em;font-weight:700}
+
+/* hero */
+.hero{min-height:100svh;background:var(--bg);color:var(--fg);display:grid;grid-template-columns:1.05fr .95fr;grid-template-rows:auto 1fr;column-gap:clamp(24px,4vw,64px);padding:0 var(--gutter);overflow:hidden}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(20px,3vw,36px) 0}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.35rem;letter-spacing:-.02em;text-decoration:none}
+.nav{display:flex;align-items:center;gap:clamp(18px,3vw,36px);font-weight:650}
+.nav a:not(.btn){text-decoration:none}.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.hero-main{align-self:center;padding:3vh 0 8vh}
+.stamp{display:inline-block;border:3px solid var(--hunt);color:var(--hunt);padding:5px 14px;border-radius:6px;font:700 .82rem var(--mono);letter-spacing:.06em;text-transform:uppercase;transform:rotate(-3deg);margin-bottom:1.8rem}
+h1{font-size:clamp(3.2rem,8vw,7.6rem);line-height:.92;letter-spacing:-.04em;font-weight:700;--w:84;font-stretch:calc(var(--w) * 1%)}
+h1 em{font-style:normal;color:var(--hunt)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:31em;font-size:clamp(1.1rem,1.6vw,1.35rem);line-height:1.55;margin:2rem 0 2.5rem;color:var(--mute)}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.art{align-self:center;justify-self:end;width:100%;max-width:500px}
+.page{position:relative;background:#fff;color:var(--ink);border:var(--line) solid var(--ink);border-radius:var(--r);padding:20px 20px 52px;display:grid;gap:14px;overflow:hidden;cursor:crosshair;min-height:430px;align-content:start}
+.pb{display:flex;gap:7px;align-items:center;margin-bottom:6px}.pb i{width:11px;height:11px;border-radius:50%;background:var(--ink)}.pb span{flex:1;height:11px;border-radius:6px;background:var(--khaki);margin-left:10px}
+.tg{position:relative;border-radius:8px;padding:10px;transition:background .2s}.tg.hit{background:#F6D3CF}
+.hl b{display:block;height:20px;border-radius:4px;background:var(--ink);margin:6px 0}.hl b+b{width:68%}
+.two{display:flex;gap:14px;align-items:stretch}.two .tg{flex:1}
+.px{font:700 1.7rem var(--mono)}.lk{display:flex;align-items:center}.lk u{font-weight:700;text-underline-offset:4px;text-decoration-thickness:2px}
+.tbl{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tbl span{height:22px;border-radius:4px;background:var(--khaki)}
+.fm{display:flex;gap:8px}.fm span{flex:1;border:var(--line) solid var(--ink);border-radius:6px;padding:7px 10px;color:#777;font-size:.9rem}.fm em{font-style:normal;background:var(--ink);color:#fff;padding:9px 16px;border-radius:6px;font-weight:700}
+.rt{position:absolute;left:0;top:0;width:56px;height:56px;border:3px solid var(--hunt);border-radius:8px;pointer-events:none;z-index:2}
+.rt span{position:absolute;left:-3px;top:calc(100% + 6px);background:var(--hunt);color:#fff;font:700 .72rem var(--mono);padding:3px 8px;border-radius:5px;white-space:nowrap}
+
+/* statement */
+.state{background:var(--ink);color:var(--bone);padding:var(--sec) var(--gutter)}
+.big{max-width:1100px;font-size:clamp(2rem,4.8vw,4.25rem);line-height:1.1;letter-spacing:-.03em;font-weight:650}
+.big span{transition:color .2s}.big span:hover{color:var(--hunt)}
+
+/* ideas */
+.ideas{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.ideas h2{max-width:11em;margin-bottom:clamp(36px,6vh,64px)}
+.grid{display:grid;grid-template-columns:1fr 1fr;border:var(--line) solid var(--fg);border-radius:var(--r);overflow:hidden}
+.idea{padding:clamp(22px,3vw,44px);min-height:290px;display:flex;flex-direction:column;justify-content:space-between;gap:28px;transition:background .25s,color .25s}
+.idea:nth-child(even){border-left:var(--line) solid var(--fg)}.idea:nth-child(n+3){border-top:var(--line) solid var(--fg)}
+.idea:hover{background:var(--ink);color:var(--bone)}
+.idea h3{font-size:clamp(2.2rem,4vw,3.6rem);letter-spacing:-.04em;line-height:.95;font-weight:700}
+.idea:hover h3{color:var(--hunt)}.idea p{max-width:26em;font-size:1.12rem;line-height:1.5}
+
+/* glimpse */
+.peek{background:var(--ink);color:var(--bone);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:5fr 6fr;gap:var(--gutter);align-items:center}
+.peek h2{margin-bottom:1.2rem}.peek .lead{max-width:28em;font-size:1.18rem;line-height:1.55;color:#B5AE9B;margin-bottom:1.8rem}
+.key{display:flex;gap:22px;flex-wrap:wrap;font:600 .85rem var(--mono)}.key span{display:inline-flex;align-items:center;gap:8px}
+.key i{width:26px;height:14px;border-radius:3px;background:var(--bone)}.key i.o{background:transparent;border:var(--line) solid var(--bone)}
+.doc{background:var(--bone);color:var(--ink);border-radius:var(--r);overflow:hidden}
+.dbar{display:flex;justify-content:space-between;padding:12px 20px;border-bottom:var(--line) solid var(--ink);font:700 .78rem var(--mono)}.dbar b{color:var(--hunt)}
+.code{padding:22px 22px 26px;font:clamp(.78rem,1.15vw,1rem)/2 var(--mono);white-space:pre;overflow-x:auto}
+.rv{position:relative;display:inline-block}.bar{position:absolute;inset:3px -3px;background:var(--ink);transform-origin:right}
+.wh{display:inline-block;height:1.05em;vertical-align:-.12em;background:var(--ink);border-radius:2px;cursor:not-allowed}
+.cm{color:#6E6755}
+
+/* research */
+.paper{background:var(--hunt);color:#fff;padding:var(--sec) var(--gutter);display:grid;grid-template-columns:6fr 5fr;gap:var(--gutter);align-items:start}
+.paper h2{margin-bottom:1.2rem}.paper p{max-width:32em;font-size:1.2rem;line-height:1.55;margin-bottom:2.2rem}
+.paper .btn{background:#fff;color:var(--ink);border-color:#fff}.paper .btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.stat{border:var(--line) solid #fff;border-radius:var(--r);overflow:hidden}
+.stat div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:18px 22px;font-size:1.1rem;font-weight:650;transition:background .2s,color .2s}
+.stat div+div{border-top:var(--line) solid #fff}.stat div:hover{background:#fff;color:var(--hunt)}
+.stat span{font:700 .8rem var(--mono);border:var(--line) solid currentColor;border-radius:6px;padding:3px 9px;white-space:nowrap}
+
+/* footer */
+.foot{background:var(--ink);color:var(--bone);padding:clamp(56px,9vh,104px) var(--gutter) 28px;overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B5AE9B;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}.foot-links a{text-decoration:none;transition:color .2s}.foot-links a:hover{color:var(--hunt)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(17vw,22rem);font-weight:700;letter-spacing:-.045em;line-height:.82;padding-bottom:.12em;color:var(--hunt);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .4s cubic-bezier(.3,1.6,.5,1)}.giant span:hover{transform:translateY(-.07em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(236,230,214,.25);padding-top:20px;font-size:.9rem;color:#B5AE9B}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;grid-template-rows:none}.hero>*{grid-column:1/-1}
+  .top{order:1}.hero-main{order:2;padding:12px 0 28px}.art{order:3;justify-self:start;margin-bottom:40px}.nav a:not(.btn){display:none}
+  .grid{grid-template-columns:1fr}.idea:nth-child(even){border-left:0}.idea:nth-child(n+2){border-top:var(--line) solid var(--fg)}.idea{min-height:230px}
+  .peek,.paper{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+html.calm .prog{display:none}html.calm .big span{opacity:1}html.calm .rv .bar{display:none}
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+
+<header class="hero" id="top">
+  <div class="top">
+    <a class="brand" href="#top">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" fill="#D7261E"/><path d="M9 10l6 5-6 5M17 21h5" fill="none" stroke="#ECE6D6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>RexScript</span>
+    </a>
+    <nav class="nav" aria-label="Main"><a href="index.html">← Singulr</a><a href="#idea">The idea</a><a href="#glimpse">A glimpse</a><a href="#research">Research</a></nav>
+  </div>
+  <div class="hero-main">
+    <span class="stamp">In development</span>
+    <h1><span class="ln"><span>Agents don’t</span></span><span class="ln"><span>browse.</span></span><span class="ln"><span>They <em>hunt.</em></span></span></h1>
+    <p class="sub">RexScript is a programming language built for autonomous agents. You write the goal. The runtime handles the hunt.</p>
+    <div class="cta"><a class="btn" href="#glimpse">Take a glimpse</a><a class="btn ghost" href="#research">The research</a></div>
+  </div>
+  <div class="art">
+    <div class="page" id="pg" role="img" aria-label="A web page with a targeting reticle locking onto elements such as a headline, a price and a form.">
+      <div class="pb"><i></i><i></i><i></i><span></span></div>
+      <div class="tg hl" data-n="headline"><b></b><b></b></div>
+      <div class="two"><div class="tg px" data-n="price">$49</div><div class="tg lk" data-n="link"><u>Read more</u></div></div>
+      <div class="tg tbl" data-n="table"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="tg fm" data-n="signup form"><span>you@mail.com</span><em>Join</em></div>
+      <div class="rt" id="rt"><span id="lab">observe page</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="state">
+  <p class="big">Most languages were designed for deterministic inputs. Agents live with the opposite: unreliable pages, rate limits, bot detection and probabilistic model output. RexScript makes that the default assumption, not an afterthought.</p>
+</section>
+
+<section class="ideas" id="idea">
+  <h2>What it’s built around.</h2>
+  <div class="grid">
+    <article class="idea"><h3>Goal-first</h3><p>You describe what you want to accomplish. Recovery and fallbacks are part of the language, not try/catch noise scattered through your code.</p></article>
+    <article class="idea"><h3>Web-native</h3><p>Observing, finding and synthesising are keywords, not library calls, and confidence is part of the picture from the start.</p></article>
+    <article class="idea"><h3>Policy-aware</h3><p>Every action is checked before and after it runs, and leaves an auditable trace behind.</p></article>
+    <article class="idea"><h3>Bridged</h3><p>Drop into other runtimes when the task calls for it, without leaving the agent’s execution context.</p></article>
+  </div>
+</section>
+
+<section class="peek" id="glimpse">
+  <div>
+    <h2>A glimpse.</h2>
+    <p class="lead">This is what we’re comfortable showing for now. The rest stays under wraps until the paper is out.</p>
+    <div class="key"><span><i class="o"></i>Declassified</span><span><i></i>Withheld</span></div>
+  </div>
+  <div class="doc">
+    <div class="dbar"><span>agent.rex</span><b>PARTIALLY REDACTED</b></div>
+<div class="code"><span class="cm"># branch on how sure the agent is</span>
+observe page <span class="wh" style="width:24ch" title="Withheld until the paper is out"></span> as $page
+
+<span class="rv">when $page confidence &gt; 0.7<i class="bar"></i></span> {
+  <span class="rv">find "price" in $page as $price<i class="bar"></i></span>
+  remember <span class="wh" style="width:7ch" title="Withheld until the paper is out"></span> tagged "latest"
+} otherwise {
+  <span class="rv">rationale "Page confidence too low"<i class="bar"></i></span>
+  skip
+}</div>
+  </div>
+</section>
+
+<section class="paper" id="research">
+  <div>
+    <h2>A paper is in the works.</h2>
+    <p>RexScript is under active development. We’re keeping the specification, runtime and tooling private while we write it up. If you work on agent systems, web automation or language design, follow along.</p>
+    <a class="btn" href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">Follow on GitHub</a>
+  </div>
+  <div class="stat" aria-label="Project status">
+    <div>Language design<span>In development</span></div>
+    <div>Runtime and policy layer<span>In development</span></div>
+    <div>Research paper<span>In preparation</span></div>
+    <div>Specification and source<span>Private for now</span></div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div><div class="brand"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="7" fill="#D7261E"/><path d="M9 10l6 5-6 5M17 21h5" fill="none" stroke="#ECE6D6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>RexScript</span></div><p class="foot-tag">A programming language built for autonomous agents.</p></div>
+    <nav class="foot-links" aria-label="Footer"><a href="index.html">← Singulr Tech</a><a href="projects.html">All projects</a><a href="about.html">About</a><a href="careers.html">Careers</a><a href="#idea">The idea</a><a href="#glimpse">A glimpse</a><a href="#research">Research</a></nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>R</span><span>e</span><span>x</span><span>S</span><span>c</span><span>r</span><span>i</span><span>p</span><span>t</span></p>
+  <div class="foot-bottom"><span>© 2026 RexScript. Work in progress.</span><span>A <a href="index.html" style="text-decoration:underline">Singulr Tech</a> product.</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* the reticle: locks onto page elements, follows your pointer, hunts on its own when idle */
+const pg=$("#pg"),rt=$("#rt"),lab=$("#lab"),T=$$(".tg");
+let cur=null,hover=false,idx=0;
+const box=el=>{const p=pg.getBoundingClientRect(),r=el.getBoundingClientRect();return{x:r.left-p.left-6,y:r.top-p.top-6,w:r.width+12,h:r.height+12};};
+const move=b=>{if(g)g.to(rt,{x:b.x,y:b.y,width:b.w,height:b.h,duration:.5,ease:"power3.out",overwrite:true});else Object.assign(rt.style,{left:b.x+"px",top:b.y+"px",width:b.w+"px",height:b.h+"px"});};
+function lock(el){
+  if(cur)cur.classList.remove("hit");
+  cur=el;el.classList.add("hit");lab.textContent='find "'+el.dataset.n+'"';move(box(el));
+}
+pg.addEventListener("pointermove",e=>{
+  hover=true;const t=e.target.closest(".tg");
+  if(t){if(t!==cur)lock(t);return;}
+  if(cur){cur.classList.remove("hit");cur=null;lab.textContent="observe page";}
+  const p=pg.getBoundingClientRect();move({x:e.clientX-p.left-28,y:e.clientY-p.top-28,w:56,h:56});
+});
+pg.addEventListener("pointerleave",()=>{hover=false;});
+const start=()=>lock(T[0]);
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>requestAnimationFrame(start));
+if(!reduce)setInterval(()=>{if(!hover){idx=(idx+1)%T.length;lock(T[idx]);}},1800);
+addEventListener("resize",()=>{if(cur)move(box(cur));});
+
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{document.documentElement.classList.add("calm");return()=>document.documentElement.classList.remove("calm");});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  g.timeline({defaults:{ease:"expo.out"}})
+    .from(".ln span",{yPercent:115,duration:1.4,stagger:.13},.1)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:18,duration:1,stagger:.07},.6)
+    .from(".stamp",{scale:1.6,autoAlpha:0,rotation:-14,duration:.5,ease:"back.out(2.4)"},1.1)
+    .from(".page",{y:40,autoAlpha:0,duration:1.1,ease:"power3.out"},.5);
+  const qw=g.quickTo($("h1"),"--w",{duration:.8,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(70+(e.clientX/innerWidth)*14));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+
+  const p=$(".big");p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+  g.fromTo(".big span",{opacity:.16},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+
+  g.from(".idea",{yPercent:6,autoAlpha:0,duration:.8,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:".grid",start:"top 82%"}});
+  /* declassify the parts we're willing to show */
+  g.to(".rv .bar",{scaleX:0,duration:.9,stagger:.55,ease:"power3.inOut",scrollTrigger:{trigger:".doc",start:"top 70%",once:true}});
+  g.from(".stat div",{xPercent:-5,autoAlpha:0,duration:.7,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:".stat",start:"top 85%"}});
+});
+}
+</script>
+</body>
+</html>
