@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Introspective — See the film inside the page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F0E6;--sand:#EAE2D3;--ink:#161412;--amber:#E59838;--rust:#D95D39;--sage:#CAD8CE;
+  --bg:#F5F0E6;--fg:#161412;--mute:#6E655B;--line:2px;--r:14px;
+  --gutter:clamp(28px,6vw,96px);--sec:clamp(104px,17vh,200px);
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#181614;--fg:#F5F0E6;--mute:#A89F93}}
+:root[data-theme="dark"]{--bg:#181614;--fg:#F5F0E6;--mute:#A89F93}
+html{background:var(--sand);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3,h4,p{margin:0}
+:focus-visible{outline:3px solid var(--rust);outline-offset:3px}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:50;pointer-events:none}
+.prog i{display:block;height:100%;background:var(--rust);transform:scaleX(0);transform-origin:left}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border:var(--line) solid var(--ink);border-radius:var(--r);background:var(--ink);color:var(--paper);font:inherit;font-weight:650;font-size:1.02rem;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .25s,color .25s,border-color .25s,transform .15s}
+.btn:hover{background:var(--amber);color:var(--ink);border-color:var(--ink)}
+.btn:active{transform:translateY(2px)}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.ghost:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:.95rem}
+.btn.ok{background:var(--sage);color:var(--ink);border-color:var(--sage)}
+h2{font-size:clamp(2.3rem,5vw,4.5rem);line-height:.98;letter-spacing:-.035em;font-weight:650}
+code{font-family:var(--mono)}
+
+/* hero */
+.hero{min-height:100svh;background:var(--sand);color:var(--ink);display:grid;grid-template-columns:1.08fr .92fr;grid-template-rows:auto 1fr auto;column-gap:clamp(28px,5vw,72px);padding:0 var(--gutter);overflow:hidden}
+.top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(20px,3vw,36px) 0}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.35rem;letter-spacing:-.02em;text-decoration:none}
+.nav{display:flex;align-items:center;gap:clamp(18px,3vw,36px);font-weight:650}
+.nav a:not(.btn){text-decoration:none}
+.nav a:not(.btn):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.hero-main{align-self:center;padding:4vh 0 6vh}
+h1{font-size:clamp(3.1rem,7.3vw,7rem);line-height:.94;letter-spacing:-.035em;font-weight:650;--w:88;font-stretch:calc(var(--w) * 1%)}
+.ln{display:block;overflow:hidden;padding-bottom:.1em}.ln span{display:block}
+.sub{max-width:31em;font-size:clamp(1.08rem,1.5vw,1.3rem);line-height:1.6;color:#423C35;margin:2rem 0 2.5rem}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+
+/* minimalist widescreen specimen */
+.art{align-self:center;justify-self:end;width:100%;max-width:500px}
+.frame{background:var(--paper);border:var(--line) solid var(--ink);border-radius:var(--r);overflow:hidden;cursor:pointer;user-select:none}
+.fbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:var(--line) solid var(--ink);font:600 .76rem var(--mono)}
+.fstage{position:relative;height:330px;padding:22px;display:flex;flex-direction:column;justify-content:space-between}
+.fstage svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.slug-pill{position:relative;z-index:1;align-self:flex-start;font:700 .76rem var(--mono);padding:5px 10px;border:var(--line) solid var(--ink);border-radius:8px;background:var(--sand)}
+.f-bottom{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+.f-quote{font-size:1.18rem;font-weight:600;letter-spacing:-.015em;line-height:1.35;max-width:22ch}
+.f-meta{font:600 .75rem var(--mono);color:var(--mute);text-align:right;white-space:nowrap}
+.t-line{stroke:var(--ink);stroke-width:2;stroke-dasharray:2 7;stroke-linecap:round}
+.f-ring{fill:none;stroke:var(--ink);stroke-width:2}
+.f-dot{fill:var(--amber);stroke:var(--ink);stroke-width:2.5}
+
+.strip{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);border-top:var(--line) solid var(--ink)}
+.strip div{padding:22px 0 30px;font-weight:650}
+.strip div+div{padding-left:clamp(16px,3vw,40px);border-left:var(--line) solid var(--ink)}
+
+/* statement */
+.state{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter)}
+.big{max-width:1080px;font-size:clamp(1.95rem,4.5vw,3.95rem);line-height:1.14;letter-spacing:-.025em;font-weight:600}
+.big span{transition:color .3s}.big span:hover{color:var(--amber)}
+
+/* pinned 4-step demo */
+.demo{height:100svh;background:var(--amber);color:var(--ink);overflow:hidden}
+.d-in{height:100%;display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:center;padding:0 var(--gutter)}
+.steps h2{font-size:clamp(1.9rem,3.4vw,3.1rem);max-width:10em;margin-bottom:2.6rem}
+.cap-wrap{position:relative;min-height:13rem;padding-left:2.25rem}
+.rail{position:absolute;left:0;top:0;bottom:0;width:4px;background:rgba(22,20,18,.22)}
+.rail i{display:block;height:100%;background:var(--ink);transform:scaleY(0);transform-origin:top}
+.cap{position:absolute;inset:0 0 auto 2.25rem;opacity:0;visibility:hidden}.cap.on{opacity:1;visibility:visible}
+.cap h3{font-size:1.7rem;letter-spacing:-.02em;font-weight:650;margin-bottom:.6rem}
+.cap p{max-width:33ch;font-size:1.1rem;line-height:1.6}
+
+.stage{height:min(72svh,560px)}
+.sheet{height:100%;background:var(--paper);color:var(--ink);border:var(--line) solid var(--ink);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.sbar{padding:12px 18px;border-bottom:var(--line) solid var(--ink);font:600 .78rem var(--mono);display:flex;justify-content:space-between}
+.sbody{flex:1;padding:clamp(22px,3.2vw,38px);display:flex;flex-direction:column;justify-content:space-between;gap:20px;overflow:hidden}
+.sc-text{font:500 clamp(.92rem,1.25vw,1.08rem)/1.7 var(--mono)}
+.sc-slug{display:inline-block;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--sand);margin-bottom:10px}
+.mk{border-radius:4px;padding:1px 4px}
+.s-meter{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;font:600 .8rem var(--mono);padding-top:14px;border-top:var(--line) solid var(--ink)}
+.s-bar{height:12px;background:var(--sand);border-radius:99px;overflow:hidden}
+.s-bar i{display:block;height:100%;width:78%;background:var(--rust);transform-origin:left}
+.s-shots{display:grid;grid-template-columns:repeat(3,1fr);border:var(--line) solid var(--ink);border-radius:10px;overflow:hidden;font-size:.86rem;font-weight:650;opacity:0;visibility:hidden}
+.s-shots div{padding:12px 14px;background:var(--paper)}
+.s-shots div+div{border-left:var(--line) solid var(--ink)}
+.s-shots small{display:block;font:600 .72rem var(--mono);color:var(--mute);margin-bottom:4px}
+.s-foot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:var(--line) solid var(--ink);border-left:10px solid var(--rust);border-radius:10px;font-weight:650;font-size:.9rem;opacity:0;visibility:hidden}
+.s-foot code{font-size:.76rem;color:var(--mute)}
+
+/* 3 modes accordion */
+.modes-s{background:var(--bg);color:var(--fg);padding:var(--sec) var(--gutter)}
+.modes-s h2{max-width:12em;margin-bottom:clamp(36px,6vh,64px)}
+.modes{display:flex;gap:14px;min-height:min(60svh,460px)}
+.mode{flex:1;border:var(--line) solid var(--fg);border-radius:var(--r);padding:clamp(22px,2.8vw,36px);display:flex;flex-direction:column;justify-content:space-between;gap:20px;color:var(--ink);overflow:hidden;transition:flex .6s cubic-bezier(.2,.8,.2,1)}
+.mode h3{font-size:clamp(2rem,4vw,3.6rem);letter-spacing:-.035em;line-height:.96;font-weight:650;margin-bottom:.6rem}
+.mode .q{font-size:1.15rem;font-weight:650}
+.mode .more{max-height:0;opacity:0;transition:max-height .6s cubic-bezier(.2,.8,.2,1),opacity .4s;font-size:1.05rem;line-height:1.58;min-width:250px}
+.modes:hover .mode{flex:.8}
+.modes:not(:hover):not(:focus-within) .mode:first-child,.modes .mode:hover,.modes .mode:focus-visible{flex:2.3}
+.modes:not(:hover):not(:focus-within) .mode:first-child .more,.modes .mode:hover .more,.modes .mode:focus-visible .more{max-height:240px;opacity:1}
+.m1{background:var(--sand)}.m2{background:var(--sage)}.m3{background:var(--amber)}
+
+/* personal note & 3 promises */
+.note-sec{background:var(--sand);color:var(--ink);padding:var(--sec) var(--gutter)}
+.note-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(40px,7vw,104px);align-items:start}
+.kicker{display:inline-block;font:700 .78rem var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.2rem;color:var(--mute)}
+.essay h2{margin-bottom:2rem}
+.prose{display:grid;gap:1.35rem;font-size:clamp(1.08rem,1.4vw,1.24rem);line-height:1.68;max-width:52ch;color:#2C2824}
+.prose em{font-style:normal;background:var(--paper);padding:2px 8px;border-radius:6px;border:1.5px solid var(--ink);font-family:var(--mono);font-size:.88em}
+.prose .pull{font-size:clamp(1.3rem,1.9vw,1.65rem);line-height:1.35;font-weight:650;letter-spacing:-.02em;color:var(--ink);padding:8px 0 8px 18px;border-left:4px solid var(--rust)}
+.sign{margin-top:2.2rem;padding-top:1.4rem;border-top:var(--line) solid var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;font-weight:650}
+.sign span{color:var(--mute);font-size:.95rem}
+
+.promises{position:sticky;top:36px}
+.promises h3{font-size:clamp(1.6rem,2.6vw,2.2rem);letter-spacing:-.025em;font-weight:650;margin-bottom:.5rem}
+.promises > p{color:var(--mute);font-size:1.02rem;margin-bottom:1.8rem}
+.p-list{list-style:none;margin:0;padding:0;border:var(--line) solid var(--ink);border-radius:var(--r);overflow:hidden;background:var(--paper)}
+.p-list li{padding:clamp(20px,2.5vw,28px);display:grid;gap:8px;transition:background .25s}
+.p-list li+li{border-top:var(--line) solid var(--ink)}
+.p-list li:hover{background:var(--amber)}
+.p-list small{font:700 .78rem var(--mono);color:var(--rust)}
+.p-list li:hover small{color:var(--ink)}
+.p-list b{font-size:1.3rem;letter-spacing:-.015em}
+.p-list p{font-size:.98rem;line-height:1.55;color:#3D3731}
+
+/* privacy & local setup */
+.start{background:var(--ink);color:var(--paper);padding:var(--sec) var(--gutter);display:grid;grid-template-columns:5.5fr 4.5fr;gap:clamp(36px,6vw,96px);align-items:end}
+.start h2{margin-bottom:1.1rem}
+.start .lead{max-width:30em;font-size:1.12rem;line-height:1.6;color:#C9C0B3;margin-bottom:1.8rem}
+.win{border:var(--line) solid var(--paper);border-radius:var(--r);overflow:hidden}
+.wbar{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:var(--line) solid rgba(245,240,230,.28);font:600 .78rem var(--mono);color:#C9C0B3}
+.term{padding:18px 20px;font:clamp(.76rem,1.05vw,.9rem)/1.85 var(--mono);white-space:pre;overflow-x:auto;color:var(--paper)}
+.cm{color:#8E8579}
+.win-bar{padding:0 18px 18px;display:flex;gap:10px;flex-wrap:wrap}
+.win-bar .btn{background:var(--amber);color:var(--ink);border-color:var(--amber)}
+.win-bar .btn:hover{background:var(--paper);border-color:var(--paper)}
+
+.no5{list-style:none;margin:0;padding:0}
+.no5 li{font-size:clamp(1.6rem,3.4vw,2.8rem);font-weight:650;letter-spacing:-.03em;line-height:1.18;border-top:var(--line) solid rgba(245,240,230,.28);padding:10px 0;transition:padding-left .4s cubic-bezier(.3,1.4,.5,1),color .3s}
+.no5 li:last-child{border-bottom:var(--line) solid rgba(245,240,230,.28)}
+.no5 li:hover{padding-left:20px;color:var(--amber)}
+
+/* footer */
+.foot{background:var(--ink);color:var(--paper);padding:clamp(56px,9vh,104px) var(--gutter) 28px;border-top:var(--line) solid rgba(245,240,230,.18);overflow:hidden}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.foot-tag{max-width:24em;margin-top:14px;color:#B5ABA0;line-height:1.5}
+.foot-links{display:grid;gap:12px;font-weight:600}
+.foot-links a{text-decoration:none;transition:color .25s}.foot-links a:hover{color:var(--amber)}
+.giant{margin:clamp(40px,8vh,96px) 0 clamp(16px,3vh,32px);font-size:min(14.8vw,19rem);font-weight:650;letter-spacing:-.045em;line-height:.82;padding-bottom:.12em;color:var(--amber);white-space:nowrap;user-select:none}
+.giant span{display:inline-block;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.giant span:hover{transform:translateY(-.06em)}
+.foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:var(--line) solid rgba(245,240,230,.22);padding-top:20px;font-size:.9rem;color:#B5ABA0}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;grid-template-rows:none}.hero>*{grid-column:1/-1}
+  .top{order:1}.hero-main{order:2;padding:16px 0 28px}.art{order:3;justify-self:start;margin-bottom:32px}.strip{order:4;grid-template-columns:1fr}
+  .strip div+div{padding-left:0;border-left:0;border-top:var(--line) solid var(--ink)}
+  .nav a:not(.btn){display:none}
+  .d-in{grid-template-columns:1fr;align-content:center;gap:18px}.stage{order:-1;height:52svh}.steps h2{display:none}
+  .cap-wrap{min-height:9rem}.cap h3{font-size:1.3rem}.cap p{font-size:1rem}
+  .modes{flex-direction:column;min-height:0}.mode,.modes:hover .mode{flex:none}.mode .more{max-height:none;opacity:1}
+  .note-grid,.start,.s-shots{grid-template-columns:1fr}
+  .s-shots div+div{border-left:0;border-top:var(--line) solid var(--ink)}
+  .promises{position:static}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+html.calm .prog{display:none}
+html.calm .demo{height:auto;padding:12vh 0}
+html.calm .cap{position:static;opacity:1;visibility:visible;margin-bottom:1.4rem}
+html.calm .cap-wrap{min-height:0}
+html.calm .big span,html.calm .s-shots,html.calm .s-foot{opacity:1;visibility:visible}
+</style>
+</head>
+<body>
+<div class="prog" aria-hidden="true"><i></i></div>
+
+<header class="hero" id="top">
+  <div class="top">
+    <a class="brand" href="#top">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="15" cy="15" r="5.5" fill="#E59838" stroke="currentColor" stroke-width="2"/>
+      </svg>
+      <span>Introspective</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">← Singulr</a>
+      <a href="#how">How it works</a>
+      <a href="#note">Why it exists</a>
+      <a href="#start">Run locally</a>
+    </nav>
+  </div>
+
+  <div class="hero-main">
+    <h1><span class="ln"><span>See the film</span></span><span class="ln"><span>inside the</span></span><span class="ln"><span>page.</span></span></h1>
+    <p class="sub">Introspective is a quiet, local-first workbench for filmmakers. Drop in a screenplay to pull scenes, characters, shot lists, and storyboards into view—without having to hold the whole movie in your head at once.</p>
+    <div class="cta">
+      <a class="btn" href="#how">See how it works</a>
+      <a class="btn ghost" href="#note">A note to filmmakers</a>
+    </div>
+  </div>
+
+  <div class="art">
+    <div class="frame" id="frame" role="button" tabindex="0" aria-label="Widescreen scene specimen. Click anywhere to shift scenes.">
+      <div class="fbar"><span>2.39:1 Frame Specimen</span><span>Click to shift scene</span></div>
+      <div class="fstage">
+        <span class="slug-pill" id="f-slug">INT. APARTMENT — NIGHT</span>
+        <svg viewBox="0 0 440 300" aria-hidden="true">
+          <circle class="f-ring" id="f-ring" cx="280" cy="136" r="52"/>
+          <line class="t-line" id="f-line" x1="110" y1="82" x2="280" y2="136"/>
+          <circle cx="110" cy="82" r="4.5" fill="currentColor"/>
+          <circle class="f-dot" id="f-dot" cx="280" cy="136" r="12"/>
+        </svg>
+        <div class="f-bottom">
+          <p class="f-quote" id="f-quote">A single lamp on the floor. Neither of them speaks first.</p>
+          <span class="f-meta" id="f-meta">35mm Prime<br>Low-key tungsten</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div>Offline Fountain &amp; script parser</div>
+    <div>Deterministic SQLite scene cache</div>
+    <div>Ollama, Gemini &amp; ComfyUI ready</div>
+  </div>
+</header>
+
+<section class="state">
+  <p class="big">A screenplay is a blueprint made of words. Between the draft and the floor are a hundred quiet decisions—about rhythm, lenses, light, and who is looking at whom. Introspective gives you a calm table to lay those pieces out.</p>
+</section>
+
+<section class="demo" id="how" aria-label="How Introspective works">
+  <div class="d-in">
+    <div class="steps">
+      <h2>From words to a working plan.</h2>
+      <div class="cap-wrap">
+        <div class="rail"><i></i></div>
+        <article class="cap on"><h3>Break the script</h3><p>Parses Fountain and standard scripts offline into scenes, dialogue, and character entities in milliseconds.</p></article>
+        <article class="cap"><h3>Read the room</h3><p>Maps emotional pacing, dramatic tension, and character co-occurrence across the draft.</p></article>
+        <article class="cap"><h3>Plan the coverage</h3><p>Shapes a starting shot list with focal lengths, lighting notes, and estimated screen time.</p></article>
+        <article class="cap"><h3>Board &amp; export</h3><p>Connects to local Flux or ComfyUI for storyboards and animatics, then exports clean PDF, JSON, or ZIP packages.</p></article>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="sheet">
+        <div class="sbar"><span>scene_14.fountain</span><span>SHA-256 cached</span></div>
+        <div class="sbody">
+          <div class="sc-text">
+            <span class="sc-slug" id="s-slug">14 INT. DINER — NIGHT</span>
+            <p><span class="mk" id="m-ch1">MARA</span> sets the microcassette on the table between them. Outside, rain blurs the neon. <span class="mk" id="m-ch2">ELI</span> keeps his hands wrapped around his mug.</p>
+          </div>
+
+          <div class="s-meter">
+            <span>Tension &amp; pace</span>
+            <div class="s-bar"><i id="s-bar"></i></div>
+            <span>0.82 • 45s</span>
+          </div>
+
+          <div class="s-shots" id="s-shots">
+            <div><small>Setup 14A</small>35mm Wide Two-Shot</div>
+            <div><small>Setup 14B</small>85mm Close on Mara</div>
+            <div><small>Setup 14C</small>50mm Insert • Tape</div>
+          </div>
+
+          <div class="s-foot" id="s-foot">
+            <span>Animatic &amp; pitch deck ready</span>
+            <code>PDF • Markdown • ZIP</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="modes-s">
+  <h2>Three ways to run it.</h2>
+  <div class="modes">
+    <article class="mode m1" tabindex="0">
+      <div><h3>Local Only</h3><p class="q">100% offline on your machine.</p></div>
+      <p class="more">Powered by local Ollama models (llama3.2, mistral, qwen2.5) and local ComfyUI, Automatic1111, or Flux Klein 4B. Not a single line of dialogue leaves your computer.</p>
+    </article>
+    <article class="mode m2" tabindex="0">
+      <div><h3>Hybrid</h3><p class="q">Local first, cloud when needed.</p></div>
+      <p class="more">Runs local inference by default and falls back to OpenAI or Gemini only on complex queries—backed by content-hashed SQLite caching so unchanged scenes are never re-run.</p>
+    </article>
+    <article class="mode m3" tabindex="0">
+      <div><h3>Cloud Only</h3><p class="q">Zero local GPU load.</p></div>
+      <p class="more">Connects directly to GPT-4o or Gemini 2.5 Flash. Your API keys are encrypted at rest on disk using PBKDF2 and symmetric Fernet in keystore.enc.</p>
+    </article>
+  </div>
+</section>
+
+<section class="note-sec" id="note">
+  <div class="note-grid">
+    <div class="essay">
+      <span class="kicker">Why it exists • A personal note</span>
+      <h2>For the space between a feeling and showing it.</h2>
+      <div class="prose">
+        <p>There is a particular kind of tired that comes from making a film. It is not just the long days. It is the tabs left open, the versions named <em>final_final_2</em>, and the scene that is still living in your head because there has not been time to explain it to anyone else.</p>
+        <p>We made Introspective for that quiet space between having a feeling and being ready to show it. A place to put the screenplay, pull the pieces into view, and start making decisions without having to hold the whole film in your head at once.</p>
+        <p>It can help with the practical things: finding scenes, gathering characters, shaping a shot list, making notes, and seeing where the story has energy. Those things are important. They are also not the reason you started making films.</p>
+        <p class="pull">Use the tool to get closer to the part that only you can make.</p>
+        <p>If a suggestion gives you a better idea, keep going. If it feels wrong, ignore it. If the strange version is the honest version, choose the strange version. The point is not to make every decision faster. It is to leave you with more attention for the decisions that matter.</p>
+        <p>Thanks for trusting us with a small corner of your process. We hope it gives you a little room back.</p>
+      </div>
+      <div class="sign">
+        <b>Keep making the thing.</b>
+        <span>— The people building Introspective</span>
+      </div>
+    </div>
+
+    <aside class="promises" aria-label="What we try to remember">
+      <span class="kicker">What we try to remember</span>
+      <h3>Three promises to keep the tool in its place.</h3>
+      <p>Built for directors, cinematographers, writers, and producers.</p>
+      <ol class="p-list">
+        <li>
+          <small>01</small>
+          <b>Your taste comes first.</b>
+          <p>A suggestion is only useful if it helps you see your own idea more clearly. Keep it, change it, or throw it away. The final call is always yours.</p>
+        </li>
+        <li>
+          <small>02</small>
+          <b>The busywork should stay busywork.</b>
+          <p>Sorting scenes, checking continuity, building a shot list, and preparing a deck matter. They just should not take the best hours of your day.</p>
+        </li>
+        <li>
+          <small>03</small>
+          <b>Your pages belong to you.</b>
+          <p>Your half-finished draft, odd little detail, and story you are not ready to share are yours. Introspective keeps your work close and your choices private.</p>
+        </li>
+      </ol>
+    </aside>
+  </div>
+</section>
+
+<section class="start" id="start">
+  <div>
+    <h2>Run it on your desk.</h2>
+    <p class="lead">FastAPI + SQLite on port 8420, React + Vite on port 5173. Everything lives in local folders on your machine.</p>
+    <div class="win">
+      <div class="wbar"><span>terminal // quickstart</span><span>Python 3.10+ • Node 18+</span></div>
+      <div class="term" id="cmds"><span class="cm"># 1. Start the FastAPI backend (http://127.0.0.1:8420)</span>
+cd backend && python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python3 -m uvicorn app.main:app --reload --port 8420
+
+<span class="cm"># 2. Start the Vite studio (http://localhost:5173)</span>
+cd frontend && npm install && npm run dev</div>
+      <div class="win-bar">
+        <button class="btn sm" id="copy" type="button">Copy setup commands</button>
+      </div>
+    </div>
+  </div>
+
+  <ul class="no5" aria-label="Privacy and architecture guarantees">
+    <li>No telemetry</li>
+    <li>Local SQLite cache</li>
+    <li>Encrypted keystore.enc</li>
+    <li>Offline Fountain parser</li>
+    <li>MIT Licensed</li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <div class="foot-top">
+    <div>
+      <div class="brand">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+          <circle cx="15" cy="15" r="13" fill="none" stroke="currentColor" stroke-width="2.5"/>
+          <circle cx="15" cy="15" r="5.5" fill="#E59838" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <span>Introspective</span>
+      </div>
+      <p class="foot-tag">A quiet, local-first workbench for the space between the screenplay and the frame.</p>
+    </div>
+    <nav class="foot-links" aria-label="Footer">
+      <a href="index.html">← Singulr Tech</a>
+      <a href="projects.html">All projects</a>
+      <a href="about.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a href="#how">How it works</a>
+      <a href="#note">Why it exists</a>
+      <a href="#start">Run locally</a>
+      <a href="https://github.com/Hootsworth" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </nav>
+  </div>
+  <p class="giant" aria-hidden="true"><span>I</span><span>n</span><span>t</span><span>r</span><span>o</span><span>s</span><span>p</span><span>e</span><span>c</span><span>t</span><span>i</span><span>v</span><span>e</span></p>
+  <div class="foot-bottom">
+    <span>© 2026 Introspective (formerly Script2Vision). MIT License.</span>
+    <span>A <a href="index.html" style="text-decoration:underline">Singulr Tech</a> product.</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const g=window.gsap&&window.ScrollTrigger?window.gsap:null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* Copy setup commands */
+$("#copy").addEventListener("click",async e=>{
+  const b=e.currentTarget,raw=$("#cmds").textContent.replace(/^#.*$/gm,"").trim();
+  let ok=true;
+  try{await navigator.clipboard.writeText(raw);}catch(_){
+    const ta=document.createElement("textarea");ta.value=raw;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();
+    try{ok=document.execCommand("copy");}catch(err){ok=false;}
+    document.body.removeChild(ta);
+  }
+  b.textContent=ok?"Copied":"Select above to copy";b.classList.toggle("ok",ok);
+  setTimeout(()=>{b.textContent="Copy setup commands";b.classList.remove("ok");},2000);
+});
+
+/* Minimalist Hero Frame Specimen */
+const SCENES=[
+  {slug:"INT. APARTMENT — NIGHT",quote:"A single lamp on the floor. Neither of them speaks first.",meta:"35mm Prime\nLow-key tungsten",x:280,y:136,r:52},
+  {slug:"INT. TRAIN COMPARTMENT — DAWN",quote:"Frost on the window. The station name blurs past in silence.",meta:"50mm Anamorphic\nSoft natural fill",x:320,y:108,r:38},
+  {slug:"EXT. ROOFTOP — DUSK",quote:"City sodium lights hum to life three blocks away.",meta:"24mm Wide\nMagic hour silhouette",x:225,y:152,r:64}
+];
+let sIdx=0,P={x:280,y:136,r:52};
+function paintFrame(){
+  $("#f-dot").setAttribute("cx",P.x);$("#f-dot").setAttribute("cy",P.y);
+  $("#f-ring").setAttribute("cx",P.x);$("#f-ring").setAttribute("cy",P.y);$("#f-ring").setAttribute("r",P.r);
+  $("#f-line").setAttribute("x2",P.x);$("#f-line").setAttribute("y2",P.y);
+}
+function nextScene(){
+  sIdx=(sIdx+1)%SCENES.length;
+  const s=SCENES[sIdx];
+  $("#f-slug").textContent=s.slug;
+  $("#f-quote").textContent=s.quote;
+  $("#f-meta").innerHTML=s.meta.replace("\n","<br>");
+  if(g&&!reduce){
+    g.to(P,{x:s.x,y:s.y,r:s.r,duration:1.2,ease:"power3.inOut",onUpdate:paintFrame});
+    g.fromTo("#f-quote,#f-meta",{autoAlpha:0,y:8},{autoAlpha:1,y:0,duration:.6,ease:"power2.out"});
+  }else{
+    P={x:s.x,y:s.y,r:s.r};paintFrame();
+  }
+}
+$("#frame").addEventListener("click",nextScene);
+$("#frame").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();nextScene();}});
+
+if(g){
+g.registerPlugin(ScrollTrigger);
+const mm=g.matchMedia();
+mm.add("(prefers-reduced-motion: reduce)",()=>{
+  document.documentElement.classList.add("calm");
+  return()=>document.documentElement.classList.remove("calm");
+});
+mm.add("(prefers-reduced-motion: no-preference)",()=>{
+  /* Unhurried load sequence */
+  g.timeline({defaults:{ease:"power3.out"}})
+    .from("h1 .ln span",{yPercent:110,duration:1.5,stagger:.14},.1)
+    .from(".brand,.nav>*,.sub,.cta",{autoAlpha:0,y:16,duration:1.1,stagger:.07},.6)
+    .from(".frame",{autoAlpha:0,y:24,duration:1.3},.5)
+    .from(".strip div",{autoAlpha:0,y:12,duration:.9,stagger:.08},.95);
+
+  const qw=g.quickTo($("h1"),"--w",{duration:1,ease:"power3"});
+  $(".hero").addEventListener("pointermove",e=>qw(76+(e.clientX/innerWidth)*12));
+  g.to(".prog i",{scaleX:1,ease:"none",scrollTrigger:{start:0,end:"max",scrub:.3}});
+
+  /* Statement word scrub */
+  const p=$(".big");p.innerHTML=p.textContent.split(" ").map(w=>"<span>"+w+"</span>").join(" ");
+  g.fromTo(".big span",{opacity:.18},{opacity:1,stagger:.12,ease:"none",scrollTrigger:{trigger:p,start:"top 82%",end:"bottom 50%",scrub:true}});
+
+  /* Pinned 4-step demo */
+  const T=[0,1.2,2.4,3.6],END=4.8;
+  const tl=g.timeline({defaults:{ease:"power2.inOut"},scrollTrigger:{trigger:".demo",start:"top top",end:"+=3600",pin:true,scrub:.9,anticipatePin:1}});
+  tl.to(".rail i",{scaleY:1,ease:"none",duration:END},0);
+  $$(".cap").forEach((c,i,all)=>{
+    if(i)tl.fromTo(c,{autoAlpha:0,y:24},{autoAlpha:1,y:0,duration:.3},T[i]-.1);
+    if(i<all.length-1)tl.to(c,{autoAlpha:0,y:-24,duration:.3},T[i+1]-.3);
+  });
+  tl.to("#m-ch1,#m-ch2",{backgroundColor:"#CAD8CE",duration:.35},.25)
+    .fromTo("#s-bar",{scaleX:0},{scaleX:1,duration:.6,ease:"power3.out"},1.25)
+    .to("#s-shots",{autoAlpha:1,duration:.35},2.45)
+    .from("#s-shots div",{y:12,autoAlpha:0,stagger:.1,duration:.35},2.5)
+    .fromTo("#s-foot",{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:.4},3.65)
+    .to({},{duration:.25},END-.25);
+
+  /* Gentle reveals for the essay & promises */
+  g.from(".prose p",{autoAlpha:0,y:16,duration:.8,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:".essay",start:"top 80%"}});
+  g.from(".p-list li",{autoAlpha:0,y:18,duration:.8,stagger:.12,ease:"power3.out",scrollTrigger:{trigger:".p-list",start:"top 82%"}});
+  g.from(".no5 li",{autoAlpha:0,x:-24,duration:.8,stagger:.1,ease:"power3.out",scrollTrigger:{trigger:".no5",start:"top 85%"}});
+});
+}
+</script>
+</body>
+</html>
