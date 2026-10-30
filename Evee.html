@@ -108,6 +108,7 @@ footer{padding:28px var(--g) 0;overflow:hidden}
 .mega{display:flex;justify-content:center;font-weight:300;line-height:.8;letter-spacing:-.04em;white-space:nowrap;padding-bottom:2vw;overflow:hidden}
 .mega span{display:inline-block;text-align:center;font-variation-settings:"wght" 300;overflow:hidden;padding-top:.1em}.mega span i{display:block;font-style:normal}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);background:var(--fg);color:var(--bg);padding:12px 20px;border-radius:999px;font-size:.92rem;z-index:90;transition:transform .4s cubic-bezier(.2,.9,.3,1.2)}.toast.on{transform:translate(-50%,0)}
+.ld{position:fixed;inset:0;z-index:100;pointer-events:none;overflow:hidden}.ld-bg{position:absolute;inset:0;background:var(--bg)}.ld-bar{position:absolute;left:var(--g);right:var(--g);bottom:calc(32px + env(safe-area-inset-bottom,0px));height:2px;background:var(--line)}.ld-bar i{display:block;height:100%;background:var(--grad);transform:scaleX(0);transform-origin:left}.ld-c{position:absolute;inset:0;display:grid;place-items:center}.lw{position:relative;font-size:clamp(88px,24vw,260px);font-weight:700;letter-spacing:-.05em;line-height:1}.wm,.lts{display:flex}.wm{align-items:flex-start}.lt{display:block;overflow:hidden;padding:.04em .03em;margin-right:-.03em}.lt i{display:block;font-style:normal}.slot{width:.42em;height:.42em;margin:.04em 0 0 -.02em;flex:none}.tl{position:absolute;left:0;right:0;top:100%;margin-top:22px;text-align:center;font:400 14px var(--mono);letter-spacing:0;color:var(--ash)}.ring,.bloom{position:absolute;left:0;top:0;width:20px;height:20px;margin:-10px;border-radius:50%;opacity:0}.ring{border:2px solid var(--mag)}.bloom{background:radial-gradient(circle,rgba(255,43,214,.5),rgba(74,11,214,.18) 45%,transparent 70%)}html.pre{overflow:hidden}.pre .brand{opacity:0}
 @media (max-width:860px){.hero,.score,.ba .two,.stage{grid-template-columns:1fr}.nav a:not([href^="index"]){display:none}.gg{grid-template-columns:1fr}.gg div{border-right-width:0!important;border-bottom-width:1px}.gg div:last-child{border-bottom-width:0}.hero{padding-top:100px}.stages{padding-left:0}.brand .mono{display:none}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.pill b{animation:none}.tp::after{animation:none}}
 </style>
@@ -115,9 +116,11 @@ footer{padding:28px var(--g) 0;overflow:hidden}
 <body>
 <div class="prog"><i></i></div>
 <div class="probe" id="cur"><div class="rot"><div class="tail"></div></div><div class="o"></div></div>
+<noscript><style>.ld{display:none}</style></noscript>
+<div class="ld" aria-hidden="true"><div class="ld-bg"><div class="ld-bar"><i></i></div></div><div class="ld-c"><div class="lw"><div class="wm"><div class="lts"><span class="lt"><i>E</i></span><span class="lt"><i>v</i></span><span class="lt"><i>e</i></span><span class="lt"><i>e</i></span></div><div class="slot"></div></div><div class="tl">Proof before the first word.</div><b class="bloom"></b><b class="ring"></b><div class="probe" id="lp"><div class="rot"><div class="tail"></div></div><div class="o"></div></div></div></div></div>
 
 <header class="top">
-  <a class="brand" href="#top" aria-label="Evee home">Evee<svg viewBox="0 0 20 20" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5a5f"/><stop offset=".55" stop-color="#ff2bd6"/><stop offset="1" stop-color="#4a0bd6"/></linearGradient></defs><circle cx="10" cy="10" r="10" fill="url(#lg)"/></svg><span class="mono">Studio edition</span></a>
+  <a class="brand" href="#top" aria-label="Evee home"><span class="bt">Evee</span><svg viewBox="0 0 20 20" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5a5f"/><stop offset=".55" stop-color="#ff2bd6"/><stop offset="1" stop-color="#4a0bd6"/></linearGradient></defs><circle cx="10" cy="10" r="10" fill="url(#lg)"/></svg><span class="mono">Studio edition</span></a>
   <nav class="nav" aria-label="Main"><a href="index.html">← Singulr</a><a href="#how">How it works</a><a href="#evidence">Evidence engine</a><a href="#governance">Governance</a></nav>
 </header>
 
@@ -223,6 +226,37 @@ function probe(el){let lx=0,ly=0,a=0,s=0;const r=el.querySelector('.rot'),t=el.q
   s+=(Math.min(v/16,1)-s)*.18;lx=x;ly=y;el.style.transform=`translate(${x}px,${y}px)`;
   r.style.transform=`rotate(${a}deg)`;t.style.transform=`scaleX(${.12+s*1.1})`}}
 
+/* loader: wordmark rises, the orb sweeps in and lands, then the logo flies to the nav */
+const LT=RM?0:3,ld=$('.ld'),H=document.documentElement;
+if(RM)ld.remove();
+else{H.classList.add('pre');
+ const lw=$('.lw'),lp=$('#lp'),o=lp.querySelector('.o'),tail=lp.querySelector('.tail'),slot=$('.slot'),lts=$('.lts'),ring=$('.ring'),bloom=$('.bloom'),pl=probe(lp),P={x:0,y:0};
+ document.fonts.ready.then(()=>{
+  const sx=slot.offsetLeft+slot.offsetWidth/2,sy=slot.offsetTop+slot.offsetHeight/2,S=slot.offsetWidth/20;
+  gsap.set([ring,bloom],{x:sx,y:sy});gsap.set(lp,{opacity:0});
+  pl(sx,sy);tail.style.display='none';gsap.set(o,{scale:0});
+  const tl=gsap.timeline();
+  tl.from('.lt i',{yPercent:110,duration:1,ease:'expo.out',stagger:.09},0)
+   .to('.ld-bar i',{scaleX:1,duration:2.4,ease:'power2.inOut'},0)
+   .from('.tl',{opacity:0,y:8,duration:.8},.9)
+   .set(lp,{opacity:1},1)
+   .to(o,{scale:S,duration:.75,ease:'back.out(2.4)'},1)
+   .fromTo(ring,{scale:S,opacity:.8},{scale:S*3.4,opacity:0,duration:1.1,ease:'power2.out',immediateRender:false},1.2)
+   .fromTo(bloom,{scale:S,opacity:0},{scale:S*9,opacity:1,duration:.6,ease:'power2.out',immediateRender:false},1.2)
+   .to(bloom,{opacity:0,duration:.9},1.8)
+   .to('.tl,.ld-bar',{opacity:0,duration:.3},2.7)
+   .call(()=>{
+    const a=lts.getBoundingClientRect(),b=$('.bt').getBoundingClientRect(),w=lw.getBoundingClientRect(),s=b.width/a.width;
+    gsap.set(lw,{transformOrigin:(a.left-w.left)+'px '+(a.top-w.top)+'px'});
+    gsap.timeline({onComplete:()=>{ld.remove();H.classList.remove('pre');ScrollTrigger.refresh()}})
+     .to(lw,{x:b.left-a.left,y:(b.top+b.height/2)-(a.top+a.height*s/2),scale:s,duration:1.1,ease:'expo.inOut'},0)
+     .to('.ld-bg',{opacity:0,duration:.7,ease:'power1.inOut'},.2)
+     .to('.brand',{opacity:1,duration:.3},.9)
+     .to(lw,{opacity:0,duration:.3},.95);
+   },null,2.95);
+ });
+}
+
 /* cursor probe */
 if(matchMedia('(pointer:fine)').matches&&!RM){const el=$('#cur'),pl=probe(el),m={x:innerWidth/2,y:innerHeight/2},p={x:m.x,y:m.y};
   addEventListener('pointermove',e=>{m.x=e.clientX;m.y=e.clientY;el.style.opacity=1});
@@ -235,10 +269,10 @@ gsap.to('.prog i',{scaleX:1,ease:'none',scrollTrigger:{scrub:.3,start:0,end:'max
 const tg=$$('.tg'),gaps=$('#gaps');tg.forEach(t=>t.querySelector('.chip').textContent=t.dataset.c);
 if(RM){tg.forEach(t=>t.classList.add('hit'));gaps.textContent=3}
 else{
-  gsap.from('.ln span',{yPercent:110,duration:1.1,ease:'expo.out',stagger:.12,delay:.1});
-  gsap.from('.sub,.cta,.mock',{opacity:0,y:18,duration:.9,ease:'power3.out',stagger:.1,delay:.5});
+  gsap.from('.ln span',{yPercent:110,duration:1.1,ease:'expo.out',stagger:.12,delay:LT+.1});
+  gsap.from('.sub,.cta,.mock',{opacity:0,y:18,duration:.9,ease:'power3.out',stagger:.1,delay:LT+.4});
   const sc=$('#scan'),ps=probe(sc),P={x:-40,y:90},mock=$('#mock');
-  const tl=gsap.timeline({repeat:-1,repeatDelay:.8,delay:1.4,onRepeat:()=>{tg.forEach(t=>t.classList.remove('hit'));gaps.textContent=0;P.x=-40;P.y=90}});
+  const tl=gsap.timeline({repeat:-1,repeatDelay:.8,delay:LT+1.4,onRepeat:()=>{tg.forEach(t=>t.classList.remove('hit'));gaps.textContent=0;P.x=-40;P.y=90}});
   tg.forEach((t,i)=>{
     tl.to(P,{x:()=>t.getBoundingClientRect().left-mock.getBoundingClientRect().left+t.offsetWidth*(.28+i*.18),y:()=>t.getBoundingClientRect().top-mock.getBoundingClientRect().top+t.offsetHeight/2,duration:1.1,ease:'power3.inOut',onUpdate:()=>ps(P.x,P.y)})
       .call(()=>{t.classList.add('hit');gaps.textContent=i+1},null,'>-.1').to({},{duration:.7});});
