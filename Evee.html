@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evee: Prospecting that shows its evidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--off:#f8fafc;--fg:#111827;--mute:#4b5563;--ash:#9ca3af;--line:#e5e7eb;--rose:#f43f5e;--coral:#ff5a5f;--mag:#ff2bd6;--vio:#4a0bd6;--deep:#120b2e;
+--grad:linear-gradient(135deg,var(--coral),var(--mag) 55%,var(--vio));--g:clamp(24px,6vw,96px);--sec:clamp(88px,15vh,170px);--r:14px;
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0e17;--off:#16141f;--fg:#f5f3ff;--mute:#b4b0c7;--ash:#7d7894;--line:#2a2638}}
+:root[data-theme="dark"]{--bg:#0f0e17;--off:#16141f;--fg:#f5f3ff;--mute:#b4b0c7;--ash:#7d7894;--line:#2a2638}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}h1,h2,h3,p{margin:0}
+:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+.mono{font-family:var(--mono);font-size:.78rem;color:var(--ash)}
+h1,h2{font-weight:300;letter-spacing:-.04em;line-height:1}
+h2{font-size:clamp(2.2rem,5vw,4.4rem)}
+.prog{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:3px;z-index:70}.prog i{display:block;height:100%;background:var(--grad);transform:scaleX(0);transform-origin:left}
+.probe{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:5}
+.probe .rot{position:absolute;left:0;top:0}
+.probe .o{position:absolute;left:-10px;top:-10px;width:20px;height:20px;border-radius:50%;background:var(--grad);box-shadow:0 0 24px rgba(255,43,214,.45)}
+.probe .tail{position:absolute;right:0;top:-5px;width:70px;height:10px;transform-origin:right center;transform:scaleX(.15);background:linear-gradient(to left,rgba(255,43,214,.6),transparent);clip-path:polygon(100% 0,100% 100%,0 50%)}
+#cur{position:fixed;z-index:80;opacity:0}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border:2px solid var(--fg);border-radius:999px;background:var(--fg);color:var(--bg);font:inherit;font-weight:500;font-size:1rem;text-decoration:none;cursor:pointer;transition:background .25s,color .25s,border-color .25s,transform .15s}
+.btn:hover{background:var(--rose);border-color:var(--rose);color:#fff}.btn:active{transform:translateY(2px)}
+.btn.ghost{background:transparent;color:var(--fg)}.btn.ghost:hover{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.btn.sm{padding:9px 18px;font-size:.92rem}
+.top{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(18px,3vw,32px) var(--g);z-index:10}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;font-size:1.6rem;letter-spacing:-.04em}
+.brand svg{width:14px;height:14px;margin:-14px 0 0 -8px}
+.brand .mono{margin-left:6px;font-weight:400;letter-spacing:0}
+.nav{display:flex;align-items:center;gap:clamp(16px,2.6vw,34px);font-size:.95rem;font-weight:600}
+.nav a{text-decoration:none;color:var(--mute);transition:color .2s}.nav a:hover{color:var(--fg)}
+.nav a[href^="index"]{font-weight:700;color:var(--fg)}
+.hero{position:relative;min-height:100svh;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,4vw,72px);align-items:center;padding:120px var(--g) 64px;overflow:hidden}
+.pill{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font:.78rem var(--mono);color:var(--mute);margin-bottom:1.8rem}
+.pill b{width:8px;height:8px;border-radius:50%;background:var(--rose);animation:pu 1.8s infinite}
+@keyframes pu{50%{box-shadow:0 0 0 7px rgba(244,63,94,0)}0%{box-shadow:0 0 0 0 rgba(244,63,94,.5)}}
+h1{font-size:clamp(2.6rem,5.7vw,5.6rem);line-height:1.02}
+.ln{display:block;overflow:hidden;padding-bottom:.08em}.ln span{display:block}
+.sub{max-width:32em;font-size:clamp(1.05rem,1.5vw,1.25rem);line-height:1.6;color:var(--mute);margin:1.8rem 0 2.2rem}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.mock{position:relative;background:#fff;color:#111827;border:2px solid var(--fg);border-radius:var(--r);padding:0 0 56px;min-height:440px;overflow:hidden}
+.mb{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid #e5e7eb}.mb i{width:10px;height:10px;border-radius:50%;background:#e5e7eb}.mb span{flex:1;margin-left:8px;background:#f1f5f9;border-radius:6px;padding:4px 10px;font:.75rem var(--mono);color:#6b7280}
+.site{display:grid;gap:16px;padding:20px}
+.site h3{font-size:1.5rem;font-weight:600;letter-spacing:-.03em}
+.tg{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e5e7eb;border-radius:10px;padding:14px;font-size:.95rem;transition:border-color .2s,background .2s}
+.tg.hit{border:2px solid var(--rose);padding:13px;background:#fff1f3}
+.tg u{color:#6b7280;font-size:.85rem}.tg em{font-style:normal;background:#111827;color:#fff;border-radius:8px;padding:7px 14px;font-size:.85rem}
+.chip{position:absolute;right:8px;top:-12px;background:var(--rose);color:#fff;font:.7rem var(--mono);padding:3px 9px;border-radius:6px;white-space:nowrap;opacity:0;transform:translateY(6px);transition:.35s}
+.tg.hit .chip{opacity:1;transform:none}
+.cnt{position:absolute;left:20px;bottom:16px;font:.8rem var(--mono);color:#6b7280}.cnt b{color:var(--rose);font-weight:500}
+.state{background:var(--deep);color:#f5f3ff;padding:var(--sec) var(--g)}
+.big{max-width:1080px;font-size:clamp(1.9rem,4.4vw,3.8rem);line-height:1.14;letter-spacing:-.03em;font-weight:300}
+.big span{color:#4b4668}.big .w50{position:relative;white-space:nowrap}
+.big .w50::after{content:"";position:absolute;left:-2%;right:-2%;top:55%;height:3px;background:var(--rose);transform:scaleX(var(--s,0));transform-origin:left}
+.pipe{position:relative;padding:var(--sec) var(--g)}
+.pipe h2{margin-bottom:clamp(32px,6vh,72px);max-width:11em}
+.stages{display:grid;gap:56px;padding-left:clamp(40px,6vw,88px)}
+.stage{display:grid;grid-template-columns:5fr 6fr;gap:clamp(28px,5vw,72px);align-items:center}
+.stage h3{font-size:clamp(1.6rem,2.8vw,2.4rem);font-weight:400;letter-spacing:-.03em;line-height:1.1;margin:.7rem 0 1rem}
+.stage p{color:var(--mute);line-height:1.65;max-width:30em}
+.rail{position:absolute;left:var(--g);top:0;bottom:0;width:2px;background:var(--line);display:none}
+.rail i{position:absolute;left:0;top:0;width:100%;height:100%;background:var(--grad);transform:scaleY(0);transform-origin:top}
+.rd{position:absolute;left:-7px;top:0;width:16px;height:16px;border-radius:50%;background:var(--grad)}
+.pipe.pin{height:100svh;padding-top:clamp(84px,12vh,120px);padding-bottom:40px;overflow:hidden}
+.pipe.pin h2{font-size:clamp(1.8rem,3.4vw,3rem);margin-bottom:3vh;padding-left:clamp(40px,6vw,88px)}
+.pipe.pin .rail{display:block;top:clamp(84px,12vh,120px);bottom:40px}
+.pipe.pin .stages{gap:0}.pipe.pin .stage{grid-area:1/1}
+.pan{background:var(--off);border:2px solid var(--fg);border-radius:var(--r);padding:20px;display:grid;gap:10px;min-height:300px;align-content:start}
+.row{display:flex;justify-content:space-between;gap:14px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.92rem}
+.row .mono{white-space:nowrap}.ok{color:#16a34a!important}.bad{color:var(--rose)!important}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;width:var(--w);background:var(--grad);border-radius:99px}
+.score{background:var(--off);padding:var(--sec) var(--g);display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,96px);align-items:center;border-block:1px solid var(--line)}
+.score p.l,.gov p,.ba p.l{color:var(--mute);line-height:1.65;max-width:30em;margin-top:1.2rem}
+.card{background:var(--bg);border:2px solid var(--fg);border-radius:var(--r);padding:clamp(20px,3vw,32px)}
+.num{font-size:clamp(4rem,9vw,7.5rem);font-weight:200;letter-spacing:-.06em;line-height:.9}.num small{font-size:.28em;color:var(--ash);letter-spacing:0}
+.m{display:grid;gap:7px;margin-top:18px;font-size:.9rem}.m div{display:flex;justify-content:space-between}
+.sw{display:flex;align-items:center;gap:12px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line);cursor:pointer;font-size:.95rem;background:none;border-inline:0;border-bottom:0;color:inherit;font-family:inherit;width:100%;text-align:left}
+.sw i{width:44px;height:26px;border-radius:99px;background:var(--rose);position:relative;transition:background .3s;flex:none}.sw i::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s}
+.sw[aria-checked=true] i{background:#16a34a}.sw[aria-checked=true] i::after{transform:translateX(18px)}
+.note{margin-top:12px;font:.8rem var(--mono);color:var(--mute);min-height:2.4em}
+.ba{padding:var(--sec) var(--g)}
+.ba .two{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:clamp(32px,6vh,64px)}
+.mail{display:grid;gap:12px;align-content:start;min-height:290px;line-height:1.6}
+.mail.g{border:1px solid var(--line);border-radius:var(--r);padding:clamp(20px,3vw,32px);color:var(--ash)}
+.mail .sj{font-weight:600;color:var(--fg)}.mail.g .sj{color:var(--ash)}.mail .sj s{text-decoration:none;color:var(--rose)}
+.tp::after{content:"";display:inline-block;width:2px;height:1em;background:var(--rose);margin-left:2px;vertical-align:-.12em;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.tag{font:.74rem var(--mono);display:inline-block;padding:3px 9px;border-radius:6px;border:1px solid currentColor}
+.gov{padding:var(--sec) var(--g);background:var(--off);border-block:1px solid var(--line)}
+.gg{display:grid;grid-template-columns:1fr 1fr;margin-top:clamp(32px,6vh,64px);border:2px solid var(--fg);border-radius:var(--r);overflow:hidden;background:var(--bg)}
+.gg div{padding:clamp(20px,3vw,36px);border:0 solid var(--line)}.gg div:nth-child(odd){border-right-width:1px}.gg div:nth-child(-n+2){border-bottom-width:1px}
+.gg h3{font-size:1.25rem;font-weight:500;letter-spacing:-.02em}.gg p{margin-top:.6rem;font-size:.95rem}
+.fin{position:relative;background:var(--grad);color:#fff;padding:var(--sec) var(--g);overflow:hidden}
+.fin h2{font-size:clamp(2.4rem,6vw,5.6rem);max-width:10em;position:relative}
+.fin .btn{background:#fff;color:#111827;border-color:#fff}.fin .btn:hover{background:#111827;color:#fff;border-color:#111827}.fin .btn.ghost{background:transparent;color:#fff}.fin .btn.ghost:hover{background:#fff;color:#111827}
+.fin .cta{margin-top:2.4rem;position:relative}
+.fin::after{content:"";position:absolute;right:-12vw;top:-18vw;width:46vw;height:46vw;border-radius:50%;background:rgba(255,255,255,.12)}
+footer{padding:28px var(--g) 0;overflow:hidden}
+.fb{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:24px}.fb a{color:var(--mute)}
+.mega{display:flex;justify-content:center;font-weight:300;line-height:.8;letter-spacing:-.04em;white-space:nowrap;padding-bottom:2vw;overflow:hidden}
+.mega span{display:inline-block;text-align:center;font-variation-settings:"wght" 300;overflow:hidden;padding-top:.1em}.mega span i{display:block;font-style:normal}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);background:var(--fg);color:var(--bg);padding:12px 20px;border-radius:999px;font-size:.92rem;z-index:90;transition:transform .4s cubic-bezier(.2,.9,.3,1.2)}.toast.on{transform:translate(-50%,0)}
+@media (max-width:860px){.hero,.score,.ba .two,.stage{grid-template-columns:1fr}.nav a:not([href^="index"]){display:none}.gg{grid-template-columns:1fr}.gg div{border-right-width:0!important;border-bottom-width:1px}.gg div:last-child{border-bottom-width:0}.hero{padding-top:100px}.stages{padding-left:0}.brand .mono{display:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.pill b{animation:none}.tp::after{animation:none}}
+</style>
+</head>
+<body>
+<div class="prog"><i></i></div>
+<div class="probe" id="cur"><div class="rot"><div class="tail"></div></div><div class="o"></div></div>
+
+<header class="top">
+  <a class="brand" href="#top" aria-label="Evee home">Evee<svg viewBox="0 0 20 20" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5a5f"/><stop offset=".55" stop-color="#ff2bd6"/><stop offset="1" stop-color="#4a0bd6"/></linearGradient></defs><circle cx="10" cy="10" r="10" fill="url(#lg)"/></svg><span class="mono">Studio edition</span></a>
+  <nav class="nav" aria-label="Main"><a href="index.html">← Singulr</a><a href="#how">How it works</a><a href="#evidence">Evidence engine</a><a href="#governance">Governance</a></nav>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div>
+    <h1 aria-label="High-intent outreach, grounded in verified business observations."><span class="ln"><span>High-intent outreach,</span></span><span class="ln"><span>grounded in verified</span></span><span class="ln"><span>business observations.</span></span></h1>
+    <p class="sub">Evee reads the public web presence of local businesses, finds concrete gaps like a missing booking system or a broken mobile menu, and writes a bespoke email. A person approves every one.</p>
+    <div class="cta"><a class="btn" href="https://evee.singulr.tech" target="_blank" rel="noopener">Launch Studio</a><a class="btn ghost" href="#evidence">Explore a live sample dossier</a></div>
+  </div>
+  <div class="mock" id="mock">
+    <div class="mb"><i></i><i></i><i></i><span>artisanbakes.in</span></div>
+    <div class="site">
+      <h3>Artisan Bakes, Indiranagar</h3>
+      <div class="tg" data-c="PDF menu, no ordering · /menu"><span>Weekend brunch menu</span><u>brunch-menu.pdf</u><b class="chip"></b></div>
+      <div class="tg" data-c="Reservation form inactive · /booking"><span>Book your table</span><em>Reserve</em><b class="chip"></b></div>
+      <div class="tg" data-c="No slot confirmation at 390px"><span>Mobile view</span><u>390 × 844</u><b class="chip"></b></div>
+    </div>
+    <div class="cnt"><b id="gaps">0</b> of 3 gaps cited with page URLs</div>
+    <div class="probe" id="scan"><div class="rot"><div class="tail"></div></div><div class="o"></div></div>
+  </div>
+</section>
+
+<section class="state">
+  <p class="big" id="big">Most outreach tools brag about sending <span class="w50">50,000</span> cold emails a month. Evee finds about 100 businesses a month, and shows its proof before it writes a single word.</p>
+</section>
+
+<section class="pipe" id="how">
+  <div class="rail"><i></i><b class="rd"></b></div>
+  <h2>Four stages. No shortcuts.</h2>
+  <div class="stages">
+    <div class="stage"><div><span class="mono">Stage 1 of 4</span><h3>Find real businesses</h3><p>Pick a city and a category, such as specialty cafés in Bengaluru or dental practices in London. Evee pulls each business’s address, phone, opening hours and official website from Google Places.</p></div>
+      <div class="pan"><div class="row"><span>Artisan Bakes · Indiranagar</span><span class="mono ok">website found</span></div><div class="row"><span>Brew Room · Koramangala</span><span class="mono ok">website found</span></div><div class="row"><span>Smile Dental · Marylebone</span><span class="mono bad">no website</span></div><div class="row"><span>Slow Roast · Bandra</span><span class="mono ok">website found</span></div></div></div>
+    <div class="stage"><div><span class="mono">Stage 2 of 4</span><h3>Read their website, safely</h3><p>Evee opens up to five key pages, checks the mobile layout and notes what’s missing. The crawler pins DNS and refuses private IP ranges, so it can’t be turned against your network.</p></div>
+      <div class="pan"><div class="row"><span class="mono">/menu</span><span class="mono bad">PDF only</span></div><div class="row"><span class="mono">/booking</span><span class="mono bad">form inactive</span></div><div class="row"><span class="mono">/order</span><span class="mono bad">not found</span></div><div class="row"><span class="mono">/contact</span><span class="mono ok">ok</span></div><div class="row"><span class="mono">mobile 390px</span><span class="mono bad">no slot confirm</span></div></div></div>
+    <div class="stage"><div><span class="mono">Stage 3 of 4</span><h3>Score it out of 100</h3><p>Identity confidence, evidence certainty and commercial fit, calculated the same way every time. No official website or no evidence? The score is capped, so a weak lead never looks strong.</p></div>
+      <div class="pan"><div class="row"><span>Identity confidence</span><div class="bar" style="width:40%"><i style="--w:93%"></i></div></div><div class="row"><span>Evidence certainty</span><div class="bar" style="width:40%"><i style="--w:90%"></i></div></div><div class="row"><span>Commercial fit</span><div class="bar" style="width:40%"><i style="--w:73%"></i></div></div></div></div>
+    <div class="stage"><div><span class="mono">Stage 4 of 4</span><h3>Draft, then wait for you</h3><p>Gemini, OpenAI or Meta models write three sentences that quote the exact observation. The draft lands in your Operator Queue, and nothing sends until you approve it.</p></div>
+      <div class="pan"><div class="row"><span>To: Sunita · Artisan Bakes</span><span class="mono">draft ready</span></div><div class="row" style="display:block;line-height:1.55;color:var(--mute)">…your table reservation button routes to an inactive third-party form without mobile slot confirmation.</div><div class="row"><span class="mono">Operator Queue</span><span class="mono bad">waiting for review</span></div></div></div>
+  </div>
+</section>
+
+<section class="score" id="evidence">
+  <div><span class="mono">Evidence engine</span><h2 style="margin-top:.8rem">A score you can check.</h2><p class="l">Every point traces back to something Evee saw on the business’s own pages. Flip the switch to see what happens when there’s no official website to check.</p></div>
+  <div class="card">
+    <div class="mono">Sample business · illustrative numbers</div>
+    <div class="num" style="margin-top:14px"><span id="tot">86</span><small> / 100</small></div>
+    <div class="m"><div><span>Identity confidence</span><span id="v1">93%</span></div><div class="bar"><i id="b1" style="--w:93%"></i></div>
+    <div><span>Evidence certainty</span><span id="v2">90%</span></div><div class="bar"><i id="b2" style="--w:90%"></i></div>
+    <div><span>Commercial fit</span><span id="v3">73%</span></div><div class="bar"><i id="b3" style="--w:73%"></i></div></div>
+    <button class="sw" id="sw" role="switch" aria-checked="true"><i></i>This business has an official website</button>
+    <p class="note" id="note">Official website found. Full evidence available.</p>
+  </div>
+</section>
+
+<section class="ba">
+  <span class="mono">Before and after</span><h2 style="margin-top:.8rem;max-width:12em">Same inbox. Different email.</h2>
+  <div class="two">
+    <div class="mail g"><span class="tag">Generic outreach tool</span><div class="sj">Subject: Quick question for you</div><p>“Hi team, I noticed you have an amazing restaurant! We help restaurants 10x their revenue with our proprietary AI tool. Would you be free for a 15 min call on Tuesday?”</p><p class="bad" style="font-size:.9rem">Vague, generic, with a compliment nobody checked.</p></div>
+    <div class="card mail"><span class="tag" style="color:#16a34a">Evee grounded draft</span><div class="sj">Subject: <s>Online table reservation gap on artisanbakes.in</s></div><p class="tp" id="draft" data-t="“Hi Sunita, while viewing the weekend brunch menu on artisanbakes.in, I noticed your table reservation button routes to an inactive third-party form without mobile slot confirmation. We built a 1-tap WhatsApp booking workflow for Indiranagar cafes that fixes this drop-off.”"></p><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn sm" id="appr">Approve draft</button><span class="mono">Evidence: artisanbakes.in/booking</span></div></div>
+  </div>
+</section>
+
+<section class="gov" id="governance">
+  <span class="mono">Governance and India DPDP readiness</span><h2 style="margin-top:.8rem;max-width:12em">Built so it can’t send by accident.</h2>
+  <div class="gg">
+    <div><h3>Zero accidental sends</h3><p>Outbound email stays blocked until an approved workflow policy and a manual review are in place.</p></div>
+    <div><h3>Your own mailbox</h3><p>Connect with a 16-character Google App Password or your company’s custom SMTP server.</p></div>
+    <div><h3>Global suppression registry</h3><p>Exclude unsubscribed addresses or competitor domains once, and they stay excluded everywhere.</p></div>
+    <div><h3>Encrypted vault</h3><p>Credentials and tokens are encrypted at rest with AES-256-GCM authenticated encryption.</p></div>
+  </div>
+</section>
+
+<section class="fin" id="access">
+  <h2>Find 100 businesses worth writing to.</h2>
+  <div class="cta"><a class="btn" href="https://evee.singulr.tech" target="_blank" rel="noopener">Launch Studio</a><a class="btn ghost" href="#evidence">Explore a live sample dossier</a></div>
+</section>
+</main>
+
+<footer>
+  <div class="fb">
+    <span class="mono">A <a href="index.html" style="text-decoration:underline">Singulr Tech</a> product · B2B prospecting studio</span>
+    <div style="display:flex;gap:18px;flex-wrap:wrap">
+      <a class="mono" href="index.html">← Singulr</a>
+      <a class="mono" href="projects.html">All projects</a>
+      <a class="mono" href="privacy.html">Privacy policy</a>
+    </div>
+  </div>
+  <div class="mega" id="mega" aria-label="Evee AI"></div>
+</footer>
+<div class="toast" id="toast" role="status">Approved by operator. Ready to send.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+gsap.registerPlugin(ScrollTrigger);
+
+/* probe: an orb whose comet tail follows its velocity */
+function probe(el){let lx=0,ly=0,a=0,s=0;const r=el.querySelector('.rot'),t=el.querySelector('.tail');
+  return(x,y)=>{const dx=x-lx,dy=y-ly,v=Math.hypot(dx,dy);if(v>.5)a=Math.atan2(dy,dx)*180/Math.PI;
+  s+=(Math.min(v/16,1)-s)*.18;lx=x;ly=y;el.style.transform=`translate(${x}px,${y}px)`;
+  r.style.transform=`rotate(${a}deg)`;t.style.transform=`scaleX(${.12+s*1.1})`}}
+
+/* cursor probe */
+if(matchMedia('(pointer:fine)').matches&&!RM){const el=$('#cur'),pl=probe(el),m={x:innerWidth/2,y:innerHeight/2},p={x:m.x,y:m.y};
+  addEventListener('pointermove',e=>{m.x=e.clientX;m.y=e.clientY;el.style.opacity=1});
+  gsap.ticker.add(()=>{p.x+=(m.x-p.x)*.16;p.y+=(m.y-p.y)*.16;pl(p.x,p.y)})}
+
+/* scroll progress */
+gsap.to('.prog i',{scaleX:1,ease:'none',scrollTrigger:{scrub:.3,start:0,end:'max'}});
+
+/* hero: headline, then the probe audits the mock site */
+const tg=$$('.tg'),gaps=$('#gaps');tg.forEach(t=>t.querySelector('.chip').textContent=t.dataset.c);
+if(RM){tg.forEach(t=>t.classList.add('hit'));gaps.textContent=3}
+else{
+  gsap.from('.ln span',{yPercent:110,duration:1.1,ease:'expo.out',stagger:.12,delay:.1});
+  gsap.from('.sub,.cta,.mock',{opacity:0,y:18,duration:.9,ease:'power3.out',stagger:.1,delay:.5});
+  const sc=$('#scan'),ps=probe(sc),P={x:-40,y:90},mock=$('#mock');
+  const tl=gsap.timeline({repeat:-1,repeatDelay:.8,delay:1.4,onRepeat:()=>{tg.forEach(t=>t.classList.remove('hit'));gaps.textContent=0;P.x=-40;P.y=90}});
+  tg.forEach((t,i)=>{
+    tl.to(P,{x:()=>t.getBoundingClientRect().left-mock.getBoundingClientRect().left+t.offsetWidth*(.28+i*.18),y:()=>t.getBoundingClientRect().top-mock.getBoundingClientRect().top+t.offsetHeight/2,duration:1.1,ease:'power3.inOut',onUpdate:()=>ps(P.x,P.y)})
+      .call(()=>{t.classList.add('hit');gaps.textContent=i+1},null,'>-.1').to({},{duration:.7});});
+  tl.to(P,{x:()=>mock.offsetWidth+60,y:40,duration:1.3,ease:'power2.in',onUpdate:()=>ps(P.x,P.y)});
+}
+
+/* statement: words light up with scroll, 50,000 gets struck */
+const big=$('#big');
+big.childNodes.forEach(n=>{if(n.nodeType===3){const f=document.createDocumentFragment();n.textContent.split(/(\s+)/).forEach(w=>{if(!w.trim()){f.append(w);return}const s=document.createElement('span');s.textContent=w;f.append(s)});n.replaceWith(f)}});
+const ws=$$('#big span');
+if(RM)ws.forEach(w=>w.style.color='#f5f3ff');
+else{gsap.to(ws,{color:'#f5f3ff',stagger:.1,ease:'none',scrollTrigger:{trigger:big,start:'top 80%',end:'bottom 45%',scrub:.4}});
+  gsap.to('.w50',{'--s':1,ease:'none',scrollTrigger:{trigger:big,start:'top 60%',end:'top 35%',scrub:.4}})}
+
+/* pipeline: pinned on desktop, the orb rides the rail */
+const pipe=$('.pipe'),mm=gsap.matchMedia();
+mm.add('(min-width:861px) and (prefers-reduced-motion:no-preference)',()=>{
+  pipe.classList.add('pin');const st=$$('.stage');gsap.set(st.slice(1),{autoAlpha:0});
+  const tl=gsap.timeline({scrollTrigger:{trigger:pipe,start:'top top',end:'+=320%',pin:true,scrub:.6}});
+  tl.to('.rail i',{scaleY:1,ease:'none',duration:3},0).to('.rd',{y:()=>$('.rail').offsetHeight-16,ease:'none',duration:3},0);
+  for(let i=1;i<4;i++){tl.to(st[i-1],{autoAlpha:0,y:-30,duration:.3},i*.75-.15).fromTo(st[i],{autoAlpha:0,y:30},{autoAlpha:1,y:0,duration:.3},i*.75)}
+  return()=>pipe.classList.remove('pin');
+});
+
+/* score switch */
+const sw=$('#sw'),S={t:86,a:93,b:90,c:73},fmt=v=>Math.round(v);
+function paint(){$('#tot').textContent=fmt(S.t);[['a',1],['b',2],['c',3]].forEach(([k,n])=>{$('#v'+n).textContent=fmt(S[k])+'%';$('#b'+n).style.setProperty('--w',S[k]+'%')})}
+sw.onclick=()=>{const on=sw.getAttribute('aria-checked')!=='true';sw.setAttribute('aria-checked',on);
+  $('#note').textContent=on?'Official website found. Full evidence available.':'No official website. Raw score 42, capped at 40.';
+  const to=on?{t:86,a:93,b:90,c:73}:{t:40,a:47,b:15,c:73};
+  RM?(Object.assign(S,to),paint()):gsap.to(S,{...to,duration:1,ease:'power3.out',onUpdate:paint})};
+if(!RM)gsap.from(S,{t:0,a:0,b:0,c:0,duration:1.4,ease:'power3.out',onUpdate:paint,scrollTrigger:{trigger:'.score',start:'top 65%',once:true}});
+
+/* draft types itself, approve confirms */
+const d=$('#draft'),txt=d.dataset.t;
+if(RM)d.textContent=txt;else{const o={n:0};gsap.to(o,{n:txt.length,duration:4.5,ease:'none',onUpdate:()=>d.textContent=txt.slice(0,Math.round(o.n)),scrollTrigger:{trigger:d,start:'top 75%',once:true}})}
+$('#appr').onclick=e=>{const b=e.target,t=$('#toast');b.textContent='Approved';b.disabled=true;b.style.background='#16a34a';b.style.borderColor='#16a34a';t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600)};
+
+/* footer: letters respond to the cursor via variable weight */
+const mega=$('#mega'),L=[];
+'EVEE AI'.split('').forEach(c=>{const s=document.createElement('span');s.innerHTML='<i>'+(c===' '?'&nbsp;':c)+'</i>';mega.append(s);L.push(s)});
+function fit(){mega.style.fontSize='100px';L.forEach(s=>{s.style.width='auto';s.style.fontVariationSettings='"wght" 700'});
+  const w=L.reduce((a,s)=>a+s.offsetWidth,0),W=mega.parentElement.clientWidth-2*parseFloat(getComputedStyle(mega.parentElement).paddingLeft);
+  mega.style.fontSize=(100*W/w*.985)+'px';L.forEach(s=>{s.style.width=s.offsetWidth+'px';s.style.fontVariationSettings='"wght" 300'})}
+document.fonts.ready.then(()=>{fit();if(!RM)gsap.from(L.map(s=>s.firstChild),{yPercent:110,duration:1.2,ease:'expo.out',stagger:.07,scrollTrigger:{trigger:mega,start:'top 95%',once:true}})});
+addEventListener('resize',()=>document.fonts.ready.then(fit));
+if(!RM)mega.addEventListener('pointermove',e=>L.forEach(s=>{const r=s.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),k=Math.max(0,1-Math.abs(dx)/(r.width*1.6));s.style.fontVariationSettings=`"wght" ${300+k*k*500}`}));
+mega.addEventListener('pointerleave',()=>L.forEach(s=>s.style.fontVariationSettings='"wght" 300'));
+</script>
+</body>
+</html>

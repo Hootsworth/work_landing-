@@ -71,6 +71,7 @@ h1{font-size:clamp(3rem,7vw,6.75rem);line-height:.94;letter-spacing:-.035em;font
 .panel[data-p=firefly]{--pbg:#1A1F50;--pfg:#FFD43B}
 .panel[data-p=intents]{--pbg:#1E2340;--pfg:#F2B48A}
 .panel[data-p=rexscript]{--pbg:#D7261E;--pfg:#ECE6D6}
+.panel[data-p=evee]{--pbg:#120b2e;--pfg:#f5f3ff}
 .panel[data-p=next]{--pbg:var(--mint);--pfg:var(--ink)}
 .pp{display:none;flex-direction:column;justify-content:space-between;gap:28px;width:100%}.pp.on{display:flex}
 .glyph{width:clamp(120px,14vw,170px);height:auto}
@@ -164,11 +165,13 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
       <a href="#products" data-jump="wavvy">Wavvy</a><i></i>
       <a href="#products" data-jump="wiggle">Wiggle</a><i></i>
       <a href="#products" data-jump="firefly">Firefly</a><i></i>
+      <a href="#products" data-jump="evee">Evee</a><i></i>
       <a href="#products" data-jump="next">More on the way</a><i></i>
       <a href="projects.html">All projects →</a><i></i>
       <a href="#products" data-jump="wavvy">Wavvy</a><i></i>
       <a href="#products" data-jump="wiggle">Wiggle</a><i></i>
       <a href="#products" data-jump="firefly">Firefly</a><i></i>
+      <a href="#products" data-jump="evee">Evee</a><i></i>
       <a href="#products" data-jump="next">More on the way</a><i></i>
       <a href="projects.html">All projects →</a><i></i>
     </div>
@@ -182,6 +185,7 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
       <button class="row on" type="button" data-p="wavvy" aria-pressed="true"><span>Wavvy</span><small>Wi-Fi login, handled</small></button>
       <button class="row" type="button" data-p="wiggle" aria-pressed="false"><span>Wiggle</span><small>Cursor AI agent</small></button>
       <button class="row" type="button" data-p="firefly" aria-pressed="false"><span>Firefly</span><small>Performance diagnostics</small></button>
+      <button class="row" type="button" data-p="evee" aria-pressed="false"><span>Evee</span><small>B2B prospecting studio</small></button>
       <button class="row" type="button" data-p="next" aria-pressed="false"><span>Next up</span><small>In the lab</small></button>
     </div>
     <p style="margin-top:20px;font-size:1rem;font-weight:600;"><a href="projects.html" style="text-decoration:underline;text-underline-offset:4px;">Browse all projects on the projects page →</a></p>
@@ -237,6 +241,29 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
         </div>
       </div>
     </div>
+    <div class="pp" data-p="evee">
+      <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <linearGradient id="evee-glyph" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ff5a5f"/>
+            <stop offset=".55" stop-color="#ff2bd6"/>
+            <stop offset="1" stop-color="#4a0bd6"/>
+          </linearGradient>
+        </defs>
+        <circle cx="100" cy="100" r="76" fill="none" stroke="url(#evee-glyph)" stroke-width="12" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="34" fill="url(#evee-glyph)"/>
+        <circle cx="146" cy="62" r="9" fill="#ff5a5f"/>
+      </svg>
+      <div>
+        <span class="chip" style="border-color:#ff2bd6;color:#ff5a5f">B2B prospecting studio • Evidence engine</span>
+        <h3>Evee</h3>
+        <p>Reads the public web presence of local businesses, spots verified gaps, and writes bespoke outreach. Shows its proof before writing a word.</p>
+        <div class="panel-acts">
+          <a class="btn" href="Evee.html">Open Evee</a>
+          <a class="btn ghost" href="https://evee.singulr.tech" target="_blank" rel="noopener noreferrer">Launch Studio</a>
+        </div>
+      </div>
+    </div>
     <div class="pp" data-p="next">
       <svg class="glyph" viewBox="0 0 200 200" aria-hidden="true" fill="none" stroke="#0B1033" stroke-width="7" stroke-linecap="round">
         <circle class="spin" cx="100" cy="100" r="70" stroke-dasharray="1 17"/><path d="M100 78v44M78 100h44"/>
@@ -262,7 +289,7 @@ html.calm .prog{display:none}html.calm .big span{opacity:1}
 
 <section class="cta2">
   <h2>See what we’ve built.</h2>
-  <p>Nine automation and AI tools, each built to solve a single annoying task and quietly step aside.</p>
+  <p>Ten automation and AI tools, each built to solve a single annoying task and quietly step aside.</p>
   <div class="cta">
     <a class="btn" href="projects.html">Browse all projects</a>
     <a class="btn ghost" href="open-source.html">Open source mission</a>
